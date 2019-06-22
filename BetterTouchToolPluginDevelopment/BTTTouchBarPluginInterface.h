@@ -70,8 +70,9 @@
 -(NSViewController* _Nullable)touchBarViewController;
 
 
-// MARK: Executing BTT actions
-// here you can configure what items are shown in the BTT configuration side-bar for this plugin
+// MARK: User Configuration
+// this will be called if the user has changed the configuration items
+// (defined using the configurationFormItems method)
 -(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
 @end
 
