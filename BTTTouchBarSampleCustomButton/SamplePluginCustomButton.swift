@@ -42,11 +42,12 @@ import AppKit
         let groupItem = BTTPluginFormItem.init();
         groupItem.formFieldType = BTTFormTypeFormGroup;
         
+        // add a bold title label
         let titleField = BTTPluginFormItem.init();
         titleField.formFieldType = BTTFormTypeTitleField;
         titleField.formLabel1 = "Some Example Title";
         
-        // here we just create a text field, we will receive the
+        // here we create a text field, we will receive the
         // current value in didReceiveNewConfigurationValues
         let textField = BTTPluginFormItem.init();
         textField.formFieldType = BTTFormTypeTextField;
@@ -54,7 +55,7 @@ import AppKit
         // the id must stat with plugin_var_ (will be added automatically if necessary)
         textField.formFieldID = "plugin_var_widgetName";
         
-        // here we just create a text field, we will receive the
+        // here we create a checkbox, we will receive the
         // current value in didReceiveNewConfigurationValues
         let checkbox = BTTPluginFormItem.init();
         checkbox.formFieldType = BTTFormTypeCheckbox;
