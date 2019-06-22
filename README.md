@@ -1,6 +1,6 @@
 # Note: This is experimental, the API may still change. You need BTT alpha 3.086 or later to run the plugins.
 
-# BetterTouchTool Plguins
+# BetterTouchTool Plugin
 
 This repository will contain examples on how to create BetterTouchTool plugins. 
 Starting with version 3.086 BetterTouchTool supports Touch Bar plugins. Soon there will also be other types of plugins (e.g. action plugins)
