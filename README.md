@@ -38,6 +38,6 @@ To see the plugin bundles, select the "Products" group in the XCode side-bar - y
 
 ## Installing Plugins into BTT
 
-You can install the plugins into BTT by double-clicking them or by copying them to ~/Library/Application Support/BetterTouchTool
+You can install the plugins into BTT by double-clicking them or by copying them to ~/Library/Application Support/BetterTouchTool/Plugins
 You can configure these plugins in BetterTouchTool - they will be listed under "Touch Bar Plugins" in the Touch Bar widget selector popover.
 
