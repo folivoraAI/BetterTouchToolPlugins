@@ -23,6 +23,10 @@ A BetterTouchTool Touch Bar plugin must fulfil these requirements:
 * its info.plist must contain these three keys: BTTPluginName, BTTPluginIdentifier, BTTPluginIcon
 * it must conform to the BTTTouchBarPluginInterface protocol (https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/BetterTouchToolPluginDevelopment/BTTTouchBarPluginInterface.h )
 * it must link against the BTTPluginSupport.framework
+* the principal class in the info.plist must be set to the main class that conforms to the BTTTouchBarPluginInterface protocol. 
+  * When using Swift to develop the plugins, make sure to set the principal class to the fully qualified name (PluginName.PluginPrincipalClass).
+  
+ Please see the example plugins for details!
 
 ## Get Started
 
