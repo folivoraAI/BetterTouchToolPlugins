@@ -9,6 +9,14 @@ import AppKit
     var configurationValues: Dictionary<AnyHashable, Any> = [:];
     
     
+    override init() {
+        super.init();
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.updateStringRegularly();
+        }
+    }
+   
+    
     /* MARK: Option 3: Returning a NSViewController instance
      * if you return a view controller BTT will display the view
      * controller's view on
@@ -19,6 +27,20 @@ import AppKit
      */
     func touchBarTitleString() -> String? {
         return "Hello Custom String!";
+    }
+    
+    func updateStringRegularly() {
+        let date = NSDate();
+        let calendar = NSCalendar.current;
+        let component = calendar.component(.second, from: date as Date);
+        
+        let newString = "Hello Custom String! \(component)";
+        self.delegate?.update(with: newString, sender: self);
+        
+        // every second
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.updateStringRegularly();
+        }
     }
     
     // here you can configure what items are shown in the BTT configuration side-bar for this plugin

@@ -10,7 +10,15 @@
 @class BTTPluginFormItem;
 
 @protocol BTTTouchBarPluginDelegate
+// this will execute the actions assigned in BTT
+// you need to pass the plugin principle class instance as sender
 -(void)executeAssignedBTTActions:(id _Nonnull )sender;
+
+// this can only be used if the touchBarTitleString method is used.
+// (see BTTTouchBarPluginSampleCustomString).
+// You need to pass the plugin principle class instance as sender
+-(void)updateWithString:(NSString*_Nonnull)string sender:(id _Nonnull )sender;
+
 @end
 
 
@@ -62,8 +70,8 @@
 -(NSViewController* _Nullable)touchBarViewController;
 
 
-// this is called when new configuartion values become available
-// e.g. when the user changed something in the
+// MARK: Executing BTT actions
+// here you can configure what items are shown in the BTT configuration side-bar for this plugin
 -(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
 @end
 
