@@ -39,14 +39,33 @@ import AppKit
     // here you can configure what items are shown in the BTT configuration side-bar for this plugin
     class func configurationFormItems() -> BTTPluginFormItem? {
         
+        let groupItem = BTTPluginFormItem.init();
+        groupItem.formFieldType = BTTFormTypeFormGroup;
+        
+        let titleField = BTTPluginFormItem.init();
+        titleField.formFieldType = BTTFormTypeTitleField;
+        titleField.formLabel1 = "Some Example Title";
+        
         // here we just create a text field, we will receive the
         // current value in didReceiveNewConfigurationValues
-        let item = BTTPluginFormItem.init();
-        item.formFieldType = BTTFormTypeTextField;
-        item.formLabel1 = "Custom Widget Name";
-        item.formFieldID = "widgetName";
+        let textField = BTTPluginFormItem.init();
+        textField.formFieldType = BTTFormTypeTextField;
+        textField.formLabel1 = "Custom Widget Name";
+        // the id must stat with plugin_var_ (will be added automatically if necessary)
+        textField.formFieldID = "plugin_var_widgetName";
         
-        return item;
+        // here we just create a text field, we will receive the
+        // current value in didReceiveNewConfigurationValues
+        let checkbox = BTTPluginFormItem.init();
+        checkbox.formFieldType = BTTFormTypeCheckbox;
+        checkbox.formLabel1 = "Some Checkbox";
+        // the id must stat with plugin_var_ (will be added automatically if necessary)
+        checkbox.formFieldID = "plugin_var_someCheckboxValue";
+        
+        
+        groupItem.formOptions = [titleField, textField, checkbox];
+        
+        return groupItem;
     }
     
     func didReceiveNewConfigurationValues(_ configurationValues: [AnyHashable : Any]) {

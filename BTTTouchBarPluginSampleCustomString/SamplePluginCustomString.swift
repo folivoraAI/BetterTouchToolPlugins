@@ -51,8 +51,8 @@ import AppKit
         let item = BTTPluginFormItem.init();
         item.formFieldType = BTTFormTypeTextField;
         item.formLabel1 = "Custom Widget Name";
-        item.formFieldID = "widgetName";
-        
+        // the id must stat with plugin_var_ (will be added automatically if necessary)
+        item.formFieldID = "plugin_var_widgetName";
         return item;
     }
     
