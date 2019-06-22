@@ -10,7 +10,7 @@ Starting with version 3.086 BetterTouchTool supports Touch Bar plugins. Soon the
 
 Currently there are three types of Touch Bar plugins:
 Plugins that
-* return a string that is then rendered and customizable using the standard BTT mechanisms
+* return a string which will be rendered using a BTT Touch Bar button and is fully customizable using the standard BTT mechanisms
 * returning a custom NSButton instance that you can style and modify
 * returning a custom NSViewController instance with a custom view attached to it.
 
