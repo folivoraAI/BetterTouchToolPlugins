@@ -71,7 +71,8 @@
 
 
 // MARK: User Configuration
-// this will be called if the user has changed the configuration items
+// This will be called if the user has changed the configuration items
+// using the BTT configuration sidebar.
 // (defined using the configurationFormItems method)
 -(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
 @end
