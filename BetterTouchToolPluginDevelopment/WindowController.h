@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "DemoTouchBarViewController.h"
-#import "BTTTouchBarPluginInterface.h"
+#import "BTTPluginInterface.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

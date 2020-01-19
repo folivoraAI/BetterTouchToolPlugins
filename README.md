@@ -21,12 +21,26 @@ This repository contains basic example plugins for all three of these types.
 A BetterTouchTool Touch Bar plugin must fulfil these requirements:
 * its wrapper extension must be ".btttouchbarplugin"
 * its info.plist must contain these three keys: BTTPluginName, BTTPluginIdentifier, BTTPluginIcon
-* it must conform to the BTTTouchBarPluginInterface protocol (https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/BetterTouchToolPluginDevelopment/BTTTouchBarPluginInterface.h )
+* it must conform to the BTTTouchBarPluginInterface protocol (https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/BetterTouchToolPluginDevelopment/BTTPluginInterface.h )
 * it must link against the BTTPluginSupport.framework
 * the principal class in the info.plist must be set to the main class that conforms to the BTTTouchBarPluginInterface protocol. 
   * When using Swift to develop the plugins, make sure to set the principal class to the fully qualified name (PluginName.PluginPrincipalClass).
   
  Please see the example plugins for details!
+
+ ## Action Plugin Development
+
+ Starting with BTT 3.226 action plugins are supported. They allow you to extend the list of available predefined ations with your own custom ones.
+
+ It's easy to create such an action extension:
+* its wrapper extension must be ".bttactionplugin"
+* its info.plist must contain these three keys: BTTPluginName, BTTPluginIdentifier, BTTPluginIcon, and BTTPluginType which must be set to "Action"
+* it must conform to the BTTActionPluginInterface protocol (https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/BetterTouchToolPluginDevelopment/BTTPluginInterface.h )
+* it must link against the BTTPluginSupport.framework
+* the principal class in the info.plist must be set to the main class that conforms to the BTTActionPluginInterface protocol. 
+  * When using Swift to develop the plugins, make sure to set the principal class to the fully qualified name ($(PRODUCT_MODULE_NAME).PluginPrincipalClass).
+  
+There is a example action extension included in this project (BTTDisplayNotificationActionPlugin), it shows the basic concepts and can be used as a starting point.
 
 ## Get Started
 
@@ -39,5 +53,5 @@ To see the plugin bundles, select the "Products" group in the XCode side-bar - y
 ## Installing Plugins into BTT
 
 You can install the plugins into BTT by double-clicking them or by copying them to ~/Library/Application Support/BetterTouchTool/Plugins
-You can configure these plugins in BetterTouchTool - they will be listed under "Touch Bar Plugins" in the Touch Bar widget selector popover.
+You can configure these plugins in BetterTouchTool - they will be listed under "Touch Bar Plugins" in the Touch Bar widget selector popover. Action plugins will appear in the standard action selector popup.
 

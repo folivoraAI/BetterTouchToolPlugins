@@ -36,6 +36,11 @@
 		A9454C7222BE6A2600055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C7322BE6A3400055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C7622BE6B4F00055860 /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C7522BE6B4F00055860 /* WindowController.m */; };
+		A9DC034D23D4AF5600C0E704 /* ShowNotificationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC034C23D4AF5600C0E704 /* ShowNotificationPlugin.swift */; };
+		A9DC035023D4B3A100C0E704 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9DC034E23D4B3A100C0E704 /* icon.png */; };
+		A9DC035123D4B3A100C0E704 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9DC034F23D4B3A100C0E704 /* icon@2x.png */; };
+		A9DC035223D4B59200C0E704 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
+		A9DC035323D4B59200C0E704 /* BTTPluginSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +121,13 @@
 			remoteGlobalIDString = A9454C4922BE69BA00055860;
 			remoteInfo = BTTPluginSupport;
 		};
+		A9DC035423D4B59200C0E704 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9454C4922BE69BA00055860;
+			remoteInfo = BTTPluginSupport;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -126,6 +138,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A9454C6022BE69BA00055860 /* BTTPluginSupport.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9DC035623D4B59200C0E704 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A9DC035323D4B59200C0E704 /* BTTPluginSupport.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,7 +178,7 @@
 		A9454C0122BE1E9900055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454C0922BE1EC600055860 /* BTTTouchBarPluginSampleCustomString.btttouchbarplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTTouchBarPluginSampleCustomString.btttouchbarplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9454C0B22BE1EC600055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A9454C0F22BE1F5B00055860 /* BTTTouchBarPluginInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTTTouchBarPluginInterface.h; sourceTree = "<group>"; };
+		A9454C0F22BE1F5B00055860 /* BTTPluginInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTTPluginInterface.h; sourceTree = "<group>"; };
 		A9454C1022BE1F7700055860 /* BTTTouchBarSampleCustomButton-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTTouchBarSampleCustomButton-Bridging-Header.h"; sourceTree = "<group>"; };
 		A9454C1122BE1F7700055860 /* SamplePluginCustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePluginCustomButton.swift; sourceTree = "<group>"; };
 		A9454C1322BE1F9100055860 /* BTTTouchBarPluginSampleCustomView-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTTouchBarPluginSampleCustomView-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -183,6 +206,12 @@
 		A9454C5B22BE69BA00055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454C7422BE6B4F00055860 /* WindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		A9454C7522BE6B4F00055860 /* WindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
+		A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTDisplayNotificationActionPlugin.bttactionplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9DC034723D4AEB900C0E704 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9DC034B23D4AF5500C0E704 /* BTTDisplayNotificationActionPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTDisplayNotificationActionPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
+		A9DC034C23D4AF5600C0E704 /* ShowNotificationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNotificationPlugin.swift; sourceTree = "<group>"; };
+		A9DC034E23D4B3A100C0E704 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		A9DC034F23D4B3A100C0E704 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +276,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A9DC034223D4AEB900C0E704 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC035223D4B59200C0E704 /* BTTPluginSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -261,6 +298,7 @@
 				A9454C0A22BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
 				A9454C4B22BE69BA00055860 /* BTTPluginSupport */,
 				A9454C5822BE69BA00055860 /* BTTPluginSupportTests */,
+				A9DC034623D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
 				A9454BBF22BE1E3300055860 /* Products */,
 				A9454C7022BE6A2200055860 /* Frameworks */,
 			);
@@ -277,6 +315,7 @@
 				A9454C0922BE1EC600055860 /* BTTTouchBarPluginSampleCustomString.btttouchbarplugin */,
 				A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */,
 				A9454C5222BE69BA00055860 /* BTTPluginSupportTests.xctest */,
+				A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -284,7 +323,7 @@
 		A9454BC022BE1E3300055860 /* BetterTouchToolPluginDevelopment */ = {
 			isa = PBXGroup;
 			children = (
-				A9454C0F22BE1F5B00055860 /* BTTTouchBarPluginInterface.h */,
+				A9454C0F22BE1F5B00055860 /* BTTPluginInterface.h */,
 				A9454BC122BE1E3300055860 /* AppDelegate.h */,
 				A9454BC222BE1E3300055860 /* AppDelegate.m */,
 				A9454BC422BE1E3300055860 /* ViewController.h */,
@@ -384,6 +423,18 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A9DC034623D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				A9DC034723D4AEB900C0E704 /* Info.plist */,
+				A9DC034C23D4AF5600C0E704 /* ShowNotificationPlugin.swift */,
+				A9DC034E23D4B3A100C0E704 /* icon.png */,
+				A9DC034F23D4B3A100C0E704 /* icon@2x.png */,
+				A9DC034B23D4AF5500C0E704 /* BTTDisplayNotificationActionPlugin-Bridging-Header.h */,
+			);
+			path = BTTDisplayNotificationActionPlugin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -549,6 +600,25 @@
 			productReference = A9454C5222BE69BA00055860 /* BTTPluginSupportTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		A9DC034423D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9DC034823D4AEB900C0E704 /* Build configuration list for PBXNativeTarget "BTTDisplayNotificationActionPlugin" */;
+			buildPhases = (
+				A9DC034123D4AEB900C0E704 /* Sources */,
+				A9DC034223D4AEB900C0E704 /* Frameworks */,
+				A9DC034323D4AEB900C0E704 /* Resources */,
+				A9DC035623D4B59200C0E704 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9DC035523D4B59200C0E704 /* PBXTargetDependency */,
+			);
+			name = BTTDisplayNotificationActionPlugin;
+			productName = BTTDisplayNotificationActionPlugin;
+			productReference = A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -593,6 +663,10 @@
 						CreatedOnToolsVersion = 10.2.1;
 						TestTargetID = A9454BBD22BE1E3300055860;
 					};
+					A9DC034423D4AEB900C0E704 = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
+					};
 				};
 			};
 			buildConfigurationList = A9454BB922BE1E3300055860 /* Build configuration list for PBXProject "BetterTouchToolPluginDevelopment" */;
@@ -616,6 +690,7 @@
 				A9454C0822BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
 				A9454C4922BE69BA00055860 /* BTTPluginSupport */,
 				A9454C5122BE69BA00055860 /* BTTPluginSupportTests */,
+				A9DC034423D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
 			);
 		};
 /* End PBXProject section */
@@ -682,6 +757,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9DC034323D4AEB900C0E704 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC035023D4B3A100C0E704 /* icon.png in Resources */,
+				A9DC035123D4B3A100C0E704 /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,6 +842,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A9DC034123D4AEB900C0E704 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9DC034D23D4AF5600C0E704 /* ShowNotificationPlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -815,6 +907,11 @@
 			isa = PBXTargetDependency;
 			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
 			targetProxy = A9454C6E22BE6A1300055860 /* PBXContainerItemProxy */;
+		};
+		A9DC035523D4B59200C0E704 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
+			targetProxy = A9DC035423D4B59200C0E704 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1053,6 +1150,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = DAFVSXZ82P;
@@ -1065,6 +1163,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BTTTouchBarSampleCustomButton;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "BTTTouchBarSampleCustomButton/BTTTouchBarSampleCustomButton-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1077,6 +1176,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = DAFVSXZ82P;
@@ -1089,6 +1189,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BTTTouchBarSampleCustomButton;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "BTTTouchBarSampleCustomButton/BTTTouchBarSampleCustomButton-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1282,6 +1383,55 @@
 			};
 			name = Release;
 		};
+		A9DC034923D4AEB900C0E704 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTDisplayNotificationActionPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.BTTDisplayNotificationActionPlugin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTDisplayNotificationActionPlugin/BTTDisplayNotificationActionPlugin-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttactionplugin;
+			};
+			name = Debug;
+		};
+		A9DC034A23D4AEB900C0E704 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTDisplayNotificationActionPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.BTTDisplayNotificationActionPlugin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTDisplayNotificationActionPlugin/BTTDisplayNotificationActionPlugin-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttactionplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1362,6 +1512,15 @@
 			buildConfigurations = (
 				A9454C6622BE69BA00055860 /* Debug */,
 				A9454C6722BE69BA00055860 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9DC034823D4AEB900C0E704 /* Build configuration list for PBXNativeTarget "BTTDisplayNotificationActionPlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9DC034923D4AEB900C0E704 /* Debug */,
+				A9DC034A23D4AEB900C0E704 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

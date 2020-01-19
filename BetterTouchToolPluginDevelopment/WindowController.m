@@ -76,7 +76,7 @@
             NSLog(@"found plugin %@ | %@ | icon %@ - loaded: %@", pluginName, pluginIdentifier, imageName, pluginIcon ? @"YES" : @"NO");
             
             NSView *touchbarView = nil;
-            id<BTTTouchBarPluginInterface> pluginInstance = [[[bundle principalClass] alloc] init];
+            id<BTTPluginInterface> pluginInstance = [[[bundle principalClass] alloc] init];
             
             if([pluginInstance respondsToSelector:@selector(touchBarTitleString)]) {
                 NSString *title = [pluginInstance touchBarTitleString];

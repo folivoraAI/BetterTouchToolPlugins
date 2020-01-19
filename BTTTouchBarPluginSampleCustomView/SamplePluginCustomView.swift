@@ -1,6 +1,6 @@
 import Foundation
 import AppKit
-@objc class SamplePluginCustomView : NSObject, BTTTouchBarPluginInterface
+@objc class SamplePluginCustomView : NSObject, BTTPluginInterface
 {
     // the delegate will be set automatically after this plugin is loaded in BTT
     var delegate : BTTTouchBarPluginDelegate?
