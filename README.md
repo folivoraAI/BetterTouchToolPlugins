@@ -30,7 +30,7 @@ A BetterTouchTool Touch Bar plugin must fulfil these requirements:
 
  ## Action Plugin Development
 
- Starting with BTT 3.226 action plugins are supported. They allow you to extend the list of available predefined ations with your own custom ones.
+ Starting with BTT 3.226 action plugins are supported. They allow you to extend the list of available predefined actions with your own custom ones.
 
  It's easy to create such an action extension:
 * its wrapper extension must be ".bttactionplugin"
