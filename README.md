@@ -60,7 +60,7 @@ You can configure these plugins in BetterTouchTool - they will be listed under "
 ## Distributing Plugins
 
 If you want to distribute plugins to other users, you must notarize them - otherwise they will not run. You need an Apple developer account to do this.
-Here a full build & notarize example:
+Here a full build & notarize example. If you have any questions: andreas@folivora.ai
 
 ### 1 Build/Archive
 xcodebuild archive -scheme BTTStreamDeckPluginCPUUsage  -configuration Release -archivePath ./build/streamdeckcpuusage.xcarchive
