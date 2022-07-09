@@ -123,11 +123,11 @@
 
 // called when the user presses the button down.
 // return true to cancel assigned BTT actions.
--(BOOL)buttonDown;
+-(BOOL)buttonDown:(NSInteger)index;
 
 // called when the user releases the button
 // return true to cancel assigned BTT actions.
--(BOOL)buttonUp;
+-(BOOL)buttonUp:(NSInteger)index;
 @end
 
 
