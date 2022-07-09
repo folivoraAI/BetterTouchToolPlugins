@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BTTPluginIcon</key>
+	<string>icon</string>
+	<key>BTTPluginIdentifier</key>
+	<string>com.folivora.sd.cpuusage</string>
+	<key>BTTPluginName</key>
+	<string>A simple CPU usage widget</string>
+	<key>BTTPluginType</key>
+	<string>StreamDeck</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -18,5 +26,9 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2022 Andreas Hegenberg. All rights reserved.</string>
+	<key>NSPrincipalClass</key>
+	<string>BTTStreamDeckPluginCPUUsage.CPUUsagePlugin</string>
 </dict>
 </plist>

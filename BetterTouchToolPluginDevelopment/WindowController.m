@@ -60,7 +60,7 @@
     CGFloat lastX = 0;
     while (file = [enumerator nextObject]) {
         
-        if([file.pathExtension containsString:@"btttouchbarplugin"]) {
+        if([file.pathExtension containsString:@"bttstreamdeckplugin"] || [file.pathExtension containsString:@"bttsdplugin"]) {
             
             NSBundle *bundle = [NSBundle bundleWithURL:file];
             
@@ -73,7 +73,24 @@
             
             
             
-            NSLog(@"found plugin %@ | %@ | icon %@ - loaded: %@", pluginName, pluginIdentifier, imageName, pluginIcon ? @"YES" : @"NO");
+            NSLog(@"found streamdeck plugin %@ | %@ | icon %@ - loaded: %@", pluginName, pluginIdentifier, imageName, pluginIcon ? @"YES" : @"NO");
+            
+            id<BTTStreamDeckPluginInterface> pluginInstance = [[[bundle principalClass] alloc] init];
+            
+        } else if([file.pathExtension containsString:@"btttouchbarplugin"]) {
+            
+            NSBundle *bundle = [NSBundle bundleWithURL:file];
+            
+            NSDictionary *infoDictionary = [bundle infoDictionary];
+            NSString *pluginName = [infoDictionary objectForKey:@"BTTPluginName"];
+            NSString *pluginIdentifier = [infoDictionary objectForKey:@"BTTPluginIdentifier"];
+            NSString *imageName = [infoDictionary objectForKey:@"BTTPluginIcon"];
+            ;
+            NSImage *pluginIcon = [[NSImage alloc] initWithContentsOfFile:[bundle pathForResource:imageName ofType:@"tiff"]] ;
+            
+            
+            
+            NSLog(@"found touchbar plugin %@ | %@ | icon %@ - loaded: %@", pluginName, pluginIdentifier, imageName, pluginIcon ? @"YES" : @"NO");
             
             NSView *touchbarView = nil;
             id<BTTPluginInterface> pluginInstance = [[[bundle principalClass] alloc] init];

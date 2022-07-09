@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -710,20 +711,21 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cwz-34-3So">
-                                <rect key="frame" x="114" y="84" width="252" height="17"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="BetterTouchTool Touch Bar Plugin Test" id="O8o-Kh-Gp0">
+                                <rect key="frame" x="146" y="85" width="188" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="BetterTouchTool  Plugin Test" id="O8o-Kh-Gp0">
                                     <font key="font" metaFont="systemBold"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="AlX-Di-gou">
-                                <rect key="frame" x="20" y="20" width="442" height="34"/>
+                                <rect key="frame" x="20" y="23" width="442" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="438" id="moh-h8-igc"/>
                                 </constraints>
-                                <textFieldCell key="cell" selectable="YES" title="This will render the views defined by the different BetterTouchTool Touch Bar plugins in this project." id="C2l-tJ-rsR">
+                                <textFieldCell key="cell" selectable="YES" id="C2l-tJ-rsR">
                                     <font key="font" metaFont="system"/>
+                                    <string key="title">This will render the views defined by the different BetterTouchTool Touch Bar plugins in this project (will be rendered on your Touch Bar!).</string>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>

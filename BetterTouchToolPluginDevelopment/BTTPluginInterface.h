@@ -10,6 +10,128 @@
 
 @class BTTPluginFormItem;
 
+
+@protocol BTTStreamDeckPluginDelegate
+
+-(void)executeAssignedBTTActions:(id _Nonnull )sender;
+-(void)requestUpdate:(id _Nonnull )sender;
+
+@end
+
+
+@protocol BTTStreamDeckPluginInterface <NSObject>
+
+
+@optional
+
+// the delegate will be set automatically after this plugin is loaded in BTT
+@property (nullable, weak) id <BTTStreamDeckPluginDelegate> delegate;
+
+//MARK: Side-Bar configuration:
+// here you can configure and return the form items are shown in the BTT configuration side-bar for this plugin
++(BTTPluginFormItem* _Nullable)configurationFormItems;
+
+// This defines whether the appearance tab will be shown when configuring this plugin
++(BOOL)showAppearanceTab;
+// This defines whether the alternate appearance tab will be shown when configuring this plugin
++(BOOL)showAlternateAppearanceTab;
+
+// Return a dictionary with default configuation items here.
+// (the ones you get when copying a trigger in BTT and looking at the BTTTriggerConfig object)
++(NSDictionary*)defaultConfiguration;
+
+/*
+ * NOTE: NOT YET SUPPORTED
+ *
+ * This defines whether the buttons of this widget will be put into a group.
+ * If you activate this,the first item in the arrays below always needs to be the
+ * group item.
+*/
+ +(BOOL)groupWidgetButtons;
+ 
+
+// MARK: RENDERING the Buttons
+
+/*
+ * If this returns true, BTT will attempt to render with alternate appearance
+ */
+-(BOOL)alternateModeActive;
+
+/*
+ * NOTE: while all the following methods return arrays,
+ * currently only the first item in the array is being used.
+ *
+ * You need to implement one of the
+ * following 4 methods. If you implement
+ * multiple, BTT will only execute the first,
+ * trying in this order:
+ */
+
+/* MARK: Option 1: Returning an Array of Strings
+ * If you return an array of strings here, it will render one button
+ * per string applying the appearance settings defined in BetterTouchTool.
+ * This means all standard properties like background color
+ * will be applied.
+ */
+-(NSArray<NSString*>* _Nullable)widgetTitleStrings;
+
+/* MARK: Option 2: Returning an Array of Attributed Strings
+ * If you return an array of attributed strings, BTT will render buttons
+ * based on these but also apply additional styling as configured by the user
+ * (e.g. background color)
+ */
+-(NSArray<NSAttributedString*>* _Nullable)widgetAttributedTitleStrings;
+
+/* MARK: Option 3: Returning an Array of Dictionaries with the rendering description
+ * You can return an array of dictionaries with the following keys. They might be mutually exclusive:
+ * {
+ "BTTStreamDeckBackgroundColor" : "80.954640, 96.000000, 94.000000, 255.000000",
+ "BTTStreamDeckCornerRadius" : 13,
+ "BTTStreamDeckImageReal": a real NSImage instance
+ "BTTStreamDeckImage" : "base64imagesstring",
+ "BTTStreamDeckImageOffsetY" : 2,
+ "BTTStreamDeckImageOffsetX" : 2
+ "BTTStreamDeckImageChangeColor" : 1,
+ "BTTStreamDeckResizeImage" : 2,
+ "BTTStreamDeckImageHeight" : 30,
+ "BTTStreamDeckImageWidth" : 30,
+ "BTTStreamDeckSFSymbolStyle" : 3,
+ "BTTStreamDeckSFSymbolName" : "square.and.arrow.up.circle.fill",
+ "BTTStreamDeckIconType" : 1,
+ "BTTStreamDeckAlternateImageHeight" : 50,
+ "BTTStreamDeckIconColor1" : "255.000000, 74.896763, 114.000000, 255.000000",
+ "BTTStreamDeckIconColor2" : "255, 255, 255, 255",
+ "BTTStreamDeckIconColor3" : "255, 255, 255, 255",
+ "BTTStreamDeckAttributedTitleReal": a real NSAttributedString instance
+ "BTTStreamDeckAttributedTitle" : "cnRmZAAAAAADAAAAAgAAAAcAAABUWFQucnRmAQAAAC6BAQAAKwAAAAEAAAB5AQAAe1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcY29jb2FydGYyNjM4Clxjb2NvYXRleHRzY2FsaW5nMFxjb2NvYXBsYXRmb3JtMHtcZm9udHRibFxmMFxmbmlsXGZjaGFyc2V0MCBTRlByby1SZWd1bGFyO30Ke1xjb2xvcnRibDtccmVkMjU1XGdyZWVuMjU1XGJsdWUyNTU7XHJlZDI1NVxncmVlbjI1NVxibHVlMjU1O30Ke1wqXGV4cGFuZGVkY29sb3J0Ymw7O1xjc3NyZ2JcYzEwMDAwMFxjMTAwMDAwXGMxMDAwMDA7fQpccGFyZFx0eDU2MFx0eDExMjBcdHgxNjgwXHR4MjI0MFx0eDI4MDBcdHgzMzYwXHR4MzkyMFx0eDQ0ODBcdHg1MDQwXHR4NTYwMFx0eDYxNjBcdHg2NzIwXHBhcmRpcm5hdHVyYWxccWNccGFydGlnaHRlbmZhY3RvcjAKClxmMFxmczUwIFxjZjIgdGVzdH0BAAAAIwAAAAEAAAAHAAAAVFhULnJ0ZhAAAABk2cZitgEAAAAAAAAAAAAA",
+
+}
+ * The individual widget buttons will be rendered based on these descriptions.
+ */
+-(NSArray<NSDictionary*>* _Nullable)widgetDictionaries;
+
+
+/* MARK: Option 4: Returning an Array of rendered Images
+ * You can also just return an array of rendered images.
+ * The images should be sized at around 140x140 (BTT will resize it to fit for any device)
+ */
+-(NSArray<NSImage*>* _Nullable)widgetImages;
+
+// this will give you the current configuration values for your widget
+// (as defined in the form you returned via configurationFormItems)
+-(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
+
+// called when the user presses the button down.
+// return true to cancel assigned BTT actions.
+-(BOOL)buttonDown;
+
+// called when the user releases the button
+// return true to cancel assigned BTT actions.
+-(BOOL)buttonUp;
+@end
+
+
+
 @protocol BTTTouchBarPluginDelegate
 
 -(void)executeAssignedBTTActions:(id _Nonnull )sender;
@@ -66,9 +188,11 @@
 -(NSViewController* _Nullable)touchBarViewController;
 
 
-// MARK: Executing BTT actions
+
 // here you can configure what items are shown in the BTT configuration side-bar for this plugin
 -(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
+
+
 @end
 
 @protocol BTTActionPluginDelegate

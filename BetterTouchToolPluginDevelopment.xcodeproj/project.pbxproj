@@ -12,8 +12,6 @@
 		A9454BC822BE1E3500055860 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9454BC722BE1E3500055860 /* Assets.xcassets */; };
 		A9454BCB22BE1E3500055860 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9454BC922BE1E3500055860 /* Main.storyboard */; };
 		A9454BCE22BE1E3500055860 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454BCD22BE1E3500055860 /* main.m */; };
-		A9454BD922BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454BD822BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.m */; };
-		A9454BE422BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454BE322BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.m */; };
 		A9454C1222BE1F7700055860 /* SamplePluginCustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9454C1122BE1F7700055860 /* SamplePluginCustomButton.swift */; };
 		A9454C1522BE1F9100055860 /* SamplePluginCustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9454C1422BE1F9100055860 /* SamplePluginCustomView.swift */; };
 		A9454C1822BE1FA300055860 /* SamplePluginCustomString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9454C1722BE1FA300055860 /* SamplePluginCustomString.swift */; };
@@ -25,8 +23,6 @@
 		A9454C4022BE24E200055860 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9454C3E22BE24E200055860 /* icon@2x.png */; };
 		A9454C4122BE24E200055860 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9454C3F22BE24E200055860 /* icon.png */; };
 		A9454C4422BE324900055860 /* DemoTouchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C4322BE324900055860 /* DemoTouchBarViewController.m */; };
-		A9454C5322BE69BA00055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
-		A9454C5A22BE69BA00055860 /* BTTPluginSupportTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C5922BE69BA00055860 /* BTTPluginSupportTests.m */; };
 		A9454C5C22BE69BA00055860 /* BTTPluginSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = A9454C4C22BE69BA00055860 /* BTTPluginSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A9454C5F22BE69BA00055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C6022BE69BA00055860 /* BTTPluginSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -36,28 +32,19 @@
 		A9454C7222BE6A2600055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C7322BE6A3400055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C7622BE6B4F00055860 /* WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C7522BE6B4F00055860 /* WindowController.m */; };
+		A9D31E5E287823450073D6A4 /* MyCpuUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D31E5D287823450073D6A4 /* MyCpuUsage.swift */; };
 		A9DC034D23D4AF5600C0E704 /* ShowNotificationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC034C23D4AF5600C0E704 /* ShowNotificationPlugin.swift */; };
 		A9DC035023D4B3A100C0E704 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9DC034E23D4B3A100C0E704 /* icon.png */; };
 		A9DC035123D4B3A100C0E704 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9DC034F23D4B3A100C0E704 /* icon@2x.png */; };
 		A9DC035223D4B59200C0E704 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9DC035323D4B59200C0E704 /* BTTPluginSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A9ED79FA2877753800B95821 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
+		A9ED7A052877762F00B95821 /* CPUUsagePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ED7A042877762F00B95821 /* CPUUsagePlugin.swift */; };
+		A9ED7A082877767300B95821 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ED7A062877767300B95821 /* icon.png */; };
+		A9ED7A092877767300B95821 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ED7A072877767300B95821 /* icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A9454BD522BE1E3500055860 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A9454BBD22BE1E3300055860;
-			remoteInfo = BetterTouchToolPluginDevelopment;
-		};
-		A9454BE022BE1E3500055860 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A9454BBD22BE1E3300055860;
-			remoteInfo = BetterTouchToolPluginDevelopment;
-		};
 		A9454C1922BE1FEA00055860 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
@@ -78,20 +65,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = A9454C0822BE1EC600055860;
 			remoteInfo = BTTTouchBarPluginSampleCustomString;
-		};
-		A9454C5422BE69BA00055860 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A9454C4922BE69BA00055860;
-			remoteInfo = BTTPluginSupport;
-		};
-		A9454C5622BE69BA00055860 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A9454BBD22BE1E3300055860;
-			remoteInfo = BetterTouchToolPluginDevelopment;
 		};
 		A9454C5D22BE69BA00055860 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -122,6 +95,13 @@
 			remoteInfo = BTTPluginSupport;
 		};
 		A9DC035423D4B59200C0E704 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9454C4922BE69BA00055860;
+			remoteInfo = BTTPluginSupport;
+		};
+		A9ED79F62877753800B95821 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
 			proxyType = 1;
@@ -166,12 +146,6 @@
 		A9454BCC22BE1E3500055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454BCD22BE1E3500055860 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A9454BCF22BE1E3500055860 /* BetterTouchToolPluginDevelopment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BetterTouchToolPluginDevelopment.entitlements; sourceTree = "<group>"; };
-		A9454BD422BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetterTouchToolPluginDevelopmentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9454BD822BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BetterTouchToolPluginDevelopmentTests.m; sourceTree = "<group>"; };
-		A9454BDA22BE1E3500055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A9454BDF22BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetterTouchToolPluginDevelopmentUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9454BE322BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BetterTouchToolPluginDevelopmentUITests.m; sourceTree = "<group>"; };
-		A9454BE522BE1E3500055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454BF522BE1E7D00055860 /* BTTTouchBarSampleCustomButton.btttouchbarplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTTouchBarSampleCustomButton.btttouchbarplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9454BF722BE1E7D00055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454BFF22BE1E9900055860 /* BTTTouchBarPluginSampleCustomView.btttouchbarplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTTouchBarPluginSampleCustomView.btttouchbarplugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,17 +175,21 @@
 		A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BTTPluginSupport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9454C4C22BE69BA00055860 /* BTTPluginSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTTPluginSupport.h; sourceTree = "<group>"; };
 		A9454C4D22BE69BA00055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A9454C5222BE69BA00055860 /* BTTPluginSupportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTPluginSupportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9454C5922BE69BA00055860 /* BTTPluginSupportTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BTTPluginSupportTests.m; sourceTree = "<group>"; };
-		A9454C5B22BE69BA00055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9454C7422BE6B4F00055860 /* WindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		A9454C7522BE6B4F00055860 /* WindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
+		A9D31E5D287823450073D6A4 /* MyCpuUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCpuUsage.swift; sourceTree = "<group>"; };
 		A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTDisplayNotificationActionPlugin.bttactionplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9DC034723D4AEB900C0E704 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9DC034B23D4AF5500C0E704 /* BTTDisplayNotificationActionPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTDisplayNotificationActionPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
 		A9DC034C23D4AF5600C0E704 /* ShowNotificationPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowNotificationPlugin.swift; sourceTree = "<group>"; };
 		A9DC034E23D4B3A100C0E704 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		A9DC034F23D4B3A100C0E704 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		A9ED7A012877753800B95821 /* BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9ED7A022877753800B95821 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = /Users/andi/Xcode/BetterTouchTool/BetterTouchToolPlugins/BTTStreamDeckPluginCPUUsage/Info.plist; sourceTree = "<absolute>"; };
+		A9ED7A042877762F00B95821 /* CPUUsagePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPUUsagePlugin.swift; sourceTree = "<group>"; };
+		A9ED7A062877767300B95821 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		A9ED7A072877767300B95821 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		A9ED7A0A287776E100B95821 /* BTTStreamDeckPluginCPUUsage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTStreamDeckPluginCPUUsage-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,20 +198,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9454C5F22BE69BA00055860 /* BTTPluginSupport.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BD122BE1E3500055860 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BDC22BE1E3500055860 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,19 +232,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9454C4F22BE69BA00055860 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9454C5322BE69BA00055860 /* BTTPluginSupport.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A9DC034223D4AEB900C0E704 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A9DC035223D4B59200C0E704 /* BTTPluginSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9ED79F92877753800B95821 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9ED79FA2877753800B95821 /* BTTPluginSupport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,14 +255,12 @@
 			isa = PBXGroup;
 			children = (
 				A9454BC022BE1E3300055860 /* BetterTouchToolPluginDevelopment */,
-				A9454BD722BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests */,
-				A9454BE222BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests */,
+				A9ED7A032877759700B95821 /* BTTStreamDeckPluginCPUUsage */,
 				A9454BF622BE1E7D00055860 /* BTTTouchBarSampleCustomButton */,
 				A9454C0022BE1E9900055860 /* BTTTouchBarPluginSampleCustomView */,
 				A9454C0A22BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
-				A9454C4B22BE69BA00055860 /* BTTPluginSupport */,
-				A9454C5822BE69BA00055860 /* BTTPluginSupportTests */,
 				A9DC034623D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
+				A9454C4B22BE69BA00055860 /* BTTPluginSupport */,
 				A9454BBF22BE1E3300055860 /* Products */,
 				A9454C7022BE6A2200055860 /* Frameworks */,
 			);
@@ -308,14 +270,12 @@
 			isa = PBXGroup;
 			children = (
 				A9454BBE22BE1E3300055860 /* BetterTouchToolPluginDevelopment.app */,
-				A9454BD422BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.xctest */,
-				A9454BDF22BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.xctest */,
 				A9454BF522BE1E7D00055860 /* BTTTouchBarSampleCustomButton.btttouchbarplugin */,
 				A9454BFF22BE1E9900055860 /* BTTTouchBarPluginSampleCustomView.btttouchbarplugin */,
 				A9454C0922BE1EC600055860 /* BTTTouchBarPluginSampleCustomString.btttouchbarplugin */,
 				A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */,
-				A9454C5222BE69BA00055860 /* BTTPluginSupportTests.xctest */,
 				A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */,
+				A9ED7A012877753800B95821 /* BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -339,24 +299,6 @@
 				A9454BCF22BE1E3500055860 /* BetterTouchToolPluginDevelopment.entitlements */,
 			);
 			path = BetterTouchToolPluginDevelopment;
-			sourceTree = "<group>";
-		};
-		A9454BD722BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests */ = {
-			isa = PBXGroup;
-			children = (
-				A9454BD822BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.m */,
-				A9454BDA22BE1E3500055860 /* Info.plist */,
-			);
-			path = BetterTouchToolPluginDevelopmentTests;
-			sourceTree = "<group>";
-		};
-		A9454BE222BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests */ = {
-			isa = PBXGroup;
-			children = (
-				A9454BE322BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.m */,
-				A9454BE522BE1E3500055860 /* Info.plist */,
-			);
-			path = BetterTouchToolPluginDevelopmentUITests;
 			sourceTree = "<group>";
 		};
 		A9454BF622BE1E7D00055860 /* BTTTouchBarSampleCustomButton */ = {
@@ -409,15 +351,6 @@
 			path = BTTPluginSupport;
 			sourceTree = "<group>";
 		};
-		A9454C5822BE69BA00055860 /* BTTPluginSupportTests */ = {
-			isa = PBXGroup;
-			children = (
-				A9454C5922BE69BA00055860 /* BTTPluginSupportTests.m */,
-				A9454C5B22BE69BA00055860 /* Info.plist */,
-			);
-			path = BTTPluginSupportTests;
-			sourceTree = "<group>";
-		};
 		A9454C7022BE6A2200055860 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,6 +368,19 @@
 				A9DC034B23D4AF5500C0E704 /* BTTDisplayNotificationActionPlugin-Bridging-Header.h */,
 			);
 			path = BTTDisplayNotificationActionPlugin;
+			sourceTree = "<group>";
+		};
+		A9ED7A032877759700B95821 /* BTTStreamDeckPluginCPUUsage */ = {
+			isa = PBXGroup;
+			children = (
+				A9ED7A0A287776E100B95821 /* BTTStreamDeckPluginCPUUsage-Bridging-Header.h */,
+				A9ED7A062877767300B95821 /* icon.png */,
+				A9ED7A072877767300B95821 /* icon@2x.png */,
+				A9ED7A022877753800B95821 /* Info.plist */,
+				A9D31E5D287823450073D6A4 /* MyCpuUsage.swift */,
+				A9ED7A042877762F00B95821 /* CPUUsagePlugin.swift */,
+			);
+			path = BTTStreamDeckPluginCPUUsage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -472,42 +418,6 @@
 			productName = BetterTouchToolPluginDevelopment;
 			productReference = A9454BBE22BE1E3300055860 /* BetterTouchToolPluginDevelopment.app */;
 			productType = "com.apple.product-type.application";
-		};
-		A9454BD322BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A9454BEB22BE1E3500055860 /* Build configuration list for PBXNativeTarget "BetterTouchToolPluginDevelopmentTests" */;
-			buildPhases = (
-				A9454BD022BE1E3500055860 /* Sources */,
-				A9454BD122BE1E3500055860 /* Frameworks */,
-				A9454BD222BE1E3500055860 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A9454BD622BE1E3500055860 /* PBXTargetDependency */,
-			);
-			name = BetterTouchToolPluginDevelopmentTests;
-			productName = BetterTouchToolPluginDevelopmentTests;
-			productReference = A9454BD422BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		A9454BDE22BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A9454BEE22BE1E3500055860 /* Build configuration list for PBXNativeTarget "BetterTouchToolPluginDevelopmentUITests" */;
-			buildPhases = (
-				A9454BDB22BE1E3500055860 /* Sources */,
-				A9454BDC22BE1E3500055860 /* Frameworks */,
-				A9454BDD22BE1E3500055860 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A9454BE122BE1E3500055860 /* PBXTargetDependency */,
-			);
-			name = BetterTouchToolPluginDevelopmentUITests;
-			productName = BetterTouchToolPluginDevelopmentUITests;
-			productReference = A9454BDF22BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		A9454BF422BE1E7D00055860 /* BTTTouchBarSampleCustomButton */ = {
 			isa = PBXNativeTarget;
@@ -581,25 +491,6 @@
 			productReference = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		A9454C5122BE69BA00055860 /* BTTPluginSupportTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A9454C6522BE69BA00055860 /* Build configuration list for PBXNativeTarget "BTTPluginSupportTests" */;
-			buildPhases = (
-				A9454C4E22BE69BA00055860 /* Sources */,
-				A9454C4F22BE69BA00055860 /* Frameworks */,
-				A9454C5022BE69BA00055860 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A9454C5522BE69BA00055860 /* PBXTargetDependency */,
-				A9454C5722BE69BA00055860 /* PBXTargetDependency */,
-			);
-			name = BTTPluginSupportTests;
-			productName = BTTPluginSupportTests;
-			productReference = A9454C5222BE69BA00055860 /* BTTPluginSupportTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		A9DC034423D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A9DC034823D4AEB900C0E704 /* Build configuration list for PBXNativeTarget "BTTDisplayNotificationActionPlugin" */;
@@ -619,6 +510,24 @@
 			productReference = A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		A9ED79F42877753800B95821 /* BTTStreamDeckPluginCPUUsage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9ED79FE2877753800B95821 /* Build configuration list for PBXNativeTarget "BTTStreamDeckPluginCPUUsage" */;
+			buildPhases = (
+				A9ED79F72877753800B95821 /* Sources */,
+				A9ED79F92877753800B95821 /* Frameworks */,
+				A9ED79FB2877753800B95821 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9ED79F52877753800B95821 /* PBXTargetDependency */,
+			);
+			name = BTTStreamDeckPluginCPUUsage;
+			productName = BTTTouchBarSampleCustomButton;
+			productReference = A9ED7A012877753800B95821 /* BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -636,14 +545,6 @@
 							};
 						};
 					};
-					A9454BD322BE1E3500055860 = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = A9454BBD22BE1E3300055860;
-					};
-					A9454BDE22BE1E3500055860 = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = A9454BBD22BE1E3300055860;
-					};
 					A9454BF422BE1E7D00055860 = {
 						CreatedOnToolsVersion = 10.2.1;
 						LastSwiftMigration = 1020;
@@ -658,10 +559,6 @@
 					};
 					A9454C4922BE69BA00055860 = {
 						CreatedOnToolsVersion = 10.2.1;
-					};
-					A9454C5122BE69BA00055860 = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = A9454BBD22BE1E3300055860;
 					};
 					A9DC034423D4AEB900C0E704 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -683,14 +580,12 @@
 			projectRoot = "";
 			targets = (
 				A9454BBD22BE1E3300055860 /* BetterTouchToolPluginDevelopment */,
-				A9454BD322BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests */,
-				A9454BDE22BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests */,
 				A9454BF422BE1E7D00055860 /* BTTTouchBarSampleCustomButton */,
 				A9454BFE22BE1E9900055860 /* BTTTouchBarPluginSampleCustomView */,
 				A9454C0822BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
-				A9454C4922BE69BA00055860 /* BTTPluginSupport */,
-				A9454C5122BE69BA00055860 /* BTTPluginSupportTests */,
 				A9DC034423D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
+				A9ED79F42877753800B95821 /* BTTStreamDeckPluginCPUUsage */,
+				A9454C4922BE69BA00055860 /* BTTPluginSupport */,
 			);
 		};
 /* End PBXProject section */
@@ -702,20 +597,6 @@
 			files = (
 				A9454BC822BE1E3500055860 /* Assets.xcassets in Resources */,
 				A9454BCB22BE1E3500055860 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BD222BE1E3500055860 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BDD22BE1E3500055860 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -753,19 +634,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9454C5022BE69BA00055860 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A9DC034323D4AEB900C0E704 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A9DC035023D4B3A100C0E704 /* icon.png in Resources */,
 				A9DC035123D4B3A100C0E704 /* icon@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9ED79FB2877753800B95821 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9ED7A092877767300B95821 /* icon@2x.png in Resources */,
+				A9ED7A082877767300B95821 /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,22 +664,6 @@
 				A9454BCE22BE1E3500055860 /* main.m in Sources */,
 				A9454BC322BE1E3300055860 /* AppDelegate.m in Sources */,
 				A9454C4422BE324900055860 /* DemoTouchBarViewController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BD022BE1E3500055860 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9454BD922BE1E3500055860 /* BetterTouchToolPluginDevelopmentTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9454BDB22BE1E3500055860 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9454BE422BE1E3500055860 /* BetterTouchToolPluginDevelopmentUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,14 +701,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9454C4E22BE69BA00055860 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9454C5A22BE69BA00055860 /* BTTPluginSupportTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A9DC034123D4AEB900C0E704 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -850,19 +709,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A9ED79F72877753800B95821 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9D31E5E287823450073D6A4 /* MyCpuUsage.swift in Sources */,
+				A9ED7A052877762F00B95821 /* CPUUsagePlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A9454BD622BE1E3500055860 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A9454BBD22BE1E3300055860 /* BetterTouchToolPluginDevelopment */;
-			targetProxy = A9454BD522BE1E3500055860 /* PBXContainerItemProxy */;
-		};
-		A9454BE122BE1E3500055860 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A9454BBD22BE1E3300055860 /* BetterTouchToolPluginDevelopment */;
-			targetProxy = A9454BE022BE1E3500055860 /* PBXContainerItemProxy */;
-		};
 		A9454C1A22BE1FEA00055860 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A9454BF422BE1E7D00055860 /* BTTTouchBarSampleCustomButton */;
@@ -877,16 +735,6 @@
 			isa = PBXTargetDependency;
 			target = A9454C0822BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */;
 			targetProxy = A9454C1D22BE1FF000055860 /* PBXContainerItemProxy */;
-		};
-		A9454C5522BE69BA00055860 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
-			targetProxy = A9454C5422BE69BA00055860 /* PBXContainerItemProxy */;
-		};
-		A9454C5722BE69BA00055860 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A9454BBD22BE1E3300055860 /* BetterTouchToolPluginDevelopment */;
-			targetProxy = A9454C5622BE69BA00055860 /* PBXContainerItemProxy */;
 		};
 		A9454C5E22BE69BA00055860 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -912,6 +760,11 @@
 			isa = PBXTargetDependency;
 			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
 			targetProxy = A9DC035423D4B59200C0E704 /* PBXContainerItemProxy */;
+		};
+		A9ED79F52877753800B95821 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
+			targetProxy = A9ED79F62877753800B95821 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1069,80 +922,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BetterTouchToolPluginDevelopment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		A9454BEC22BE1E3500055860 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BetterTouchToolPluginDevelopmentTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BetterTouchToolPluginDevelopmentTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetterTouchToolPluginDevelopment.app/Contents/MacOS/BetterTouchToolPluginDevelopment";
-			};
-			name = Debug;
-		};
-		A9454BED22BE1E3500055860 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BetterTouchToolPluginDevelopmentTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BetterTouchToolPluginDevelopmentTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetterTouchToolPluginDevelopment.app/Contents/MacOS/BetterTouchToolPluginDevelopment";
-			};
-			name = Release;
-		};
-		A9454BEF22BE1E3500055860 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BetterTouchToolPluginDevelopmentUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BetterTouchToolPluginDevelopmentUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = BetterTouchToolPluginDevelopment;
-			};
-			name = Debug;
-		};
-		A9454BF022BE1E3500055860 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BetterTouchToolPluginDevelopmentUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BetterTouchToolPluginDevelopmentUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = BetterTouchToolPluginDevelopment;
 			};
 			name = Release;
 		};
@@ -1347,42 +1126,6 @@
 			};
 			name = Release;
 		};
-		A9454C6622BE69BA00055860 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BTTPluginSupportTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BTTPluginSupportTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetterTouchToolPluginDevelopment.app/Contents/MacOS/BetterTouchToolPluginDevelopment";
-			};
-			name = Debug;
-		};
-		A9454C6722BE69BA00055860 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = DAFVSXZ82P;
-				INFOPLIST_FILE = BTTPluginSupportTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hegenberg.BTTPluginSupportTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetterTouchToolPluginDevelopment.app/Contents/MacOS/BetterTouchToolPluginDevelopment";
-			};
-			name = Release;
-		};
 		A9DC034923D4AEB900C0E704 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1432,6 +1175,57 @@
 			};
 			name = Release;
 		};
+		A9ED79FF2877753800B95821 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTStreamDeckPluginCPUUsage/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.sd.cpuusage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTStreamDeckPluginCPUUsage/BTTStreamDeckPluginCPUUsage-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttstreamdeckplugin;
+			};
+			name = Debug;
+		};
+		A9ED7A002877753800B95821 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTStreamDeckPluginCPUUsage/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.sd.cpuusage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTStreamDeckPluginCPUUsage/BTTStreamDeckPluginCPUUsage-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttstreamdeckplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1449,24 +1243,6 @@
 			buildConfigurations = (
 				A9454BE922BE1E3500055860 /* Debug */,
 				A9454BEA22BE1E3500055860 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A9454BEB22BE1E3500055860 /* Build configuration list for PBXNativeTarget "BetterTouchToolPluginDevelopmentTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A9454BEC22BE1E3500055860 /* Debug */,
-				A9454BED22BE1E3500055860 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A9454BEE22BE1E3500055860 /* Build configuration list for PBXNativeTarget "BetterTouchToolPluginDevelopmentUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A9454BEF22BE1E3500055860 /* Debug */,
-				A9454BF022BE1E3500055860 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1507,20 +1283,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A9454C6522BE69BA00055860 /* Build configuration list for PBXNativeTarget "BTTPluginSupportTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A9454C6622BE69BA00055860 /* Debug */,
-				A9454C6722BE69BA00055860 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		A9DC034823D4AEB900C0E704 /* Build configuration list for PBXNativeTarget "BTTDisplayNotificationActionPlugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A9DC034923D4AEB900C0E704 /* Debug */,
 				A9DC034A23D4AEB900C0E704 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9ED79FE2877753800B95821 /* Build configuration list for PBXNativeTarget "BTTStreamDeckPluginCPUUsage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9ED79FF2877753800B95821 /* Debug */,
+				A9ED7A002877753800B95821 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
