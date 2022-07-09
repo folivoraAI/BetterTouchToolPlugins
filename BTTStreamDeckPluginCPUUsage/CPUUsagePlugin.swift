@@ -93,7 +93,7 @@ import AppKit
         return groupItem;
     }
     
-    class func defaultConfiguration() -> [AnyHashable : Any]! {
+    class func defaultConfiguration() -> [AnyHashable : Any] {
         return [
                 "BTTStreamDeckImageHeight" : 30,
                 "BTTStreamDeckCornerRadius" : 12,

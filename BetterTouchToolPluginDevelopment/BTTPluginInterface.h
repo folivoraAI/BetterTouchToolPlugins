@@ -38,7 +38,7 @@
 
 // Return a dictionary with default configuation items here.
 // (the ones you get when copying a trigger in BTT and looking at the BTTTriggerConfig object)
-+(NSDictionary*)defaultConfiguration;
++( NSDictionary* _Nonnull )defaultConfiguration;
 
 /*
  * NOTE: NOT YET SUPPORTED

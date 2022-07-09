@@ -16,6 +16,8 @@ Plugins that
 
 This repository contains basic example plugins for all three of these types.
 
+
+
 ## Touch Bar Plugin Requirements
 
 A BetterTouchTool Touch Bar plugin must fulfil these requirements:
@@ -54,4 +56,31 @@ To see the plugin bundles, select the "Products" group in the XCode side-bar - y
 
 You can install the plugins into BTT by double-clicking them or by copying them to ~/Library/Application Support/BetterTouchTool/Plugins
 You can configure these plugins in BetterTouchTool - they will be listed under "Touch Bar Plugins" in the Touch Bar widget selector popover. Action plugins will appear in the standard action selector popup.
+
+## Distributing Plugins
+
+If you want to distribute plugins to other users, you must notarize them - otherwise they will not run. You need an Apple developer account to do this.
+Here a full build & notarize example:
+
+### 1 Build/Archive
+xcodebuild archive -scheme BTTStreamDeckPluginCPUUsage  -configuration Release -archivePath ./build/streamdeckcpuusage.xcarchive
+cd build/streamdeckcpuusage.xcarchive/Products/Library/Bundles/
+
+### 2 Code Sign with Developer ID Application (replace with your IDs)
+codesign --deep -s "Developer ID Application: folivora.AI GmbH (DAFVSXZ82P)" -f BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin
+
+### 3 Zip Up For Notarization
+ditto -c -k --keepParent --rsrc BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin.notarize.zip
+
+### 4 Send for Notarization (this references an application specific password for my Apple Account from the keychain)
+xcrun altool --notarize-app --primary-bundle-id "com.folivora.sd.cpuusage" --username "your.developer.account.email@gmail.com" --password "@keychain:notarization" --file BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin.notarize.zip
+
+### 5 Staple Notarization Info
+xcrun stapler staple BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin
+
+
+### 6 Zip for Shipping to Others
+ditto -c -k --keepParent --rsrc BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin.zip
+
+
 
