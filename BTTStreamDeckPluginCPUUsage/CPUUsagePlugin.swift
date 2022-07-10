@@ -71,23 +71,6 @@ import AppKit
         titleField.formFieldType = BTTFormTypeTitleField;
         titleField.formLabel1 = "CPU Load Example Widget (no further config available yet)";
         
-//        // here we create a text field, we will receive the
-//        // current value in didReceiveNewConfigurationValues
-//        let textField = BTTPluginFormItem.init();
-//        textField.formFieldType = BTTFormTypeTextField;
-//        textField.formLabel1 = "Custom Widget Name";
-//        // the id must stat with plugin_var_ (will be added automatically if necessary)
-//        textField.formFieldID = "plugin_var_widgetName";
-//
-//        // here we create a checkbox, we will receive the
-//        // current value in didReceiveNewConfigurationValues
-//        let checkbox = BTTPluginFormItem.init();
-//        checkbox.formFieldType = BTTFormTypeCheckbox;
-//        checkbox.formLabel1 = "Some Checkbox";
-//        // the id must stat with plugin_var_ (will be added automatically if necessary)
-//        checkbox.formFieldID = "plugin_var_someCheckboxValue";
-        
-        
         groupItem.formOptions = [titleField /*, textField, checkbox*/];
         
         return groupItem;
@@ -109,7 +92,6 @@ import AppKit
                 "BTTStreamDeckAlternateBackgroundColor" : "157.000006, 68.000004, 184.000004, 255.000000",
                 "BTTStreamDeckAttributedTitle" : "cnRmZAAAAAADAAAAAgAAAAcAAABUWFQucnRmAQAAAC6EAQAAKwAAAAEAAAB8AQAAe1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcY29jb2FydGYyNjM4Clxjb2NvYXRleHRzY2FsaW5nMFxjb2NvYXBsYXRmb3JtMHtcZm9udHRibFxmMFxmbmlsXGZjaGFyc2V0MTI5IEJNSEFOTkFQcm9PVEY7fQp7XGNvbG9ydGJsO1xyZWQyNTVcZ3JlZW4yNTVcYmx1ZTI1NTtccmVkMjU1XGdyZWVuMjU1XGJsdWUyNTU7fQp7XCpcZXhwYW5kZWRjb2xvcnRibDs7XGNzc3JnYlxjMTAwMDAwXGMxMDAwMDBcYzEwMDAwMDt9ClxwYXJkXHR4NTYwXHR4MTEyMFx0eDE2ODBcdHgyMjQwXHR4MjgwMFx0eDMzNjBcdHgzOTIwXHR4NDQ4MFx0eDUwNDBcdHg1NjAwXHR4NjE2MFx0eDY3MjBccGFyZGlybmF0dXJhbFxxY1xwYXJ0aWdodGVuZmFjdG9yMAoKXGYwXGJcZnM4OCBcY2YyIDk5JX0BAAAAIwAAAAEAAAAHAAAAVFhULnJ0ZhAAAADEfMlitgEAAAAAAAAAAAAA",
                 "BTTStreamDeckAlternateCornerRadius" : 12,
-                "plugin_var_widgetName" : "fsdf",
                 "BTTStreamDeckIconColor3" : "255, 255, 255, 255"
           
         ]
