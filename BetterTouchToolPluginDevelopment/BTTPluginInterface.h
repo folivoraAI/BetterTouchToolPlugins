@@ -38,7 +38,7 @@
 
 // Return a dictionary with default configuation items here.
 // (the ones you get when copying a trigger in BTT and looking at the BTTTriggerConfig object)
-+( NSDictionary* _Nonnull )defaultConfiguration;
++(NSDictionary* _Nullable)defaultConfiguration;
 
 /*
  * NOTE: NOT YET SUPPORTED
@@ -121,13 +121,20 @@
 // (as defined in the form you returned via configurationFormItems)
 -(void)didReceiveNewConfigurationValues:(NSDictionary* _Nonnull)configurationValues;
 
+
+// If you return more than one button you need to return an array of
+// strings that identify the buttons in the same order as returned from
+// widgetTitleStrings, widgetAttributedTitleStrings, widgetDictionaries or
+// widgetImages
+-(NSArray<NSString*>* _Nullable)buttonIdentifiers;
+
 // called when the user presses the button down.
 // return true to cancel assigned BTT actions.
--(BOOL)buttonDown:(NSInteger)index;
+-(BOOL)buttonDown:( NSString* _Nullable )identifier;
 
 // called when the user releases the button
 // return true to cancel assigned BTT actions.
--(BOOL)buttonUp:(NSInteger)index;
+-(BOOL)buttonUp:(NSInteger)identifier;
 @end
 
 
@@ -211,7 +218,7 @@
 
 // MARK: Execute this action
 // This will be called if the user has triggered the action through some trigger in BTT.
--(void)executeActionWithConfiguration:(NSDictionary* _Nullable)configurationValues completionBlock:(void (^)(_Nullable id))actionExecutedWithResult;
+-(void)executeActionWithConfiguration:(NSDictionary* _Nullable)configurationValues completionBlock:(void (^_Nullable)(_Nullable id))actionExecutedWithResult;
 
 @optional
 // by default the action name is specified in the info.plist, in case you want

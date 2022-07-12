@@ -3,10 +3,21 @@
 # BetterTouchTool Plugins
 
 This repository will contain examples on how to create BetterTouchTool plugins. 
-Starting with version 3.086 BetterTouchTool supports Touch Bar plugins. Soon there will also be other types of plugins (e.g. action plugins)
+Starting with version 3.818 BetterTouchTool supports Touch Bar, Stream Deck and Action plugins. 
 
+Plugins are installed at this location: /Library/Application Support/BetterTouchTool/Plugins
 
-## Touch Bar Plugin Development
+## Stream Deck Plugins
+Currently there are three types of Stream Deck plugins:
+Plugins that
+* return an array of strings which will be rendered using the appearance settings configured by the user in BetterTouchTool
+* return an array of attributed strings which will be rendered
+* return an array of dictionaries that describe what shall be rendered
+* return an array of ready rendered nsimages
+
+The CPU Usage example in this repo uses the first option and just returns a simple string, which is then rendered in BTT.
+
+## Touch Bar Plugins
 
 Currently there are three types of Touch Bar plugins:
 Plugins that
