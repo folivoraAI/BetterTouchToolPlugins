@@ -1,5 +1,3 @@
-# Note: This is experimental, the API may still change. You need BTT alpha 3.086 or later to run the plugins.
-
 # BetterTouchTool Plugins
 
 This repository will contain examples on how to create BetterTouchTool plugins. 
