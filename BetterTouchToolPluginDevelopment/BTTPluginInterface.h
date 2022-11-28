@@ -12,10 +12,9 @@
 
 
 @protocol BTTStreamDeckPluginDelegate
-
+-(void)executeNamedTrigger:(NSString* _Nonnull)triggerName withReply:(void (^_Nullable)(id _Nullable ))reply;
 -(void)executeAssignedBTTActions:(id _Nonnull )sender;
 -(void)requestUpdate:(id _Nonnull )sender;
-
 @end
 
 

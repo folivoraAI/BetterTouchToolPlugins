@@ -33,9 +33,13 @@ import AppKit
     // we just return a string with the current cpu usage
     // and make use of the default styling defined by the user
     func widgetTitleStrings() -> [String]? {
-        return [displayString]
+        return [displayString];
     }
     
+    func buttonIdentifiers() -> [String]? {
+        return ["cpuUsage"];
+    }
+
     
     /*
      Alternatively these could be used:
