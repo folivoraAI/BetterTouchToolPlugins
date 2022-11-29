@@ -12,8 +12,16 @@
 
 
 @protocol BTTStreamDeckPluginDelegate
+
+// This allows to trigger a named trigger which the user has configured in BTT
 -(void)executeNamedTrigger:(NSString* _Nonnull)triggerName withReply:(void (^_Nullable)(id _Nullable ))reply;
+
+// This allows to trigger any of BTT's script commands see http://docs.folivora.ai/docs/1102_apple_script.html
+-(id _Nullable )executeScriptCommand:(NSString* _Nonnull)command withParameters:(NSDictionary* _Nullable)args asyncReply:(void (^_Nullable)(id _Nullable))asyncReply;
+
+// This will execute the actions the user has assigned to your plugin.
 -(void)executeAssignedBTTActions:(id _Nonnull )sender;
+
 -(void)requestUpdate:(id _Nonnull )sender;
 @end
 
