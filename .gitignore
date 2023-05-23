@@ -1,0 +1,3 @@
+# Specify filepatterns you want git to ignore.
+node_modules
+.DS_Store
