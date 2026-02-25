@@ -99,7 +99,9 @@ class HelloWidget: NSObject, BTTFloatingMenuWidgetInterface {
 
 ### Floating Menu Widget Example (SwiftUI)
 
-Floating menu widgets can use SwiftUI — just wrap your SwiftUI view in an `NSHostingView`:
+Floating menu widgets can use SwiftUI — just wrap your SwiftUI view in an `NSHostingView`.
+
+If your widget contains interactive controls (buttons, sliders, text fields, etc.), return `true` from `widgetWantsInteractiveView()` so BTT doesn't intercept clicks:
 
 ```swift
 // BTT-Plugin-Name: Timer Widget
@@ -115,6 +117,9 @@ class TimerWidget: NSObject, BTTFloatingMenuWidgetInterface {
     static func widgetName() -> String { "Timer Widget" }
     static func widgetDescription() -> String { "A simple countdown timer" }
     static func widgetIcon() -> String { "timer" }
+
+    // Allow buttons inside the widget to receive clicks
+    static func widgetWantsInteractiveView() -> Bool { true }
 
     func makeWidgetView() -> NSView {
         return NSHostingView(rootView: TimerView())
@@ -300,6 +305,9 @@ Touch Bar delegate methods:
 ### Floating Menu Widget Plugins
 
 Must implement `makeWidgetView` returning an NSView.
+
+Optional class methods:
+- `widgetWantsInteractiveView` — Return `true` if the widget contains its own interactive controls (buttons, sliders, etc.). This tells BTT not to intercept mouse events on the widget, allowing clicks to reach your controls. Default is `false`.
 
 Widget delegate methods:
 - `executeAssignedBTTActions:` — Execute assigned BTT actions
