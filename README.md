@@ -80,6 +80,10 @@ class HelloWidget: NSObject, BTTFloatingMenuWidgetInterface {
     static func widgetDescription() -> String { "A simple greeting widget" }
     static func widgetIcon() -> String { "hand.wave.fill" }
 
+    // Override the menu item's configured size (optional)
+    static func widgetMinWidth() -> CGFloat { 200 }
+    static func widgetMinHeight() -> CGFloat { 80 }
+
     func makeWidgetView() -> NSView {
         let label = NSTextField(labelWithString: "Hello from BTT!")
         label.font = .systemFont(ofSize: 24, weight: .medium)
@@ -120,6 +124,12 @@ class TimerWidget: NSObject, BTTFloatingMenuWidgetInterface {
 
     // Allow buttons inside the widget to receive clicks
     static func widgetWantsInteractiveView() -> Bool { true }
+
+    // Override the menu item's configured size (optional)
+    static func widgetMinWidth() -> CGFloat { 250 }
+    static func widgetMinHeight() -> CGFloat { 150 }
+    static func widgetMaxWidth() -> CGFloat { 300 }
+    static func widgetMaxHeight() -> CGFloat { 200 }
 
     func makeWidgetView() -> NSView {
         return NSHostingView(rootView: TimerView())
@@ -308,6 +318,7 @@ Must implement `makeWidgetView` returning an NSView.
 
 Optional class methods:
 - `widgetWantsInteractiveView` — Return `true` if the widget contains its own interactive controls (buttons, sliders, etc.). This tells BTT not to intercept mouse events on the widget, allowing clicks to reach your controls. Default is `false`.
+- `widgetMinWidth`, `widgetMinHeight`, `widgetMaxWidth`, `widgetMaxHeight` — Return a `CGFloat` value greater than 0 to override the menu item's configured size. Not implementing a method or returning 0 means "use the item's configured default".
 
 Widget delegate methods:
 - `executeAssignedBTTActions:` — Execute assigned BTT actions
