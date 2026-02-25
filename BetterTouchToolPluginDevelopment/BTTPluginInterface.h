@@ -209,6 +209,46 @@
 
 @end
 
+// MARK: - Floating Menu Widget Plugin
+
+@protocol BTTFloatingMenuWidgetDelegate
+-(void)executeAssignedBTTActions:(id _Nonnull)sender;
+-(void)requestWidgetUpdate:(id _Nonnull)sender;
+-(void)setVariable:(NSString* _Nonnull)name value:(id _Nonnull)value;
+-(nullable id)getVariable:(NSString* _Nonnull)name;
+-(void)executeNamedTrigger:(NSString* _Nonnull)triggerName;
+// Execute a plugin-defined action category (use tags 1000+)
+-(void)executeActionCategory:(NSInteger)category forSender:(id _Nonnull)sender;
+@end
+
+@protocol BTTFloatingMenuWidgetInterface <NSObject>
+@optional
+@property (nullable, weak) id<BTTFloatingMenuWidgetDelegate> delegate;
+
+// Metadata
++(NSString* _Nonnull)widgetName;
++(NSString* _Nonnull)widgetDescription;
++(NSString* _Nonnull)widgetIcon; // SF Symbol name
+
+// Configuration
++(BTTPluginFormItem* _Nullable)configurationFormItems;
+-(void)didReceiveNewConfigurationValues:(NSDictionary* _Nullable)configurationValues;
+
+// View creation — must return an NSView (typically NSHostingView wrapping SwiftUI)
+-(NSView* _Nonnull)makeWidgetView;
+
+// Lifecycle
+-(void)widgetDidAppear;
+-(void)widgetWillDisappear;
+
+// Additional action categories provided by this widget plugin.
+// Return array of dicts with keys: CategoryActionName (NSString), CategoryTag (NSNumber, use 1000+),
+// CategoryColor (NSColor, optional), CategoryIconName (NSString SF Symbol, optional)
++(NSArray<NSDictionary*>* _Nullable)additionalActionCategories;
+@end
+
+// MARK: - Action Plugin
+
 @protocol BTTActionPluginDelegate
 
 // doesn't have any functionality yet

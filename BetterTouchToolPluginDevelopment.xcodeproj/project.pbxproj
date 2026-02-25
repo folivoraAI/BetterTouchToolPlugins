@@ -42,6 +42,9 @@
 		A9ED7A052877762F00B95821 /* CPUUsagePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ED7A042877762F00B95821 /* CPUUsagePlugin.swift */; };
 		A9ED7A082877767300B95821 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ED7A062877767300B95821 /* icon.png */; };
 		A9ED7A092877767300B95821 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9ED7A072877767300B95821 /* icon@2x.png */; };
+		CC0001012AFE25B200000001 /* SampleClockWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0001092AFE25B200000009 /* SampleClockWidget.swift */; };
+		CC0001022AFE25B200000002 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
+		CC0001032AFE25B200000003 /* BTTPluginSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +125,20 @@
 			remoteGlobalIDString = A9454C4922BE69BA00055860;
 			remoteInfo = BTTPluginSupport;
 		};
+		CC0001042AFE25B200000004 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9454C4922BE69BA00055860;
+			remoteInfo = BTTPluginSupport;
+		};
+		CC0001052AFE25B200000005 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9454BB622BE1E3300055860 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC0001132AFE25B200000013;
+			remoteInfo = BTTSampleFloatingMenuWidget;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -143,6 +160,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A9DC035323D4B59200C0E704 /* BTTPluginSupport.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC0001062AFE25B200000006 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CC0001032AFE25B200000003 /* BTTPluginSupport.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,6 +232,10 @@
 		A9ED7A062877767300B95821 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		A9ED7A072877767300B95821 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		A9ED7A0A287776E100B95821 /* BTTStreamDeckPluginCPUUsage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTStreamDeckPluginCPUUsage-Bridging-Header.h"; sourceTree = "<group>"; };
+		CC0001072AFE25B200000007 /* BTTSampleFloatingMenuWidget.bttwidget */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BTTSampleFloatingMenuWidget.bttwidget; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC0001082AFE25B200000008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC0001092AFE25B200000009 /* SampleClockWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleClockWidget.swift; sourceTree = "<group>"; };
+		CC0001102AFE25B200000010 /* BTTSampleFloatingMenuWidget-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BTTSampleFloatingMenuWidget-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +294,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC0001112AFE25B200000011 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC0001022AFE25B200000002 /* BTTPluginSupport.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -274,6 +314,7 @@
 				A9454C0022BE1E9900055860 /* BTTTouchBarPluginSampleCustomView */,
 				A9454C0A22BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
 				A9DC034623D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
+				CC0001122AFE25B200000012 /* BTTSampleFloatingMenuWidget */,
 				A9454C4B22BE69BA00055860 /* BTTPluginSupport */,
 				A9454BBF22BE1E3300055860 /* Products */,
 				A9454C7022BE6A2200055860 /* Frameworks */,
@@ -290,6 +331,7 @@
 				A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */,
 				A9DC034523D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin.bttactionplugin */,
 				A9ED7A012877753800B95821 /* BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin */,
+				CC0001072AFE25B200000007 /* BTTSampleFloatingMenuWidget.bttwidget */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -397,6 +439,16 @@
 			path = BTTStreamDeckPluginCPUUsage;
 			sourceTree = "<group>";
 		};
+		CC0001122AFE25B200000012 /* BTTSampleFloatingMenuWidget */ = {
+			isa = PBXGroup;
+			children = (
+				CC0001082AFE25B200000008 /* Info.plist */,
+				CC0001092AFE25B200000009 /* SampleClockWidget.swift */,
+				CC0001102AFE25B200000010 /* BTTSampleFloatingMenuWidget-Bridging-Header.h */,
+			);
+			path = BTTSampleFloatingMenuWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -423,6 +475,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CC0001172AFE25B200000017 /* PBXTargetDependency */,
 				A9C1C5CB287A27A500A78C42 /* PBXTargetDependency */,
 				A9C1C5C9287A273E00A78C42 /* PBXTargetDependency */,
 				A9454C1E22BE1FF000055860 /* PBXTargetDependency */,
@@ -544,6 +597,25 @@
 			productReference = A9ED7A012877753800B95821 /* BTTStreamDeckPluginCPUUsage.bttstreamdeckplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		CC0001132AFE25B200000013 /* BTTSampleFloatingMenuWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC0001202AFE25B200000020 /* Build configuration list for PBXNativeTarget "BTTSampleFloatingMenuWidget" */;
+			buildPhases = (
+				CC0001152AFE25B200000015 /* Sources */,
+				CC0001112AFE25B200000011 /* Frameworks */,
+				CC0001142AFE25B200000014 /* Resources */,
+				CC0001062AFE25B200000006 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC0001162AFE25B200000016 /* PBXTargetDependency */,
+			);
+			name = BTTSampleFloatingMenuWidget;
+			productName = BTTSampleFloatingMenuWidget;
+			productReference = CC0001072AFE25B200000007 /* BTTSampleFloatingMenuWidget.bttwidget */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -580,6 +652,10 @@
 						CreatedOnToolsVersion = 11.3.1;
 						LastSwiftMigration = 1130;
 					};
+					CC0001132AFE25B200000013 = {
+						CreatedOnToolsVersion = 15.0;
+						LastSwiftMigration = 1500;
+					};
 				};
 			};
 			buildConfigurationList = A9454BB922BE1E3300055860 /* Build configuration list for PBXProject "BetterTouchToolPluginDevelopment" */;
@@ -601,6 +677,7 @@
 				A9454C0822BE1EC600055860 /* BTTTouchBarPluginSampleCustomString */,
 				A9DC034423D4AEB900C0E704 /* BTTDisplayNotificationActionPlugin */,
 				A9ED79F42877753800B95821 /* BTTStreamDeckPluginCPUUsage */,
+				CC0001132AFE25B200000013 /* BTTSampleFloatingMenuWidget */,
 				A9454C4922BE69BA00055860 /* BTTPluginSupport */,
 			);
 		};
@@ -665,6 +742,13 @@
 			files = (
 				A9ED7A092877767300B95821 /* icon@2x.png in Resources */,
 				A9ED7A082877767300B95821 /* icon.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC0001142AFE25B200000014 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,6 +818,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC0001152AFE25B200000015 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC0001012AFE25B200000001 /* SampleClockWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -791,6 +883,16 @@
 			isa = PBXTargetDependency;
 			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
 			targetProxy = A9ED79F62877753800B95821 /* PBXContainerItemProxy */;
+		};
+		CC0001162AFE25B200000016 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9454C4922BE69BA00055860 /* BTTPluginSupport */;
+			targetProxy = CC0001042AFE25B200000004 /* PBXContainerItemProxy */;
+		};
+		CC0001172AFE25B200000017 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC0001132AFE25B200000013 /* BTTSampleFloatingMenuWidget */;
+			targetProxy = CC0001052AFE25B200000005 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1267,6 +1369,55 @@
 			};
 			name = Release;
 		};
+		CC0001182AFE25B200000018 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTSampleFloatingMenuWidget/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.BTTSampleFloatingMenuWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTSampleFloatingMenuWidget/BTTSampleFloatingMenuWidget-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttwidget;
+			};
+			name = Debug;
+		};
+		CC0001192AFE25B200000019 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = DAFVSXZ82P;
+				INFOPLIST_FILE = BTTSampleFloatingMenuWidget/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.folivora.BTTSampleFloatingMenuWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "BTTSampleFloatingMenuWidget/BTTSampleFloatingMenuWidget-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = bttwidget;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1338,6 +1489,15 @@
 			buildConfigurations = (
 				A9ED79FF2877753800B95821 /* Debug */,
 				A9ED7A002877753800B95821 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC0001202AFE25B200000020 /* Build configuration list for PBXNativeTarget "BTTSampleFloatingMenuWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC0001182AFE25B200000018 /* Debug */,
+				CC0001192AFE25B200000019 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
