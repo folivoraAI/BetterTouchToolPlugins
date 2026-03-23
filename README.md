@@ -1,6 +1,6 @@
 # BetterTouchTool Plugins
 
-BetterTouchTool supports four types of plugins: **Touch Bar**, **Stream Deck**, **Floating Menu Widget**, and **Action** plugins.
+BetterTouchTool supports five types of plugins: **Touch Bar**, **Stream Deck**, **Floating Menu Widget**, **Action**, and **Trigger** plugins.
 
 There are two ways to develop plugins:
 1. **Swift Source Plugins** (new) — Drop a single `.swift` file into the Plugins folder. BTT compiles and loads it automatically. No Xcode project required.
@@ -37,7 +37,7 @@ Add metadata comments at the top of your `.swift` file (all optional — default
 | `BTT-Plugin-Type` | Inferred from protocol conformance, or `FloatingMenuWidget` |
 | `BTT-Plugin-Icon` | None (SF Symbol name) |
 
-Supported `BTT-Plugin-Type` values: `FloatingMenuWidget`, `Action`, `StreamDeck`, `TouchBar`
+Supported `BTT-Plugin-Type` values: `FloatingMenuWidget`, `Action`, `StreamDeck`, `TouchBar`, `Trigger`
 
 ### How It Works
 
@@ -248,6 +248,134 @@ class ClockText: NSObject, BTTPluginInterface {
 }
 ```
 
+### Trigger Plugin Example
+
+Trigger plugins observe system events and fire BTT triggers when conditions are met. They appear in **Other Triggers > Trigger Plugins**.
+
+```swift
+// BTT-Plugin-Name: Clipboard Change
+// BTT-Plugin-Type: Trigger
+// BTT-Plugin-Icon: doc.on.clipboard
+
+import Cocoa
+
+class ClipboardChangeTrigger: NSObject, BTTTriggerPluginInterface {
+    weak var delegate: (any BTTTriggerPluginDelegate)?
+    private var timer: Timer?
+    private var lastChangeCount = NSPasteboard.general.changeCount
+
+    static func triggerName() -> String { "Clipboard Change" }
+    static func triggerDescription() -> String { "Fires when clipboard content changes" }
+    static func triggerIcon() -> String { "doc.on.clipboard" }
+    static func configurationFormItems() -> BTTPluginFormItem? { nil }
+    func didReceiveNewConfigurationValues(_ config: [String: Any]?) {}
+
+    func startObserving() {
+        lastChangeCount = NSPasteboard.general.changeCount
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            let current = NSPasteboard.general.changeCount
+            if current != self.lastChangeCount {
+                self.lastChangeCount = current
+                let content = NSPasteboard.general.string(forType: .string) ?? ""
+                self.delegate?.triggerFired(self, withContext: ["clipboardContent": content])
+            }
+        }
+    }
+
+    func stopObserving() {
+        timer?.invalidate()
+        timer = nil
+    }
+}
+```
+
+### Trigger Plugin Example (with Configuration)
+
+```swift
+// BTT-Plugin-Name: File Watcher
+// BTT-Plugin-Type: Trigger
+// BTT-Plugin-Icon: doc.badge.clock
+
+import Cocoa
+
+class FileWatcherTrigger: NSObject, BTTTriggerPluginInterface {
+    weak var delegate: (any BTTTriggerPluginDelegate)?
+    private var watchedPath: String = ""
+    private var fileDescriptor: Int32 = -1
+    private var dispatchSource: DispatchSourceFileSystemObject?
+
+    static func triggerName() -> String { "File Watcher" }
+    static func triggerDescription() -> String { "Fires when a file or folder changes" }
+    static func triggerIcon() -> String { "doc.badge.clock" }
+
+    static func configurationFormItems() -> BTTPluginFormItem? {
+        let group = BTTPluginFormItem()
+        group.formFieldType = BTTFormTypeFormGroup
+
+        let pathField = BTTPluginFormItem()
+        pathField.formFieldType = BTTFormTypeTextField
+        pathField.formFieldID = "plugin_var_watchPath"
+        pathField.formLabel1 = "Path to watch"
+        pathField.defaultValue = "~/Desktop" as NSString
+        pathField.dataType = .string
+
+        group.formOptions = [pathField]
+        return group
+    }
+
+    func didReceiveNewConfigurationValues(_ config: [String: Any]?) {
+        let newPath = (config?["plugin_var_watchPath"] as? String ?? "~/Desktop")
+            .replacingOccurrences(of: "~", with: NSHomeDirectory())
+        if newPath != watchedPath {
+            let wasObserving = dispatchSource != nil
+            if wasObserving { stopObserving() }
+            watchedPath = newPath
+            if wasObserving { startObserving() }
+        }
+    }
+
+    func startObserving() {
+        guard !watchedPath.isEmpty else { return }
+        fileDescriptor = open(watchedPath, O_EVTONLY)
+        guard fileDescriptor >= 0 else { return }
+
+        let path = watchedPath
+        dispatchSource = DispatchSource.makeFileSystemObjectSource(
+            fileDescriptor: fileDescriptor,
+            eventMask: [.write, .delete, .rename, .attrib, .extend],
+            queue: .main
+        )
+        dispatchSource?.setEventHandler { [weak self] in
+            guard let self else { return }
+            self.delegate?.triggerFired(self, withContext: ["changedPath": path])
+        }
+        dispatchSource?.setCancelHandler { [weak self] in
+            guard let self else { return }
+            if self.fileDescriptor >= 0 { close(self.fileDescriptor); self.fileDescriptor = -1 }
+        }
+        dispatchSource?.resume()
+    }
+
+    func stopObserving() {
+        dispatchSource?.cancel()
+        dispatchSource = nil
+    }
+}
+```
+
+Trigger plugin lifecycle:
+1. BTT calls `startObserving()` when a trigger using this plugin is active for the current app
+2. Your plugin monitors events and calls `delegate?.triggerFired(self)` or `delegate?.triggerFired(self, withContext:)` when conditions are met
+3. BTT calls `stopObserving()` when the trigger is no longer needed (app change, trigger deleted, etc.)
+4. Context values passed to `triggerFired(_:withContext:)` become BTT variables with prefix `TriggerPlugin_`
+
+Trigger plugin delegate methods:
+- `triggerFired:` — Fire the trigger (no context)
+- `triggerFired:withContext:` — Fire with a context dictionary (values become BTT variables)
+- `setVariable:value:` — Set a BTT variable
+- `getVariable:` — Read a BTT variable
+
 ---
 
 ## Xcode Bundle Plugins
@@ -262,6 +390,7 @@ For more complex plugins with multiple source files, resources, or third-party d
 | Stream Deck | `.bttstreamdeckplugin` | `BTTStreamDeckPluginInterface` |
 | Floating Menu Widget | `.bttwidget` | `BTTFloatingMenuWidgetInterface` |
 | Action | `.bttactionplugin` | `BTTActionPluginInterface` |
+| Trigger | `.btttriggerplugin` | `BTTTriggerPluginInterface` |
 
 ### Info.plist Keys
 
@@ -271,7 +400,7 @@ Every plugin bundle's `Info.plist` must contain:
 |---|---|
 | `BTTPluginName` | Display name shown in BTT |
 | `BTTPluginIdentifier` | Unique reverse-domain identifier |
-| `BTTPluginType` | One of: `TouchBar`, `StreamDeck`, `FloatingMenuWidget`, `Action` |
+| `BTTPluginType` | One of: `TouchBar`, `StreamDeck`, `FloatingMenuWidget`, `Action`, `Trigger` |
 | `BTTPluginIcon` | SF Symbol name (optional) |
 | `NSPrincipalClass` | Fully qualified class name (`ModuleName.ClassName` for Swift) |
 
@@ -336,6 +465,18 @@ Action delegate methods:
 - `setVariable:value:` — Set a BTT variable
 - `getVariable:` — Read a BTT variable
 
+### Trigger Plugins
+
+Must implement `startObserving`, `stopObserving`, and the metadata class methods (`triggerName`, `triggerDescription`, `triggerIcon`).
+
+BTT controls the lifecycle — `startObserving` is called when triggers using this plugin are active, `stopObserving` when they're not. The plugin fires triggers by calling `delegate.triggerFired(self)` or `delegate.triggerFired(self, withContext:)`.
+
+Trigger delegate methods:
+- `triggerFired:` — Fire the trigger
+- `triggerFired:withContext:` — Fire with context (values become `TriggerPlugin_<key>` variables)
+- `setVariable:value:` — Set a BTT variable
+- `getVariable:` — Read a BTT variable
+
 ---
 
 ## Get Started (Xcode Bundle Plugins)
@@ -351,7 +492,7 @@ Action delegate methods:
 - **Drag and drop** a plugin bundle or `.swift` file onto the BTT preferences window
 - **Copy manually** to `/Library/Application Support/BetterTouchTool/Plugins/`
 
-Touch Bar and Stream Deck plugins appear in their respective widget selectors. Floating Menu Widget plugins appear in the widget picker. Action plugins appear in the standard action selector.
+Touch Bar and Stream Deck plugins appear in their respective widget selectors. Floating Menu Widget plugins appear in the widget picker. Action plugins appear in the standard action selector. Trigger plugins appear in **Other Triggers > Trigger Plugins**.
 
 ## Distributing Xcode Bundle Plugins
 
