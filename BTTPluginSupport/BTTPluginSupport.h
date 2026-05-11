@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "BTTPluginFormItem.h"
 #import "BTTFormConstants.h"
+#import "BTTLauncherPluginSupport.h"
 
 //! Project version number for BTTPluginSupport.
 FOUNDATION_EXPORT double BTTPluginSupportVersionNumber;
@@ -17,5 +18,4 @@ FOUNDATION_EXPORT double BTTPluginSupportVersionNumber;
 FOUNDATION_EXPORT const unsigned char BTTPluginSupportVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <BTTPluginSupport/PublicHeader.h>
-
 

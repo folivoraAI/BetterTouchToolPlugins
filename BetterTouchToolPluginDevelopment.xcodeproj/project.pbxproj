@@ -24,6 +24,10 @@
 		A9454C4122BE24E200055860 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A9454C3F22BE24E200055860 /* icon.png */; };
 		A9454C4422BE324900055860 /* DemoTouchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C4322BE324900055860 /* DemoTouchBarViewController.m */; };
 		A9454C5C22BE69BA00055860 /* BTTPluginSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = A9454C4C22BE69BA00055860 /* BTTPluginSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9F6B0062FBA000000000006 /* BTTPluginFormItem.h in Headers */ = {isa = PBXBuildFile; fileRef = A9454C2922BE204300055860 /* BTTPluginFormItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9F6B0072FBA000000000007 /* BTTFormConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = A9454C2A22BE204300055860 /* BTTFormConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9F6B0012FBA000000000001 /* BTTLauncherPluginSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = A9F6B0042FBA000000000004 /* BTTLauncherPluginSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9F6B0022FBA000000000002 /* BTTLauncherPluginSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F6B0052FBA000000000005 /* BTTLauncherPluginSupport.m */; };
 		A9454C5F22BE69BA00055860 /* BTTPluginSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; };
 		A9454C6022BE69BA00055860 /* BTTPluginSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A9454C6822BE69C700055860 /* BTTFormConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A9454C2822BE204300055860 /* BTTFormConstants.m */; };
@@ -217,6 +221,8 @@
 		A9454C4A22BE69BA00055860 /* BTTPluginSupport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BTTPluginSupport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9454C4C22BE69BA00055860 /* BTTPluginSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTTPluginSupport.h; sourceTree = "<group>"; };
 		A9454C4D22BE69BA00055860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9F6B0042FBA000000000004 /* BTTLauncherPluginSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTTLauncherPluginSupport.h; sourceTree = "<group>"; };
+		A9F6B0052FBA000000000005 /* BTTLauncherPluginSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTTLauncherPluginSupport.m; sourceTree = "<group>"; };
 		A9454C7422BE6B4F00055860 /* WindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		A9454C7522BE6B4F00055860 /* WindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WindowController.m; sourceTree = "<group>"; };
 		A9D31E5D287823450073D6A4 /* MyCpuUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCpuUsage.swift; sourceTree = "<group>"; };
@@ -401,6 +407,8 @@
 				A9454C2722BE204300055860 /* BTTPluginFormItem.m */,
 				A9454C2822BE204300055860 /* BTTFormConstants.m */,
 				A9454C2A22BE204300055860 /* BTTFormConstants.h */,
+				A9F6B0042FBA000000000004 /* BTTLauncherPluginSupport.h */,
+				A9F6B0052FBA000000000005 /* BTTLauncherPluginSupport.m */,
 				A9454C4C22BE69BA00055860 /* BTTPluginSupport.h */,
 				A9454C4D22BE69BA00055860 /* Info.plist */,
 			);
@@ -456,6 +464,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9F6B0072FBA000000000007 /* BTTFormConstants.h in Headers */,
+				A9F6B0062FBA000000000006 /* BTTPluginFormItem.h in Headers */,
+				A9F6B0012FBA000000000001 /* BTTLauncherPluginSupport.h in Headers */,
 				A9454C5C22BE69BA00055860 /* BTTPluginSupport.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -796,6 +807,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9F6B0022FBA000000000002 /* BTTLauncherPluginSupport.m in Sources */,
 				A9454C6922BE69C700055860 /* BTTPluginFormItem.m in Sources */,
 				A9454C6822BE69C700055860 /* BTTFormConstants.m in Sources */,
 			);

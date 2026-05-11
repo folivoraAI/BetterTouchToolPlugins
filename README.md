@@ -1,12 +1,14 @@
 # BetterTouchTool Plugins
 
-BetterTouchTool supports five types of plugins: **Touch Bar**, **Stream Deck**, **Floating Menu Widget**, **Action**, and **Trigger** plugins.
+BetterTouchTool supports six types of plugins: **Touch Bar**, **Stream Deck**, **Floating Menu Widget**, **Action**, **Trigger**, and **Launcher** plugins.
 
 There are two ways to develop plugins:
 1. **Swift Source Plugins** (new) — Drop a single `.swift` file into the Plugins folder. BTT compiles and loads it automatically. No Xcode project required.
 2. **Xcode Bundle Plugins** — Build a plugin bundle in Xcode with full control over project structure, multiple files, and third-party dependencies.
 
-Plugins are installed at: `/Library/Application Support/BetterTouchTool/Plugins`
+Plugins are loaded from both:
+- `~/Library/Application Support/BetterTouchTool/Plugins`
+- `/Library/Application Support/BetterTouchTool/Plugins`
 
 ---
 
@@ -37,11 +39,11 @@ Add metadata comments at the top of your `.swift` file (all optional — default
 | `BTT-Plugin-Type` | Inferred from protocol conformance, or `FloatingMenuWidget` |
 | `BTT-Plugin-Icon` | None (SF Symbol name) |
 
-Supported `BTT-Plugin-Type` values: `FloatingMenuWidget`, `Action`, `StreamDeck`, `TouchBar`, `Trigger`
+Supported `BTT-Plugin-Type` values: `FloatingMenuWidget`, `Action`, `StreamDeck`, `TouchBar`, `Trigger`, `Launcher`
 
 ### How It Works
 
-1. Drop your `.swift` file into `/Library/Application Support/BetterTouchTool/Plugins/`
+1. Drop your `.swift` file into either `~/Library/Application Support/BetterTouchTool/Plugins/` or `/Library/Application Support/BetterTouchTool/Plugins/`
 2. BTT detects the file and asks: *"Compile & Load?"*
 3. On approval, BTT compiles it with `swiftc` into a plugin bundle in the same folder
 4. The compiled bundle is loaded and the plugin becomes available
@@ -248,6 +250,56 @@ class ClockText: NSObject, BTTPluginInterface {
 }
 ```
 
+### Launcher Plugin Example
+
+Launcher plugins provide native results inside the launcher. They can return top-level items, child items, per-item commands with keyboard shortcuts, and optional native launcher surfaces.
+
+```swift
+// BTT-Plugin-Name: Demo Launcher Plugin
+// BTT-Plugin-Type: Launcher
+// BTT-Plugin-Icon: sparkles.rectangle.stack
+
+import Cocoa
+
+class DemoLauncherPlugin: NSObject, BTTLauncherPluginInterface {
+    weak var delegate: (any BTTLauncherPluginDelegate)?
+
+    static func launcherPluginName() -> String { "Demo Launcher Plugin" }
+    static func launcherPluginDescription() -> String { "Shows custom launcher results" }
+    static func launcherPluginIcon() -> String { "sparkles.rectangle.stack" }
+
+    func launcherResults(for context: BTTLauncherPluginContext) -> [BTTLauncherPluginResult]? {
+        let result = BTTLauncherPluginResult()
+        result.itemIdentifier = "demo-root"
+        result.title = "Launcher Plugin Demo"
+        result.subtitle = "Returned by a native launcher plugin"
+        result.systemImageName = "sparkles.rectangle.stack"
+        result.surfaceIdentifier = "demo-surface"
+        return [result]
+    }
+
+    func launcherSurface(
+        forItemIdentifier itemIdentifier: String,
+        surfaceIdentifier: String?,
+        context: BTTLauncherPluginContext
+    ) -> (any BTTLauncherPluginSurfaceInterface)? {
+        DemoLauncherSurface()
+    }
+}
+```
+
+If a result should open a rich launcher surface, set `surfaceIdentifier` on the `BTTLauncherPluginResult` and return a `BTTLauncherPluginSurfaceInterface` from `launcherSurface(...)`.
+
+Surface objects can:
+
+- provide an `NSView` via `makeLauncherSurfaceView()`
+- react to launcher query changes
+- request launcher-hosted refreshes via `delegate?.requestLauncherSurfaceUpdate()`
+- ask the launcher to go back or close
+- opt into pinning the launcher while the surface is visible via `launcherSurfaceKeepsLauncherPinned()`
+
+See [`BTTSampleLauncherPlugin/SampleLauncherPlugin.swift`](BTTSampleLauncherPlugin/SampleLauncherPlugin.swift) for a fuller example with child items, commands, keyboard shortcuts, variables, refresh requests, and a pinned native launcher panel.
+
 ### Trigger Plugin Example
 
 Trigger plugins observe system events and fire BTT triggers when conditions are met. They appear in **Other Triggers > Trigger Plugins**.
@@ -391,6 +443,7 @@ For more complex plugins with multiple source files, resources, or third-party d
 | Floating Menu Widget | `.bttwidget` | `BTTFloatingMenuWidgetInterface` |
 | Action | `.bttactionplugin` | `BTTActionPluginInterface` |
 | Trigger | `.btttriggerplugin` | `BTTTriggerPluginInterface` |
+| Launcher | `.bttlauncherplugin` | `BTTLauncherPluginInterface` |
 
 ### Info.plist Keys
 
@@ -400,7 +453,7 @@ Every plugin bundle's `Info.plist` must contain:
 |---|---|
 | `BTTPluginName` | Display name shown in BTT |
 | `BTTPluginIdentifier` | Unique reverse-domain identifier |
-| `BTTPluginType` | One of: `TouchBar`, `StreamDeck`, `FloatingMenuWidget`, `Action`, `Trigger` |
+| `BTTPluginType` | One of: `TouchBar`, `StreamDeck`, `FloatingMenuWidget`, `Action`, `Trigger`, `Launcher` |
 | `BTTPluginIcon` | SF Symbol name (optional) |
 | `NSPrincipalClass` | Fully qualified class name (`ModuleName.ClassName` for Swift) |
 
@@ -477,22 +530,42 @@ Trigger delegate methods:
 - `setVariable:value:` — Set a BTT variable
 - `getVariable:` — Read a BTT variable
 
+### Launcher Plugins
+
+Launcher plugins return native launcher rows, optional child items, per-item commands, and launcher-hosted surfaces.
+
+Main methods:
+- `launcherResultsForContext:` — Return launcher results for the current query/context
+- `performActionForItemIdentifier:actionIdentifier:context:` — Run a row or command action
+- `launcherSurfaceForItemIdentifier:surfaceIdentifier:context:` — Return a native launcher surface
+
+Launcher delegate methods:
+- `setVariable:value:` — Set a BTT variable
+- `getVariable:` — Read a BTT variable
+- `executeNamedTrigger:` — Execute a named trigger
+- `requestLauncherResultsRefresh` — Ask the launcher to rebuild the plugin's results
+
+Surface delegate methods:
+- `requestLauncherSurfaceUpdate` — Refresh the visible surface
+- `requestLauncherSurfaceGoBack` — Ask the launcher to leave the current surface
+- `requestLauncherSurfaceClose` — Ask the launcher to close
+
 ---
 
 ## Get Started (Xcode Bundle Plugins)
 
 1. Clone this project: `git clone git@github.com:folivoraAI/BetterTouchToolPlugins.git`
 2. Open the project in Xcode
-3. Run the project — it loads sample plugins and renders them to the Touch Bar
+3. Build one of the sample plugin targets (or your own plugin target)
 4. Find built bundles under the "Products" group in Xcode (right-click > Show in Finder)
 
 ## Installing Plugins
 
 - **Double-click** a plugin bundle (`.bttwidget`, `.bttactionplugin`, etc.) to install
 - **Drag and drop** a plugin bundle or `.swift` file onto the BTT preferences window
-- **Copy manually** to `/Library/Application Support/BetterTouchTool/Plugins/`
+- **Copy manually** to either `~/Library/Application Support/BetterTouchTool/Plugins/` or `/Library/Application Support/BetterTouchTool/Plugins/`
 
-Touch Bar and Stream Deck plugins appear in their respective widget selectors. Floating Menu Widget plugins appear in the widget picker. Action plugins appear in the standard action selector. Trigger plugins appear in **Other Triggers > Trigger Plugins**.
+Touch Bar and Stream Deck plugins appear in their respective widget selectors. Floating Menu Widget plugins appear in the widget picker. Action plugins appear in the standard action selector. Trigger plugins appear in **Other Triggers > Trigger Plugins**. Launcher plugins contribute rows to the Launcher's **Launcher Plugins** section.
 
 ## Distributing Xcode Bundle Plugins
 
