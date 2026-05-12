@@ -7,6 +7,12 @@ For most new plugins, use a single Swift source file. Drop the `.swift` file ont
 the BetterTouchTool preferences window, or copy it into the BetterTouchTool
 Plugins folder. BetterTouchTool will ask before compiling and loading it.
 
+## Official Documentation
+
+Read the [BetterTouchTool plugin documentation](https://docs.folivora.ai/docs/plugins/overview)
+for the complete plugin API overview, installation flow, and current development
+guidance.
+
 ## Repository Structure
 
 ```text
