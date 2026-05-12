@@ -103,11 +103,11 @@ The registry for these plugins lives in [plugins/index.json](plugins/index.json)
 
 ## Community Plugins
 
-`plugins/community` is intended for user-generated plugins submitted through pull
-requests. Each accepted plugin gets its own folder with source, metadata,
+`plugins/community` contains user-generated plugins submitted through pull
+requests. Each accepted plugin has its own folder with source, metadata,
 description, screenshots when useful, and safety notes.
 
-Suggested folder shape:
+Required folder shape:
 
 ```text
 plugins/community/launcher-my-plugin/
@@ -123,7 +123,7 @@ submission.
 
 ### Folder Naming
 
-Plugin folders should start with a type prefix:
+Plugin folders must start with a type prefix:
 
 - `launcher-` for launcher plugins
 - `floating-` for floating menu widget plugins
@@ -135,9 +135,9 @@ Plugin folders should start with a type prefix:
 ## Review And Whitelisting
 
 Native Swift plugins run inside BetterTouchTool's process, so community plugins
-should be reviewed before they are shown as trusted or installable.
+are reviewed before they are shown as trusted or installable.
 
-For this repository, "whitelisted" should mean:
+In this repository, "whitelisted" means:
 
 - the plugin was accepted into `plugins/community`
 - the plugin has a `plugin.json` manifest
@@ -145,7 +145,7 @@ For this repository, "whitelisted" should mean:
 - `reviewStatus` is `community-reviewed` or `official`
 - the plugin README documents privacy-sensitive behavior
 
-Recommended review checklist:
+Review checklist:
 
 - source code is readable and intentionally scoped
 - plugin identifier is unique and stable
@@ -161,7 +161,7 @@ review that makes the plugin suitable for discovery by BetterTouchTool users.
 
 ## Plugin Manifest
 
-Each plugin folder should include a `plugin.json` file:
+Each plugin folder must include a `plugin.json` file:
 
 ```json
 {
@@ -182,14 +182,14 @@ Each plugin folder should include a `plugin.json` file:
 }
 ```
 
-Suggested `reviewStatus` values:
+Allowed `reviewStatus` values:
 
 - `submitted`: used in pull requests before review
 - `community-reviewed`: accepted community plugin
 - `official`: maintained by the BetterTouchTool project
-- `deprecated`: kept for reference but no longer recommended
+- `deprecated`: kept for reference but hidden from normal discovery
 
-Suggested permission labels:
+Allowed permission labels:
 
 - `clipboard-read`
 - `clipboard-write`
@@ -213,7 +213,7 @@ Suggested permission labels:
 5. Add safety notes to the plugin README.
 6. Open a pull request.
 
-Pull requests should keep plugin code self-contained. If your plugin needs an
+Pull requests must keep plugin code self-contained. If your plugin needs an
 Xcode project, explain why and place it in a clearly named subfolder.
 
 ## Xcode Bundle Plugins
@@ -236,25 +236,7 @@ xcode-bundle-examples/BetterTouchToolPluginDevelopment.xcodeproj
 ```
 
 Bundle plugins are still useful, but the single-file Swift source plugin path is
-the recommended starting point for most users.
-
-## Distributing Bundle Plugins
-
-Plugins distributed as compiled bundles should be signed and notarized.
-
-```bash
-xcodebuild archive -scheme BTTStreamDeckPluginCPUUsage -configuration Release \
-  -archivePath ./build/streamdeckcpuusage.xcarchive
-
-codesign --deep -s "Developer ID Application: Your Name (TEAMID)" -f YourPlugin.bttstreamdeckplugin
-
-ditto -c -k --keepParent --rsrc YourPlugin.bttstreamdeckplugin YourPlugin.notarize.zip
-
-xcrun notarytool submit YourPlugin.notarize.zip --apple-id "your@email.com" \
-  --team-id TEAMID --password "@keychain:notarization" --wait
-
-xcrun stapler staple YourPlugin.bttstreamdeckplugin
-```
+the default starting point for most users.
 
 ## License
 

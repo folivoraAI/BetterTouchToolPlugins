@@ -2,7 +2,7 @@
 
 Short one-sentence description of what the plugin does.
 
-Folder names should start with the plugin type, for example
+Folder names must start with the plugin type, for example
 `launcher-plugin-name`, `floating-plugin-name`, `action-plugin-name`, or
 `trigger-plugin-name`.
 

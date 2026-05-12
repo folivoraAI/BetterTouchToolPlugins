@@ -1,6 +1,6 @@
 # Contributing BetterTouchTool Plugins
 
-Community plugins are welcome as pull requests.
+Community plugins are accepted through pull requests.
 
 ## New Plugin Checklist
 
