@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Compress Finder Selection",
+  "identifier": "com.folivora.btt.action.compressfinderselection",
+  "type": "Action",
+  "entry": "CompressFinderSelection.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Creates zip archives from the current Finder selection.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["apple-script", "file-read", "file-write", "shell"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

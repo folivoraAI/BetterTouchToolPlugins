@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Launcher FallingBlocks2",
+  "identifier": "com.folivora.btt.launcher.fallingblocks",
+  "type": "Launcher",
+  "entry": "LauncherFallingBlocks.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Demonstrates a SwiftUI falling-blocks game hosted inside a launcher surface.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

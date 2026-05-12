@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Finder Convert Selected Image to JPEG",
+  "identifier": "com.folivora.btt.action.finderconvertselectedimagetojpeg",
+  "type": "Action",
+  "entry": "FinderConvertSelectedImageToJPEG.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Converts the currently selected Finder image to JPEG.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["apple-script", "file-read", "file-write"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

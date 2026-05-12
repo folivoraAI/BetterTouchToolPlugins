@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Analog Clock",
+  "identifier": "com.folivora.btt.floating.analogclock",
+  "type": "FloatingMenuWidget",
+  "entry": "AnalogClock.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Shows a smooth native analog clock as a floating menu widget.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

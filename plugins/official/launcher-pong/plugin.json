@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Launcher Pong",
+  "identifier": "com.folivora.btt.launcher.pong",
+  "type": "Launcher",
+  "entry": "LauncherPong.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Demonstrates an interactive Pong game hosted inside a launcher surface.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/folivoraAI/BetterTouchToolPlugins",
+  "plugins": [
+    {
+      "name": "Sample Launcher Plugin",
+      "identifier": "com.folivora.btt.launcher.sample",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-sample",
+      "entry": "SampleLauncherPlugin.swift",
+      "reviewStatus": "official",
+      "description": "Demonstrates launcher rows, child items, commands, BTT variables, named triggers, and a native launcher surface."
+    },
+    {
+      "name": "Quick Links",
+      "identifier": "com.folivora.btt.launcher.quicklinks",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-quick-links",
+      "entry": "QuickLinkLauncherPlugin.swift",
+      "reviewStatus": "official",
+      "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances."
+    },
+    {
+      "name": "Clipboard Change",
+      "identifier": "com.folivora.btt.trigger.clipboardchange",
+      "type": "Trigger",
+      "path": "plugins/official/trigger-clipboard-change",
+      "entry": "ClipboardChangeTrigger.swift",
+      "reviewStatus": "official",
+      "description": "Fires a BetterTouchTool trigger when the system clipboard changes."
+    },
+    {
+      "name": "File Watcher",
+      "identifier": "com.folivora.btt.trigger.filewatcher",
+      "type": "Trigger",
+      "path": "plugins/official/trigger-file-watcher",
+      "entry": "FileWatcherTrigger.swift",
+      "reviewStatus": "official",
+      "description": "Watches a configured file or folder and fires a BetterTouchTool trigger when it changes."
+    },
+    {
+      "name": "1Password Launcher Example",
+      "identifier": "com.folivora.btt.launcher.onepassword",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-onepassword-example",
+      "entry": "OnePasswordLauncherExamplePlugin.swift",
+      "reviewStatus": "official",
+      "description": "Searches and opens 1Password items through the op CLI."
+    },
+    {
+      "name": "Google Search Launcher",
+      "identifier": "com.folivora.btt.launcher.googlesearch",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-google-search",
+      "entry": "GoogleSearchLauncher.swift",
+      "reviewStatus": "official",
+      "description": "Opens the current launcher query as a Google search in the default browser."
+    },
+    {
+      "name": "Caffeinate",
+      "identifier": "com.folivora.btt.launcher.caffeinate",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-caffeinate",
+      "entry": "Caffeinate.swift",
+      "reviewStatus": "official",
+      "description": "Toggles a background caffeinate process to keep the Mac awake."
+    },
+    {
+      "name": "Launcher FallingBlocks2",
+      "identifier": "com.folivora.btt.launcher.fallingblocks",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-falling-blocks",
+      "entry": "LauncherFallingBlocks.swift",
+      "reviewStatus": "official",
+      "description": "Demonstrates a SwiftUI falling-blocks game hosted inside a launcher surface."
+    },
+    {
+      "name": "Launcher Pong",
+      "identifier": "com.folivora.btt.launcher.pong",
+      "type": "Launcher",
+      "path": "plugins/official/launcher-pong",
+      "entry": "LauncherPong.swift",
+      "reviewStatus": "official",
+      "description": "Demonstrates an interactive Pong game hosted inside a launcher surface."
+    },
+    {
+      "name": "Compress Finder Selection",
+      "identifier": "com.folivora.btt.action.compressfinderselection",
+      "type": "Action",
+      "path": "plugins/official/action-compress-finder-selection",
+      "entry": "CompressFinderSelection.swift",
+      "reviewStatus": "official",
+      "description": "Creates zip archives from the current Finder selection."
+    },
+    {
+      "name": "Finder Convert Selected Image to JPEG",
+      "identifier": "com.folivora.btt.action.finderconvertselectedimagetojpeg",
+      "type": "Action",
+      "path": "plugins/official/action-finder-convert-selected-image-to-jpeg",
+      "entry": "FinderConvertSelectedImageToJPEG.swift",
+      "reviewStatus": "official",
+      "description": "Converts the currently selected Finder image to JPEG."
+    },
+    {
+      "name": "Analog Clock",
+      "identifier": "com.folivora.btt.floating.analogclock",
+      "type": "FloatingMenuWidget",
+      "path": "plugins/official/floating-analog-clock",
+      "entry": "AnalogClock.swift",
+      "reviewStatus": "official",
+      "description": "Shows a smooth native analog clock as a floating menu widget."
+    }
+  ]
+}

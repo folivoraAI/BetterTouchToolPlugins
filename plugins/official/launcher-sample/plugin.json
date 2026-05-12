@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Sample Launcher Plugin",
+  "identifier": "com.folivora.btt.launcher.sample",
+  "type": "Launcher",
+  "entry": "SampleLauncherPlugin.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Demonstrates launcher rows, child items, commands, BTT variables, named triggers, and a native launcher surface.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["clipboard-write", "btt-variables", "named-triggers"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

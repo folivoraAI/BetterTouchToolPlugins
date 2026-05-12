@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Caffeinate",
+  "identifier": "com.folivora.btt.launcher.caffeinate",
+  "type": "Launcher",
+  "entry": "Caffeinate.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Toggles a background caffeinate process to keep the Mac awake.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["shell", "file-read", "file-write"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "File Watcher",
+  "identifier": "com.folivora.btt.trigger.filewatcher",
+  "type": "Trigger",
+  "entry": "FileWatcherTrigger.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Watches a configured file or folder and fires a BetterTouchTool trigger when it changes.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["file-read"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

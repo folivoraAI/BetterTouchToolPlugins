@@ -1,4 +1,7 @@
 # Specify filepatterns you want git to ignore.
-node_modules
+node_modules/
 .DS_Store
-build
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate

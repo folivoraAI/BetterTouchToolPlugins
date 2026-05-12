@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "1Password Launcher Example",
+  "identifier": "com.folivora.btt.launcher.onepassword",
+  "type": "Launcher",
+  "entry": "OnePasswordLauncherExamplePlugin.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Searches and opens 1Password items through the op CLI.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["shell", "file-read", "clipboard-write", "open-url"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

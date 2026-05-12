@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Quick Links",
+  "identifier": "com.folivora.btt.launcher.quicklinks",
+  "type": "Launcher",
+  "entry": "QuickLinkLauncherPlugin.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["clipboard-read", "clipboard-write", "open-url", "launcher-plugin-instances"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

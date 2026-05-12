@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "name": "Plugin Name",
+  "identifier": "com.example.btt.plugin-name",
+  "type": "Launcher",
+  "entry": "Plugin.swift",
+  "author": {
+    "name": "Your Name",
+    "url": "https://example.com"
+  },
+  "description": "Short description of what this plugin does.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [],
+  "screenshots": [],
+  "reviewStatus": "submitted"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Clipboard Change",
+  "identifier": "com.folivora.btt.trigger.clipboardchange",
+  "type": "Trigger",
+  "entry": "ClipboardChangeTrigger.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Fires a BetterTouchTool trigger when the system clipboard changes.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["clipboard-read"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}

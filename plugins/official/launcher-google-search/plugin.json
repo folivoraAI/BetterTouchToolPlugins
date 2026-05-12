@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Google Search Launcher",
+  "identifier": "com.folivora.btt.launcher.googlesearch",
+  "type": "Launcher",
+  "entry": "GoogleSearchLauncher.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Opens the current launcher query as a Google search in the default browser.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["open-url", "network"],
+  "screenshots": [],
+  "reviewStatus": "official"
+}
