@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "name": "Quick Links",
+  "identifier": "com.folivora.launcher.quicklinks.example",
+  "type": "Launcher",
+  "entry": "QuickLinkLauncherPlugin.swift",
+  "author": {
+    "name": "Subhash Jha",
+    "url": "https://github.com/jhasubhash"
+  },
+  "description": "Save reusable URL or filesystem-path templates and open them with the right app.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [
+    "clipboard-read",
+    "clipboard-write",
+    "open-url",
+    "file-read",
+    "launcher-plugin-instances",
+    "user-defaults"
+  ],
+  "screenshots": [
+    "screenshots/quick-links.png"
+  ],
+  "reviewStatus": "community-reviewed",
+  "origin": {
+    "repository": "https://github.com/jhasubhash/btt-plugins",
+    "source": "https://github.com/jhasubhash/btt-plugins/blob/main/QuickLinkLauncherPlugin.swift",
+    "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+  },
+  "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
+  "license": "No explicit upstream license file was present in the upstream repository at import time."
+}

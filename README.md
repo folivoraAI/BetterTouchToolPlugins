@@ -13,9 +13,28 @@ Read the [BetterTouchTool plugin documentation](https://docs.folivora.ai/docs/pl
 for the complete plugin API overview, installation flow, and current development
 guidance.
 
+## Plugin Gallery
+
+The repository includes a static, searchable plugin gallery in [site](site).
+It reads the official and community plugin manifests and can be published with
+GitHub Pages.
+
+Update the generated gallery catalog after changing plugin metadata:
+
+```sh
+node tools/build-site-catalog.mjs
+```
+
+The GitHub Pages workflow in `.github/workflows/plugin-gallery.yml` runs the
+same generator and publishes the `site` folder.
+
 ## Repository Structure
 
 ```text
+.github/workflows/plugin-gallery.yml  GitHub Pages publisher for the gallery
+site/                                Static searchable plugin gallery
+tools/build-site-catalog.mjs          Gallery catalog generator
+
 plugins/
   index.json                         Reviewed plugin registry
   official/                          Examples maintained by BetterTouchTool
@@ -113,6 +132,25 @@ The registry for these plugins lives in [plugins/index.json](plugins/index.json)
 requests. Each accepted plugin has its own folder with source, metadata,
 description, screenshots when useful, and safety notes.
 
+The first imported community collection comes from
+[jhasubhash/btt-plugins](https://github.com/jhasubhash/btt-plugins). Each
+imported plugin README includes the original source link, import commit,
+copyright attribution, and upstream license note.
+
+| Plugin | Type | What It Shows |
+|---|---|---|
+| [Copy Path / URL](plugins/community/action-copy-path-url) | `Action` | Copy the front app document path or active browser tab URL |
+| [Cursor Launcher](plugins/community/launcher-cursor) | `Launcher` | Open recent Cursor workspaces |
+| [GitHub PR Monitor](plugins/community/launcher-github-pr-monitor) | `Launcher` | Browse open pull requests through the `gh` CLI |
+| [Jira Issues](plugins/community/launcher-jira-issues) | `Launcher` | Browse Jira issues and custom JQL results |
+| [Kill Process](plugins/community/launcher-kill-process) | `Launcher` | List and terminate running processes |
+| [News Search](plugins/community/launcher-news-search) | `Launcher` | Search Google News with a native preview surface |
+| [Quick Links](plugins/community/launcher-quick-links-jhasubhash) | `Launcher` | Save and open reusable URL or path templates |
+| [QuickTime Recording](plugins/community/launcher-quicktime-recording) | `Launcher` | Start QuickTime recordings |
+| [Stock Prices](plugins/community/launcher-stock-prices) | `Launcher` | Track stock quotes and watchlists |
+| [Code Launcher](plugins/community/launcher-vscode) | `Launcher` | Open recent Visual Studio Code workspaces |
+| [Xcode Recent Projects](plugins/community/launcher-xcode-recent-projects) | `Launcher` | Open recent Xcode projects and workspaces |
+
 Required folder shape:
 
 ```text
@@ -184,9 +222,19 @@ Each plugin folder must include a `plugin.json` file:
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": ["clipboard-read"],
   "screenshots": ["screenshots/main.png"],
-  "reviewStatus": "submitted"
+  "reviewStatus": "submitted",
+  "origin": {
+    "repository": "https://github.com/example/source-repo",
+    "source": "https://github.com/example/source-repo/blob/main/Plugin.swift",
+    "importedFromCommit": "commit-sha"
+  },
+  "copyright": "Copyright (c) Original Author.",
+  "license": "MIT"
 }
 ```
+
+Use `origin`, `copyright`, and `license` when a plugin is imported from another
+repository or adapted from existing source.
 
 Allowed `reviewStatus` values:
 
@@ -209,6 +257,9 @@ Allowed permission labels:
 - `btt-variables`
 - `named-triggers`
 - `launcher-plugin-instances`
+- `user-defaults`
+- `process-control`
+- `spotlight`
 
 ## Submitting A Plugin
 

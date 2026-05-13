@@ -109,6 +109,105 @@
       "entry": "AnalogClock.swift",
       "reviewStatus": "official",
       "description": "Shows a smooth native analog clock as a floating menu widget."
+    },
+    {
+      "name": "Copy Path / URL",
+      "identifier": "com.bttuserplugin.swift.copypathaction",
+      "type": "Action",
+      "path": "plugins/community/action-copy-path-url",
+      "entry": "CopyPathAction.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Copies the front app's document path or the active browser tab's URL."
+    },
+    {
+      "name": "Cursor Launcher",
+      "identifier": "com.bttuserplugin.cursor.launcher",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-cursor",
+      "entry": "CursorLauncher.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Quick-open recent Cursor workspaces."
+    },
+    {
+      "name": "GitHub PR Monitor",
+      "identifier": "com.bttuserplugin.github.prmonitor",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-github-pr-monitor",
+      "entry": "GitHubPRMonitor.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Lists open pull requests and review requests for a configured GitHub repository."
+    },
+    {
+      "name": "Jira Issues",
+      "identifier": "com.bttuserplugin.jira.launcher",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-jira-issues",
+      "entry": "JiraLauncherPlugin.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Browse issues assigned to, reported by, or watched by you, or run custom JQL."
+    },
+    {
+      "name": "Kill Process",
+      "identifier": "com.bttuserplugin.killprocess",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-kill-process",
+      "entry": "KillProcess.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Browse running processes and force-kill or gracefully terminate them."
+    },
+    {
+      "name": "News Search",
+      "identifier": "com.bttuserplugin.newssearch",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-news-search",
+      "entry": "NewsSearchPlugin.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Search Google News from the launcher with a rich preview surface."
+    },
+    {
+      "name": "Quick Links",
+      "identifier": "com.folivora.launcher.quicklinks.example",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-quick-links-jhasubhash",
+      "entry": "QuickLinkLauncherPlugin.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Save reusable URL or filesystem-path templates and open them with the right app."
+    },
+    {
+      "name": "QuickTime Recording",
+      "identifier": "com.bttuserplugin.quicktime.recording",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-quicktime-recording",
+      "entry": "QuickTimeRecording.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Start QuickTime screen, audio, or movie recordings from the launcher."
+    },
+    {
+      "name": "Stock Prices",
+      "identifier": "com.bttuserplugin.stockprices",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-stock-prices",
+      "entry": "StockPrices.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Look up stock quotes and manage a watchlist with sparkline details."
+    },
+    {
+      "name": "Code Launcher",
+      "identifier": "com.bttuserplugin.vscode.launcher",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-vscode",
+      "entry": "VSCodeLauncher.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Quick-open recent Visual Studio Code workspaces."
+    },
+    {
+      "name": "Xcode Recent Projects",
+      "identifier": "com.bttuserplugin.xcode-recent-projects",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-xcode-recent-projects",
+      "entry": "XcodeRecentProjects.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Search and open recently used Xcode projects and workspaces."
     }
   ]
 }

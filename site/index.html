@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BetterTouchTool Plugin Gallery</title>
+    <meta
+      name="description"
+      content="Search official and community BetterTouchTool Swift plugins."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__brand">
+        <div class="mark" aria-hidden="true">BT</div>
+        <div>
+          <p class="eyebrow">BetterTouchTool</p>
+          <h1>Plugin Gallery</h1>
+        </div>
+      </div>
+      <nav class="topbar__links" aria-label="Primary">
+        <a href="https://docs.folivora.ai/docs/plugins/overview">Documentation</a>
+        <a href="https://github.com/folivoraAI/BetterTouchToolPlugins">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="gallery-title">
+        <div>
+          <h2 id="gallery-title">Find BetterTouchTool plugins</h2>
+          <p>
+            Official examples and reviewed community plugins in one searchable catalog.
+          </p>
+        </div>
+        <div class="stats" aria-label="Catalog statistics">
+          <div>
+            <strong id="stat-total">0</strong>
+            <span>Total</span>
+          </div>
+          <div>
+            <strong id="stat-official">0</strong>
+            <span>Official</span>
+          </div>
+          <div>
+            <strong id="stat-community">0</strong>
+            <span>Community</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Search and filters">
+        <label class="search">
+          <span>Search plugins</span>
+          <input
+            id="search-input"
+            type="search"
+            autocomplete="off"
+            placeholder="Search by name, type, permission, or author"
+          >
+        </label>
+
+        <div class="filter-row" aria-label="Review status">
+          <button class="filter is-active" type="button" data-filter-group="origin" data-filter-value="all">All</button>
+          <button class="filter" type="button" data-filter-group="origin" data-filter-value="official">Official</button>
+          <button class="filter" type="button" data-filter-group="origin" data-filter-value="community">Community</button>
+        </div>
+
+        <div id="type-filters" class="filter-row" aria-label="Plugin types"></div>
+      </section>
+
+      <section class="result-meta" aria-live="polite">
+        <p id="result-count">Showing 0 plugins</p>
+        <button id="clear-filters" class="text-button" type="button">Clear filters</button>
+      </section>
+
+      <section id="plugin-grid" class="plugin-grid" aria-label="Plugin results"></section>
+      <section id="empty-state" class="empty-state" hidden>
+        <h2>No plugins found</h2>
+        <p>Try a broader search or clear the active filters.</p>
+      </section>
+    </main>
+
+    <dialog id="plugin-dialog" class="plugin-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" type="button" aria-label="Close details">Close</button>
+      <div id="dialog-content"></div>
+    </dialog>
+
+    <script src="plugins.generated.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

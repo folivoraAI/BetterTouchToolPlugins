@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "name": "Jira Issues",
+  "identifier": "com.bttuserplugin.jira.launcher",
+  "type": "Launcher",
+  "entry": "JiraLauncherPlugin.swift",
+  "author": {
+    "name": "Subhash Jha",
+    "url": "https://github.com/jhasubhash"
+  },
+  "description": "Browse issues assigned to, reported by, or watched by you, or run custom JQL.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [
+    "network",
+    "clipboard-write",
+    "open-url",
+    "user-defaults"
+  ],
+  "screenshots": [
+    "screenshots/jira-issues.png",
+    "screenshots/jira-settings.png"
+  ],
+  "reviewStatus": "community-reviewed",
+  "origin": {
+    "repository": "https://github.com/jhasubhash/btt-plugins",
+    "source": "https://github.com/jhasubhash/btt-plugins/blob/main/JiraLauncherPlugin.swift",
+    "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+  },
+  "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
+  "license": "No explicit upstream license file was present in the upstream repository at import time."
+}
