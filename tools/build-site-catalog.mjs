@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const pluginsRoot = path.join(repoRoot, "plugins");
 const siteRoot = path.join(repoRoot, "site");
+const downloadsRoot = path.join(siteRoot, "downloads");
 const registryPath = path.join(pluginsRoot, "index.json");
 const branch = "master";
 
@@ -86,6 +87,18 @@ async function readJson(filePath) {
   return JSON.parse(raw);
 }
 
+async function copyDownloadAsset(sourcePath, downloadPath) {
+  const sourceFile = path.join(repoRoot, sourcePath);
+  if (!(await pathExists(sourceFile))) {
+    return null;
+  }
+
+  const destinationFile = path.join(siteRoot, downloadPath);
+  await fs.mkdir(path.dirname(destinationFile), { recursive: true });
+  await fs.copyFile(sourceFile, destinationFile);
+  return normalizePath(downloadPath);
+}
+
 async function scanPluginFolders(section) {
   const sectionPath = path.join(pluginsRoot, section);
   if (!(await pathExists(sectionPath))) {
@@ -138,7 +151,7 @@ async function buildCatalog() {
     const registryEntry = registryByPath.get(folderPlugin.path) || {};
     const manifest = folderPlugin.manifest;
     const entry = manifest.entry || registryEntry.entry || null;
-    const sourcePath = entry ? normalizePath(path.posix.join(folderPlugin.path, entry)) : null;
+    const sourcePath = entry ? safeRelativeAsset(folderPlugin.path, entry) : null;
     const readmePath = normalizePath(path.posix.join(folderPlugin.path, "README.md"));
     const screenshots = Array.isArray(manifest.screenshots)
       ? manifest.screenshots
@@ -150,6 +163,13 @@ async function buildCatalog() {
     const sourceUrls = sourcePath ? githubUrls(repository, sourcePath) : null;
     const readmeUrls = githubUrls(repository, readmePath);
     const screenshotUrls = screenshots.map((assetPath) => githubUrls(repository, assetPath).raw);
+    const downloadFileName = sourcePath ? path.posix.basename(sourcePath) : null;
+    const downloadPath = sourcePath && downloadFileName
+      ? await copyDownloadAsset(
+          sourcePath,
+          path.join("downloads", folderPlugin.section, folderPlugin.folder, downloadFileName)
+        )
+      : null;
     const reviewStatus = manifest.reviewStatus || registryEntry.reviewStatus || folderPlugin.section;
     const type = manifest.type || registryEntry.type || "Plugin";
     const permissions = Array.isArray(manifest.permissions) ? manifest.permissions : [];
@@ -178,10 +198,12 @@ async function buildCatalog() {
       minimumBetterTouchToolVersion: manifest.minimumBetterTouchToolVersion || null,
       permissions,
       screenshots: screenshotUrls,
+      downloadFileName,
       links: {
         folder: urls.page,
         source: sourceUrls?.blob || null,
         readme: readmeUrls.blob,
+        download: downloadPath,
       },
       origin: manifest.origin || null,
       copyright: manifest.copyright || null,
@@ -227,8 +249,9 @@ async function buildCatalog() {
 }
 
 async function main() {
-  const catalog = await buildCatalog();
   await fs.mkdir(siteRoot, { recursive: true });
+  await fs.rm(downloadsRoot, { recursive: true, force: true });
+  const catalog = await buildCatalog();
 
   const json = `${JSON.stringify(catalog, null, 2)}\n`;
   await fs.writeFile(path.join(siteRoot, "catalog.json"), json);

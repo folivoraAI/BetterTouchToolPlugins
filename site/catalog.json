@@ -25,10 +25,12 @@
         "named-triggers"
       ],
       "screenshots": [],
+      "downloadFileName": "SampleLauncherPlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-sample",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-sample/SampleLauncherPlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-sample/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-sample/README.md",
+        "download": "downloads/official/launcher-sample/SampleLauncherPlugin.swift"
       },
       "origin": null,
       "copyright": null,
@@ -67,10 +69,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-quick-links/screenshots/quick-links.jpeg"
       ],
+      "downloadFileName": "QuickLinkLauncherPlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-quick-links",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-quick-links/QuickLinkLauncherPlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-quick-links/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-quick-links/README.md",
+        "download": "downloads/official/launcher-quick-links/QuickLinkLauncherPlugin.swift"
       },
       "origin": null,
       "copyright": null,
@@ -105,10 +109,12 @@
         "clipboard-read"
       ],
       "screenshots": [],
+      "downloadFileName": "ClipboardChangeTrigger.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/trigger-clipboard-change",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-clipboard-change/ClipboardChangeTrigger.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-clipboard-change/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-clipboard-change/README.md",
+        "download": "downloads/official/trigger-clipboard-change/ClipboardChangeTrigger.swift"
       },
       "origin": null,
       "copyright": null,
@@ -140,10 +146,12 @@
         "file-read"
       ],
       "screenshots": [],
+      "downloadFileName": "FileWatcherTrigger.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/trigger-file-watcher",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-file-watcher/FileWatcherTrigger.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-file-watcher/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/trigger-file-watcher/README.md",
+        "download": "downloads/official/trigger-file-watcher/FileWatcherTrigger.swift"
       },
       "origin": null,
       "copyright": null,
@@ -178,10 +186,12 @@
         "open-url"
       ],
       "screenshots": [],
+      "downloadFileName": "OnePasswordLauncherExamplePlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-onepassword-example",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-onepassword-example/OnePasswordLauncherExamplePlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-onepassword-example/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-onepassword-example/README.md",
+        "download": "downloads/official/launcher-onepassword-example/OnePasswordLauncherExamplePlugin.swift"
       },
       "origin": null,
       "copyright": null,
@@ -217,10 +227,12 @@
         "network"
       ],
       "screenshots": [],
+      "downloadFileName": "GoogleSearchLauncher.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-google-search",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-google-search/GoogleSearchLauncher.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-google-search/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-google-search/README.md",
+        "download": "downloads/official/launcher-google-search/GoogleSearchLauncher.swift"
       },
       "origin": null,
       "copyright": null,
@@ -255,10 +267,12 @@
         "file-write"
       ],
       "screenshots": [],
+      "downloadFileName": "Caffeinate.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-caffeinate",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-caffeinate/Caffeinate.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-caffeinate/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-caffeinate/README.md",
+        "download": "downloads/official/launcher-caffeinate/Caffeinate.swift"
       },
       "origin": null,
       "copyright": null,
@@ -292,10 +306,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-falling-blocks/screenshots/falling-blocks.jpeg"
       ],
+      "downloadFileName": "LauncherFallingBlocks.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-falling-blocks",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-falling-blocks/LauncherFallingBlocks.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-falling-blocks/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-falling-blocks/README.md",
+        "download": "downloads/official/launcher-falling-blocks/LauncherFallingBlocks.swift"
       },
       "origin": null,
       "copyright": null,
@@ -326,10 +342,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-pong/screenshots/pong.jpeg"
       ],
+      "downloadFileName": "LauncherPong.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-pong",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-pong/LauncherPong.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-pong/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-pong/README.md",
+        "download": "downloads/official/launcher-pong/LauncherPong.swift"
       },
       "origin": null,
       "copyright": null,
@@ -363,10 +381,12 @@
         "shell"
       ],
       "screenshots": [],
+      "downloadFileName": "CompressFinderSelection.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/action-compress-finder-selection",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-compress-finder-selection/CompressFinderSelection.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-compress-finder-selection/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-compress-finder-selection/README.md",
+        "download": "downloads/official/action-compress-finder-selection/CompressFinderSelection.swift"
       },
       "origin": null,
       "copyright": null,
@@ -403,10 +423,12 @@
         "file-write"
       ],
       "screenshots": [],
+      "downloadFileName": "FinderConvertSelectedImageToJPEG.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/action-finder-convert-selected-image-to-jpeg",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-finder-convert-selected-image-to-jpeg/FinderConvertSelectedImageToJPEG.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-finder-convert-selected-image-to-jpeg/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/action-finder-convert-selected-image-to-jpeg/README.md",
+        "download": "downloads/official/action-finder-convert-selected-image-to-jpeg/FinderConvertSelectedImageToJPEG.swift"
       },
       "origin": null,
       "copyright": null,
@@ -440,10 +462,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/floating-analog-clock/screenshots/analog-clock.jpeg"
       ],
+      "downloadFileName": "AnalogClock.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/floating-analog-clock",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/floating-analog-clock/AnalogClock.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/floating-analog-clock/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/floating-analog-clock/README.md",
+        "download": "downloads/official/floating-analog-clock/AnalogClock.swift"
       },
       "origin": null,
       "copyright": null,
@@ -480,10 +504,12 @@
         "btt-variables"
       ],
       "screenshots": [],
+      "downloadFileName": "CopyPathAction.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/action-copy-path-url",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/action-copy-path-url/CopyPathAction.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/action-copy-path-url/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/action-copy-path-url/README.md",
+        "download": "downloads/community/action-copy-path-url/CopyPathAction.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -527,10 +553,12 @@
         "finder-selection"
       ],
       "screenshots": [],
+      "downloadFileName": "CursorLauncher.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-cursor",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-cursor/CursorLauncher.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-cursor/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-cursor/README.md",
+        "download": "downloads/community/launcher-cursor/CursorLauncher.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -575,10 +603,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-github-pr-monitor/screenshots/github-prs.png"
       ],
+      "downloadFileName": "GitHubPRMonitor.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-github-pr-monitor",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-github-pr-monitor/GitHubPRMonitor.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-github-pr-monitor/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-github-pr-monitor/README.md",
+        "download": "downloads/community/launcher-github-pr-monitor/GitHubPRMonitor.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -624,10 +654,12 @@
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-jira-issues/screenshots/jira-issues.png",
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-jira-issues/screenshots/jira-settings.png"
       ],
+      "downloadFileName": "JiraLauncherPlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-jira-issues",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-jira-issues/JiraLauncherPlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-jira-issues/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-jira-issues/README.md",
+        "download": "downloads/community/launcher-jira-issues/JiraLauncherPlugin.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -671,10 +703,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-kill-process/screenshots/kill-process.png"
       ],
+      "downloadFileName": "KillProcess.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-kill-process",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-kill-process/KillProcess.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-kill-process/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-kill-process/README.md",
+        "download": "downloads/community/launcher-kill-process/KillProcess.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -717,10 +751,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-news-search/screenshots/news-search.png"
       ],
+      "downloadFileName": "NewsSearchPlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-news-search",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-news-search/NewsSearchPlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-news-search/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-news-search/README.md",
+        "download": "downloads/community/launcher-news-search/NewsSearchPlugin.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -766,10 +802,12 @@
       "screenshots": [
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-quick-links-jhasubhash/screenshots/quick-links.png"
       ],
+      "downloadFileName": "QuickLinkLauncherPlugin.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-quick-links-jhasubhash",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quick-links-jhasubhash/QuickLinkLauncherPlugin.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quick-links-jhasubhash/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quick-links-jhasubhash/README.md",
+        "download": "downloads/community/launcher-quick-links-jhasubhash/QuickLinkLauncherPlugin.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -813,10 +851,12 @@
         "open-url"
       ],
       "screenshots": [],
+      "downloadFileName": "QuickTimeRecording.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-quicktime-recording",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quicktime-recording/QuickTimeRecording.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quicktime-recording/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-quicktime-recording/README.md",
+        "download": "downloads/community/launcher-quicktime-recording/QuickTimeRecording.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -859,10 +899,12 @@
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-stock-prices/screenshots/stocks-watchlist.png",
         "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-stock-prices/screenshots/stock-prices.png"
       ],
+      "downloadFileName": "StockPrices.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-stock-prices",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-stock-prices/StockPrices.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-stock-prices/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-stock-prices/README.md",
+        "download": "downloads/community/launcher-stock-prices/StockPrices.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -903,10 +945,12 @@
         "finder-selection"
       ],
       "screenshots": [],
+      "downloadFileName": "VSCodeLauncher.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-vscode",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-vscode/VSCodeLauncher.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-vscode/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-vscode/README.md",
+        "download": "downloads/community/launcher-vscode/VSCodeLauncher.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
@@ -948,10 +992,12 @@
         "open-url"
       ],
       "screenshots": [],
+      "downloadFileName": "XcodeRecentProjects.swift",
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-xcode-recent-projects",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-xcode-recent-projects/XcodeRecentProjects.swift",
-        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-xcode-recent-projects/README.md"
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-xcode-recent-projects/README.md",
+        "download": "downloads/community/launcher-xcode-recent-projects/XcodeRecentProjects.swift"
       },
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",

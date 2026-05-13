@@ -16,5 +16,6 @@ The generator reads `plugins/official/**/plugin.json` and
 
 - `site/catalog.json`
 - `site/plugins.generated.js`
+- `site/downloads/`
 
 The page itself has no framework or runtime dependencies.

@@ -135,8 +135,11 @@
   }
 
   function renderPluginCard(plugin, index) {
+    const downloadButton = plugin.links.download
+      ? `<a class="primary-button" href="${attr(plugin.links.download)}" download="${attr(plugin.downloadFileName || "")}">Download</a>`
+      : "";
     const sourceButton = plugin.links.source
-      ? `<a class="primary-button" href="${attr(plugin.links.source)}">Source</a>`
+      ? `<a class="secondary-button" href="${attr(plugin.links.source)}">Source</a>`
       : "";
 
     return `
@@ -158,6 +161,7 @@
             ${renderPermissionPills(plugin)}
           </div>
           <div class="card-actions">
+            ${downloadButton}
             ${sourceButton}
             <button class="secondary-button" type="button" data-details="${index}">Details</button>
           </div>
@@ -208,8 +212,11 @@
       : "No extra permissions";
 
     const minimumVersion = plugin.minimumBetterTouchToolVersion || "Not specified";
+    const downloadLink = plugin.links.download
+      ? `<a class="primary-button" href="${attr(plugin.links.download)}" download="${attr(plugin.downloadFileName || "")}">Download</a>`
+      : "";
     const sourceLink = plugin.links.source
-      ? `<a class="primary-button" href="${attr(plugin.links.source)}">View source</a>`
+      ? `<a class="secondary-button" href="${attr(plugin.links.source)}">View source</a>`
       : "";
     const originRepoLink = plugin.origin && plugin.origin.repository
       ? `<a class="secondary-button" href="${attr(plugin.origin.repository)}">Original repo</a>`
@@ -237,6 +244,7 @@
           ${detailItem("Upstream license", plugin.license)}
         </div>
         <div class="card-actions">
+          ${downloadLink}
           ${sourceLink}
           <a class="secondary-button" href="${attr(plugin.links.readme)}">Readme</a>
           <a class="secondary-button" href="${attr(plugin.links.folder)}">Folder</a>
