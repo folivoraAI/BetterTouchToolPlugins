@@ -64,7 +64,9 @@ window.BTT_PLUGIN_CATALOG = {
         "open-url",
         "launcher-plugin-instances"
       ],
-      "screenshots": [],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-quick-links/screenshots/quick-links.jpeg"
+      ],
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-quick-links",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-quick-links/QuickLinkLauncherPlugin.swift",

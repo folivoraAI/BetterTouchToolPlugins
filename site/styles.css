@@ -459,12 +459,17 @@ main {
 .plugin-meta {
   display: flex;
   flex-wrap: wrap;
+  align-self: start;
+  align-items: flex-start;
+  align-content: flex-start;
   gap: 6px;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
+  align-self: flex-start;
   max-width: 100%;
   min-height: 25px;
   border: 1px solid var(--line);
@@ -474,6 +479,8 @@ main {
   background: #fafbfc;
   font-size: 0.76rem;
   font-weight: 620;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 .card-actions {

@@ -10,6 +10,8 @@
   "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": ["clipboard-read", "clipboard-write", "open-url", "launcher-plugin-instances"],
-  "screenshots": [],
+  "screenshots": [
+    "screenshots/quick-links.jpeg"
+  ],
   "reviewStatus": "official"
 }
