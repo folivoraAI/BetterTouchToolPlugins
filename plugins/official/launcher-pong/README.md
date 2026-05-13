@@ -4,6 +4,8 @@ Launcher plugin example that hosts a small Pong game in a native launcher
 surface. It demonstrates SwiftUI rendering, live updates, and launcher surface
 interaction.
 
+![Launcher Pong screenshot](screenshots/pong.jpeg)
+
 ## Installation
 
 Drop `LauncherPong.swift` onto the BetterTouchTool preferences window.

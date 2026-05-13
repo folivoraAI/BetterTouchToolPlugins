@@ -3,6 +3,8 @@
 Floating menu widget example that draws a smooth analog clock with hour, minute,
 and second hands.
 
+![Analog Clock screenshot](screenshots/analog-clock.jpeg)
+
 ## Installation
 
 Drop `AnalogClock.swift` onto the BetterTouchTool preferences window.

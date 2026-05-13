@@ -10,6 +10,8 @@
   "description": "Demonstrates an interactive Pong game hosted inside a launcher surface.",
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": [],
-  "screenshots": [],
+  "screenshots": [
+    "screenshots/pong.jpeg"
+  ],
   "reviewStatus": "official"
 }

@@ -10,6 +10,8 @@
   "description": "Shows a smooth native analog clock as a floating menu widget.",
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": [],
-  "screenshots": [],
+  "screenshots": [
+    "screenshots/analog-clock.jpeg"
+  ],
   "reviewStatus": "official"
 }

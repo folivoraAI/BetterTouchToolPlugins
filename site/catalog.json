@@ -287,7 +287,9 @@
       },
       "minimumBetterTouchToolVersion": "TBD",
       "permissions": [],
-      "screenshots": [],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-falling-blocks/screenshots/falling-blocks.jpeg"
+      ],
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-falling-blocks",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-falling-blocks/LauncherFallingBlocks.swift",
@@ -319,7 +321,9 @@
       },
       "minimumBetterTouchToolVersion": "TBD",
       "permissions": [],
-      "screenshots": [],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-pong/screenshots/pong.jpeg"
+      ],
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-pong",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-pong/LauncherPong.swift",
@@ -431,7 +435,9 @@
       },
       "minimumBetterTouchToolVersion": "TBD",
       "permissions": [],
-      "screenshots": [],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/floating-analog-clock/screenshots/analog-clock.jpeg"
+      ],
       "links": {
         "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/floating-analog-clock",
         "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/floating-analog-clock/AnalogClock.swift",

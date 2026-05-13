@@ -4,6 +4,8 @@ Launcher plugin example that hosts a small falling-blocks game in a native
 launcher surface. It demonstrates SwiftUI rendering, keyboard handling, and
 launcher surface lifecycle hooks.
 
+![Launcher FallingBlocks2 screenshot](screenshots/falling-blocks.jpeg)
+
 ## Installation
 
 Drop `LauncherFallingBlocks.swift` onto the BetterTouchTool preferences window.
