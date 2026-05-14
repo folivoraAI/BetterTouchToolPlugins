@@ -40,6 +40,7 @@ class PRViewModel: ObservableObject {
     /// user's value is read from / written to `UserDefaults`.
     static let defaultRepo = "OWNER/REPO"
     static let repoUserDefaultsKey = "com.bttuserplugin.github.prmonitor.repo"
+    static let repoChangedNotification = Notification.Name("com.bttuserplugin.github.prmonitor.repoChanged")
 
     var isConfigured: Bool {
         let trimmed = repo.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -49,6 +50,15 @@ class PRViewModel: ObservableObject {
     init() {
         self.repo = UserDefaults.standard.string(forKey: Self.repoUserDefaultsKey)
             ?? Self.defaultRepo
+        NotificationCenter.default.addObserver(
+            forName: Self.repoChangedNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] note in
+            guard let self,
+                  let newRepo = note.userInfo?["repo"] as? String else { return }
+            self.updateRepo(newRepo)
+        }
         Task { await refresh() }
     }
 
@@ -215,6 +225,17 @@ class PRViewModel: ObservableObject {
         }
     }
 
+    /// Copy the selected PR's URL to the clipboard. Returns true if a URL was copied.
+    @discardableResult
+    func copySelectedURL() -> Bool {
+        guard let id = selectedPRId,
+              let pr = allFiltered.first(where: { $0.id == id }) else { return false }
+        let pb = NSPasteboard.general
+        pb.clearContents()
+        pb.setString(pr.url, forType: .string)
+        return true
+    }
+
     /// Invoked after `open(_:)` so the hosting surface can close the launcher.
     var onAfterOpen: (() -> Void)?
 
@@ -331,8 +352,6 @@ struct PRSectionHeader: View {
 
 struct PRDashboard: View {
     @ObservedObject var vm: PRViewModel
-    @State private var showSettings = false
-    @State private var repoDraft: String = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -362,20 +381,6 @@ struct PRDashboard: View {
                     .foregroundColor(.secondary)
                     .keyboardShortcut("r", modifiers: [.command])
                     .help("Refresh (⌘R)")
-                }
-                Button {
-                    repoDraft = vm.repo
-                    showSettings.toggle()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 11))
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(.secondary)
-                .keyboardShortcut(",", modifiers: [.command])
-                .help("Settings (⌘,)")
-                .popover(isPresented: $showSettings, arrowEdge: .top) {
-                    settingsPopover
                 }
             }
             .padding(.horizontal, 10)
@@ -473,49 +478,6 @@ struct PRDashboard: View {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
         return f.string(from: d)
-    }
-
-    private var settingsPopover: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("GitHub Repository")
-                .font(.headline)
-            Text("Format: owner/repository (e.g. octocat/hello-world)")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            HStack(spacing: 6) {
-                Image(systemName: "arrow.triangle.pull")
-                    .foregroundColor(.secondary)
-                TextField("owner/repo", text: $repoDraft, onCommit: {
-                    saveRepo()
-                })
-                .textFieldStyle(.roundedBorder)
-            }
-
-            HStack {
-                Spacer()
-                Button("Cancel") { showSettings = false }
-                    .keyboardShortcut(.cancelAction)
-                Button("Save") { saveRepo() }
-                    .keyboardShortcut(.defaultAction)
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!isValidRepoDraft)
-            }
-        }
-        .padding(16)
-        .frame(width: 360)
-    }
-
-    private var isValidRepoDraft: Bool {
-        let trimmed = repoDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-        let parts = trimmed.split(separator: "/")
-        return parts.count == 2 && !parts[0].isEmpty && !parts[1].isEmpty
-    }
-
-    private func saveRepo() {
-        guard isValidRepoDraft else { return }
-        vm.updateRepo(repoDraft)
-        showSettings = false
     }
 }
 
@@ -695,8 +657,11 @@ class GitHubPRLauncherPlugin: NSObject, BTTLauncherPluginInterface {
     func launcherSurface(forItemIdentifier itemIdentifier: String,
                          surfaceIdentifier: String?,
                          context: BTTLauncherPluginContext) -> (any BTTLauncherPluginSurfaceInterface)? {
-        guard surfaceIdentifier == "github-prs" else { return nil }
-        return GitHubPRSurface()
+        switch surfaceIdentifier {
+        case "github-prs":          return GitHubPRSurface()
+        case "github-prs-settings": return GitHubPRSettingsSurface()
+        default:                    return nil
+        }
     }
 
     func launcherResultSelected(_ result: BTTLauncherPluginResult,
@@ -712,6 +677,19 @@ class GitHubPRLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         r.systemImageName   = "arrow.triangle.pull"
         r.surfaceIdentifier = "github-prs"
         r.trailingHint      = "Open"
+
+        // Expose repository configuration via the launcher's native ⌘P
+        // action popover (the BTT-standard pattern). The user selects this
+        // row in the launcher list, presses ⌘P, and picks "Settings" to
+        // open the github-prs-settings surface.
+        let settings = BTTLauncherPluginCommand()
+        settings.title             = "Settings"
+        settings.subtitle          = "Configure GitHub repository (owner/repo)"
+        settings.systemImageName   = "gearshape.fill"
+        settings.commandIdentifier = "settings"
+        settings.surfaceIdentifier = "github-prs-settings"
+        r.commands = [settings]
+
         return r
     }
 }
@@ -749,7 +727,7 @@ final class GitHubPRSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     func launcherSurfacePreferredContentSize() -> CGSize { GitHubPRSurfaceSize.load() }
     func launcherSurfaceKeepsLauncherPinned()  -> Bool   { false }
     func launcherSurfacePlaceholderText()      -> String? { "Filter PRs…" }
-    func launcherSurfaceFooterHint()           -> String? { "↑/↓ Navigate  ·  Return Open  ·  Esc Back" }
+    func launcherSurfaceFooterHint()           -> String? { "↑/↓ Navigate  ·  Return Open  ·  ⌘C Copy URL  ·  Esc + ⌘P for Settings" }
 
     func launcherSurfaceShouldBypassGlobalKeyboardHandling(for event: NSEvent) -> Bool {
         // Let BTT keep handling navigation keys (↑/↓/Return) so it can route
@@ -793,6 +771,17 @@ final class GitHubPRSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     // search field has focus.
     func handleLauncherRawKeyEvent(_ event: NSEvent) -> Bool {
         guard event.type == .keyDown else { return false }
+
+        // ⌘C → copy selected PR URL to clipboard. Intercept here so the
+        // launcher's search field can't swallow it.
+        let mods = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        if mods == .command,
+           let chars = event.charactersIgnoringModifiers,
+           chars.lowercased() == "c" {
+            let copied = vm.copySelectedURL()
+            return copied
+        }
+
         if event.keyCode == 36 || event.keyCode == 76 {
             DispatchQueue.main.async { [weak self] in
                 self?.vm.openSelected()
@@ -801,5 +790,113 @@ final class GitHubPRSurface: NSObject, BTTLauncherPluginSurfaceInterface {
             return true
         }
         return false
+    }
+}
+
+// MARK: - Settings Surface
+
+final class GitHubPRSettingsSurface: NSObject, BTTLauncherPluginSurfaceInterface {
+    weak var delegate: (any BTTLauncherPluginSurfaceDelegate)?
+
+    private var vm: GitHubPRSettingsViewModel?
+
+    func makeLauncherSurfaceView() -> NSView {
+        let initial = UserDefaults.standard.string(forKey: PRViewModel.repoUserDefaultsKey)
+            ?? PRViewModel.defaultRepo
+        let vm = GitHubPRSettingsViewModel(repo: initial)
+        self.vm = vm
+        let view = GitHubPRSettingsView(
+            vm: vm,
+            onSave: { [weak self] in
+                guard let self, let vm = self.vm else { return }
+                let trimmed = vm.repo.trimmingCharacters(in: .whitespacesAndNewlines)
+                UserDefaults.standard.set(trimmed, forKey: PRViewModel.repoUserDefaultsKey)
+                NotificationCenter.default.post(
+                    name: PRViewModel.repoChangedNotification,
+                    object: nil,
+                    userInfo: ["repo": trimmed]
+                )
+                self.delegate?.requestLauncherSurfaceGoBack()
+            },
+            onCancel: { [weak self] in
+                self?.delegate?.requestLauncherSurfaceGoBack()
+            }
+        )
+        return NSHostingView(rootView: view)
+    }
+
+    func launcherSurfacePreferredContentSize() -> CGSize { CGSize(width: 480, height: 220) }
+    func launcherSurfaceKeepsLauncherPinned()  -> Bool   { false }
+    func launcherSurfacePlaceholderText()      -> String? { "GitHub Repository" }
+    func launcherSurfaceFooterHint()           -> String? { "Return Save  ·  Esc Cancel" }
+
+    func launcherSurfaceShouldBypassGlobalKeyboardHandling(for event: NSEvent) -> Bool {
+        true
+    }
+}
+
+// MARK: - Settings ViewModel
+
+final class GitHubPRSettingsViewModel: ObservableObject {
+    @Published var repo: String
+
+    init(repo: String) {
+        self.repo = repo
+    }
+
+    var isValid: Bool {
+        let trimmed = repo.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parts = trimmed.split(separator: "/")
+        return parts.count == 2 && !parts[0].isEmpty && !parts[1].isEmpty
+    }
+}
+
+// MARK: - Settings View
+
+struct GitHubPRSettingsView: View {
+    @ObservedObject var vm: GitHubPRSettingsViewModel
+    var onSave:   () -> Void
+    var onCancel: () -> Void
+
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                Image(systemName: "gearshape.fill")
+                    .foregroundColor(.accentColor)
+                Text("GitHub Repository")
+                    .font(.headline)
+                Spacer()
+            }
+
+            Text("Format: owner/repository (e.g. octocat/hello-world)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            HStack(spacing: 6) {
+                Image(systemName: "arrow.triangle.pull")
+                    .foregroundColor(.secondary)
+                TextField("owner/repo", text: $vm.repo, onCommit: {
+                    if vm.isValid { onSave() }
+                })
+                .textFieldStyle(.roundedBorder)
+                .focused($focused)
+            }
+
+            Spacer()
+
+            HStack {
+                Spacer()
+                Button("Cancel", action: onCancel)
+                    .keyboardShortcut(.cancelAction)
+                Button("Save", action: onSave)
+                    .keyboardShortcut(.defaultAction)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!vm.isValid)
+            }
+        }
+        .padding(18)
+        .onAppear { focused = true }
     }
 }

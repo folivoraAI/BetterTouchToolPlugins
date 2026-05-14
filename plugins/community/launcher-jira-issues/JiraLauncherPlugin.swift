@@ -216,6 +216,9 @@ class JiraLauncherPlugin: NSObject, BTTLauncherPluginInterface {
                 },
                 onOpenIssue: { [weak self] key in
                     self?.openIssue(withKey: key)
+                },
+                onCopyIssueURL: { [weak self] key in
+                    self?.copyIssueURL(forKey: key)
                 }
             )
         }
@@ -224,9 +227,9 @@ class JiraLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         return JiraConfigSurface(
             initialURL:   jiraBaseURL,
             initialToken: jiraToken,
-            initialJQL:   jiraJQL,
-            onSave: { [weak self] url, token, jql in
-                self?.applyConfig(url: url, token: token, jql: jql)
+            onSave: { [weak self] url, token in
+                guard let self else { return }
+                self.applyConfig(url: url, token: token, jql: self.jiraJQL)
             }
         )
     }
@@ -248,6 +251,10 @@ class JiraLauncherPlugin: NSObject, BTTLauncherPluginInterface {
     func launcherResultCommandSelected(_ result: BTTLauncherPluginResult,
                                        command: BTTLauncherPluginCommand,
                                        context: BTTLauncherPluginContext) {
+        // The "settings" command opens the jira-config surface via
+        // `command.surfaceIdentifier` — BTT handles the navigation; nothing
+        // to do here. Copy commands operate on the row's issue key.
+        if command.commandIdentifier == "settings" { return }
         guard let id = result.itemIdentifier else { return }
         let pb = NSPasteboard.general
         pb.clearContents()
@@ -293,6 +300,12 @@ class JiraLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         NSWorkspace.shared.open(url)
     }
 
+    private func copyIssueURL(forKey key: String) {
+        let pb = NSPasteboard.general
+        pb.clearContents()
+        pb.setString("\(jiraBaseURL)/browse/\(key)", forType: .string)
+    }
+
     private func makeMainResult() -> BTTLauncherPluginResult {
         let r = BTTLauncherPluginResult()
         r.itemIdentifier = "jira-root"
@@ -301,6 +314,19 @@ class JiraLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         r.systemImageName = "list.bullet.rectangle"
         r.surfaceIdentifier = "jira-main"
         r.trailingHint = "Open"
+
+        // Expose configuration via the launcher's native ⌘P action popover
+        // (the BTT-standard pattern). The user selects this row in the
+        // launcher list, presses ⌘P, and picks "Settings" to open the
+        // jira-config surface.
+        let settings = BTTLauncherPluginCommand()
+        settings.title             = "Settings"
+        settings.subtitle          = "Configure Base URL and PAT token"
+        settings.systemImageName   = "gearshape.fill"
+        settings.commandIdentifier = "settings"
+        settings.surfaceIdentifier = "jira-config"
+        r.commands = [settings]
+
         return r
     }
 
@@ -653,6 +679,7 @@ final class JiraMainSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     private let onSaveConfig: (String, String, String) -> Void
     private let onRefresh: (String, Bool, @escaping (JiraSurfaceState) -> Void) -> Void
     private let onOpenIssue: (String) -> Void
+    private let onCopyIssueURL: (String) -> Void
     private var vm: JiraMainViewModel?
 
     fileprivate init(initialURL: String,
@@ -661,7 +688,8 @@ final class JiraMainSurface: NSObject, BTTLauncherPluginSurfaceInterface {
          initialState: JiraSurfaceState,
          onSaveConfig: @escaping (String, String, String) -> Void,
          onRefresh: @escaping (String, Bool, @escaping (JiraSurfaceState) -> Void) -> Void,
-         onOpenIssue: @escaping (String) -> Void) {
+         onOpenIssue: @escaping (String) -> Void,
+         onCopyIssueURL: @escaping (String) -> Void) {
         self.initialURL = initialURL
         self.initialToken = initialToken
         self.initialJQL = initialJQL
@@ -669,6 +697,7 @@ final class JiraMainSurface: NSObject, BTTLauncherPluginSurfaceInterface {
         self.onSaveConfig = onSaveConfig
         self.onRefresh = onRefresh
         self.onOpenIssue = onOpenIssue
+        self.onCopyIssueURL = onCopyIssueURL
     }
 
     func makeLauncherSurfaceView() -> NSView {
@@ -705,7 +734,7 @@ final class JiraMainSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     func launcherSurfacePreferredContentSize() -> CGSize { JiraSurfaceSize.load() }
     func launcherSurfaceKeepsLauncherPinned() -> Bool { false }
     func launcherSurfacePlaceholderText() -> String? { "Jira" }
-    func launcherSurfaceFooterHint() -> String? { "Return Open Issue  |  Cmd+R Refresh  |  Cmd+, Settings" }
+    func launcherSurfaceFooterHint() -> String? { "Return Open Issue  |  ⌘C Copy URL  |  ⌘R Refresh  |  Esc + ⌘P for Settings" }
 
     func launcherSurfaceShouldBypassGlobalKeyboardHandling(for event: NSEvent) -> Bool {
         // Let BTT keep handling navigation keys (↑/↓/Return) so it can route
@@ -746,6 +775,20 @@ final class JiraMainSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     // search field has focus.
     func handleLauncherRawKeyEvent(_ event: NSEvent) -> Bool {
         guard event.type == .keyDown else { return false }
+
+        // ⌘C → copy selected issue's URL to clipboard. Intercept here so the
+        // launcher's search field can't swallow it.
+        let mods = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        if mods == .command,
+           let chars = event.charactersIgnoringModifiers,
+           chars.lowercased() == "c" {
+            if let key = vm?.selectedIssueKey {
+                onCopyIssueURL(key)
+                return true
+            }
+            return false
+        }
+
         if event.keyCode == 36 || event.keyCode == 76 {
             DispatchQueue.main.async { [weak self] in
                 self?.vm?.openSelected()
@@ -947,7 +990,6 @@ final class JiraMainViewModel: ObservableObject {
 
 struct JiraMainView: View {
     @ObservedObject var vm: JiraMainViewModel
-    @State private var showSettings: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -966,7 +1008,6 @@ struct JiraMainView: View {
         .padding(.top, 10)
         .padding(.bottom, 16)
         .onAppear {
-            if !vm.canConnect { showSettings = true }
             vm.loadIfNeeded()
         }
     }
@@ -1004,26 +1045,6 @@ struct JiraMainView: View {
         .keyboardShortcut("r", modifiers: [.command])
         .disabled(vm.isLoading || !vm.canConnect)
         .help("Refresh (\u{2318}R)")
-
-        Button {
-            showSettings.toggle()
-        } label: {
-            Image(systemName: "gearshape.fill")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 6)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.secondary.opacity(0.15))
-                )
-        }
-        .buttonStyle(.plain)
-        .keyboardShortcut(",", modifiers: [.command])
-        .help("Settings (\u{2318},)")
-        .popover(isPresented: $showSettings, arrowEdge: .top) {
-            settingsPopover
-        }
     }
 
     // MARK: Tabs
@@ -1091,8 +1112,9 @@ struct JiraMainView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Configure Base URL and PAT token to load your assigned issues.")
                     .foregroundColor(.secondary)
-                Button("Open Settings") { showSettings = true }
-                    .buttonStyle(.borderedProminent)
+                Text("Close this surface (Esc) and press ⌘P on the Jira row to open Settings.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
         } else if vm.isLoading && vm.issues.isEmpty {
             HStack(spacing: 10) {
@@ -1165,38 +1187,7 @@ struct JiraMainView: View {
         }
     }
 
-    // MARK: Settings Popover
-
-    private var settingsPopover: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Jira Connection")
-                .font(.headline)
-
-            LabeledConfigField(label: "Base URL", icon: "globe") {
-                TextField("https://jira.corp.YOUR_ORG.com", text: $vm.url)
-                    .textFieldStyle(.roundedBorder)
-            }
-
-            LabeledConfigField(label: "PAT Token", icon: "key.fill") {
-                SecureField("Paste your Jira PAT token", text: $vm.token)
-                    .textFieldStyle(.roundedBorder)
-            }
-
-            HStack {
-                Spacer()
-                Button("Cancel") { showSettings = false }
-                Button("Save") {
-                    vm.saveConfiguration()
-                    showSettings = false
-                }
-                .buttonStyle(.borderedProminent)
-                .keyboardShortcut(.defaultAction)
-                .disabled(!vm.canConnect)
-            }
-        }
-        .padding(16)
-        .frame(width: 420)
-    }
+    // MARK: Helpers
 
     private func relativeTime(_ date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
@@ -1394,26 +1385,24 @@ final class JiraConfigSurface: NSObject, BTTLauncherPluginSurfaceInterface {
 
     private let initialURL:   String
     private let initialToken: String
-    private let initialJQL:   String
-    private let onSave:       (String, String, String) -> Void
+    private let onSave:       (String, String) -> Void
     private var vm: JiraConfigViewModel?
 
-    init(initialURL: String, initialToken: String, initialJQL: String,
-         onSave: @escaping (String, String, String) -> Void) {
+    init(initialURL: String, initialToken: String,
+         onSave: @escaping (String, String) -> Void) {
         self.initialURL   = initialURL
         self.initialToken = initialToken
-        self.initialJQL   = initialJQL
         self.onSave       = onSave
     }
 
     func makeLauncherSurfaceView() -> NSView {
-        let vm = JiraConfigViewModel(url: initialURL, token: initialToken, jql: initialJQL)
+        let vm = JiraConfigViewModel(url: initialURL, token: initialToken)
         self.vm = vm
         let view = JiraConfigView(
             vm: vm,
             onSave: { [weak self] in
                 guard let self, let vm = self.vm else { return }
-                self.onSave(vm.url, vm.token, vm.jql)
+                self.onSave(vm.url, vm.token)
                 self.delegate?.requestLauncherSurfaceGoBack()
             },
             onCancel: { [weak self] in
@@ -1438,12 +1427,10 @@ final class JiraConfigSurface: NSObject, BTTLauncherPluginSurfaceInterface {
 final class JiraConfigViewModel: ObservableObject {
     @Published var url:   String
     @Published var token: String
-    @Published var jql:   String
 
-    init(url: String, token: String, jql: String) {
+    init(url: String, token: String) {
         self.url   = url
         self.token = token
-        self.jql   = jql
     }
 }
 
@@ -1455,7 +1442,7 @@ struct JiraConfigView: View {
     let onCancel: () -> Void
 
     @FocusState private var focused: ConfigField?
-    enum ConfigField { case url, token, jql }
+    enum ConfigField { case url, token }
 
     var canSave: Bool { !vm.url.isEmpty && !vm.token.isEmpty }
 
@@ -1488,12 +1475,6 @@ struct JiraConfigView: View {
                     SecureField("Paste your Personal Access Token here", text: $vm.token)
                         .textFieldStyle(.roundedBorder)
                         .focused($focused, equals: .token)
-                }
-
-                LabeledConfigField(label: "JQL Query", icon: "line.3.horizontal.decrease.circle") {
-                    TextField("assignee = currentUser() ORDER BY updated DESC", text: $vm.jql)
-                        .textFieldStyle(.roundedBorder)
-                        .focused($focused, equals: .jql)
                 }
             }
 

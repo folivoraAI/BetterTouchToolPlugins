@@ -19,13 +19,14 @@
     "user-defaults"
   ],
   "screenshots": [
-    "screenshots/quick-links.png"
+    "screenshots/quick-links.png",
+    "screenshots/quick-links-manage.png"
   ],
-  "reviewStatus": "community-reviewed",
+  "reviewStatus": "submitted",
   "origin": {
     "repository": "https://github.com/jhasubhash/btt-plugins",
     "source": "https://github.com/jhasubhash/btt-plugins/blob/main/QuickLinkLauncherPlugin.swift",
-    "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+    "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
   },
   "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
   "license": "No explicit upstream license file was present in the upstream repository at import time."
