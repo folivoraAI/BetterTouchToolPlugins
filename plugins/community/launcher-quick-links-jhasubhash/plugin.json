@@ -29,5 +29,5 @@
     "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
   },
   "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-  "license": "No explicit upstream license file was present in the upstream repository at import time."
+  "license": "MIT"
 }

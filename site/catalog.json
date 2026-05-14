@@ -617,7 +617,7 @@
         "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
@@ -628,7 +628,7 @@
         "clipboard-write",
         "user-defaults"
       ],
-      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher submitted community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. shell network open-url clipboard-write user-defaults",
+      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher submitted community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit shell network open-url clipboard-write user-defaults",
       "order": 14
     },
     {
@@ -669,7 +669,7 @@
         "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
@@ -679,7 +679,7 @@
         "open-url",
         "user-defaults"
       ],
-      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher submitted community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. network clipboard-write open-url user-defaults",
+      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher submitted community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
       "order": 15
     },
     {
@@ -818,7 +818,7 @@
         "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
@@ -830,7 +830,7 @@
         "launcher-plugin-instances",
         "user-defaults"
       ],
-      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher submitted community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
+      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher submitted community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
       "order": 18
     },
     {

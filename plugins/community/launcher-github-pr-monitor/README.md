@@ -8,7 +8,7 @@ Lists open pull requests and review requests for a configured GitHub repository.
 - Original source: [GitHubPRMonitor.swift](https://github.com/jhasubhash/btt-plugins/blob/main/GitHubPRMonitor.swift)
 - Imported from commit: `60711f23ea559f150e0d1d1e65dd4e3633cd9d3e`
 - Copyright: Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.
-- Upstream license: No explicit upstream license file was present in the upstream repository at import time.
+- Upstream license: MIT (see https://github.com/jhasubhash/btt-plugins/blob/main/LICENSE).
 
 ## Features
 
