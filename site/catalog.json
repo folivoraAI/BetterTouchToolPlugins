@@ -586,7 +586,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-github-pr-monitor",
       "section": "community",
-      "reviewStatus": "community-reviewed",
+      "reviewStatus": "submitted",
       "description": "Lists open pull requests and review requests for a configured GitHub repository.",
       "entry": "GitHubPRMonitor.swift",
       "author": {
@@ -598,6 +598,7 @@
         "shell",
         "network",
         "open-url",
+        "clipboard-write",
         "user-defaults"
       ],
       "screenshots": [
@@ -613,20 +614,21 @@
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
         "source": "https://github.com/jhasubhash/btt-plugins/blob/main/GitHubPRMonitor.swift",
-        "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+        "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
-        "community-reviewed",
+        "submitted",
         "shell",
         "network",
         "open-url",
+        "clipboard-write",
         "user-defaults"
       ],
-      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher community-reviewed community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. shell network open-url user-defaults",
+      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher submitted community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit shell network open-url clipboard-write user-defaults",
       "order": 14
     },
     {
@@ -636,7 +638,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-jira-issues",
       "section": "community",
-      "reviewStatus": "community-reviewed",
+      "reviewStatus": "submitted",
       "description": "Browse issues assigned to, reported by, or watched by you, or run custom JQL.",
       "entry": "JiraLauncherPlugin.swift",
       "author": {
@@ -664,20 +666,20 @@
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
         "source": "https://github.com/jhasubhash/btt-plugins/blob/main/JiraLauncherPlugin.swift",
-        "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+        "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
-        "community-reviewed",
+        "submitted",
         "network",
         "clipboard-write",
         "open-url",
         "user-defaults"
       ],
-      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher community-reviewed community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. network clipboard-write open-url user-defaults",
+      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher submitted community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
       "order": 15
     },
     {
@@ -783,7 +785,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-quick-links-jhasubhash",
       "section": "community",
-      "reviewStatus": "community-reviewed",
+      "reviewStatus": "submitted",
       "description": "Save reusable URL or filesystem-path templates and open them with the right app.",
       "entry": "QuickLinkLauncherPlugin.swift",
       "author": {
@@ -800,7 +802,8 @@
         "user-defaults"
       ],
       "screenshots": [
-        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-quick-links-jhasubhash/screenshots/quick-links.png"
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-quick-links-jhasubhash/screenshots/quick-links.png",
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-quick-links-jhasubhash/screenshots/quick-links-manage.png"
       ],
       "downloadFileName": "QuickLinkLauncherPlugin.swift",
       "links": {
@@ -812,14 +815,14 @@
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
         "source": "https://github.com/jhasubhash/btt-plugins/blob/main/QuickLinkLauncherPlugin.swift",
-        "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+        "importedFromCommit": "60711f23ea559f150e0d1d1e65dd4e3633cd9d3e"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT",
       "tags": [
         "community",
         "launcher",
-        "community-reviewed",
+        "submitted",
         "clipboard-read",
         "clipboard-write",
         "open-url",
@@ -827,7 +830,7 @@
         "launcher-plugin-instances",
         "user-defaults"
       ],
-      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher community-reviewed community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
+      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher submitted community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
       "order": 18
     },
     {
