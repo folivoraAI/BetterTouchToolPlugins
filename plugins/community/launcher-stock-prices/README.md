@@ -6,9 +6,9 @@ Look up stock quotes and manage a watchlist with sparkline details.
 
 - Original repository: [jhasubhash/btt-plugins](https://github.com/jhasubhash/btt-plugins)
 - Original source: [StockPrices.swift](https://github.com/jhasubhash/btt-plugins/blob/main/StockPrices.swift)
-- Imported from commit: `c8a095204b44e3fe8c5bb0e0455b24744453f916`
+- Imported from commit: `d50cae6fb703d7782b3594da820ebbd957d2775b`
 - Copyright: Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.
-- Upstream license: No explicit upstream license file was present in the upstream repository at import time.
+- Upstream license: MIT (see LICENSE in upstream repository).
 
 ## Install
 
