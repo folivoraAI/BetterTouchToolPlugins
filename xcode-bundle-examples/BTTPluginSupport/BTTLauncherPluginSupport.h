@@ -125,6 +125,18 @@ typedef void (^BTTLauncherPluginResultsCompletion)(NSArray<BTTLauncherPluginResu
 -(nullable BTTLauncherPluginInstance *)saveLauncherPluginInstance:(BTTLauncherPluginInstance *)instance pluginIdentifier:(NSString *)pluginIdentifier launcherID:(nullable NSString *)launcherID NS_SWIFT_NAME(saveLauncherPluginInstance(_:pluginIdentifier:launcherID:));
 -(void)deleteLauncherPluginInstance:(NSString *)instanceIdentifier pluginIdentifier:(NSString *)pluginIdentifier launcherID:(nullable NSString *)launcherID NS_SWIFT_NAME(deleteLauncherPluginInstance(_:pluginIdentifier:launcherID:));
 -(NSArray<NSDictionary<NSString *, id> *> *)launcherGroupsForLauncherID:(nullable NSString *)launcherID NS_SWIFT_NAME(launcherGroups(launcherID:));
+
+// Resolve input for one result before rendering it or performing its action.
+// Returns query (unchanged), matchedKeyword (empty if none), and argument
+// (trimmed remainder, or the full trimmed query if no keyword matched).
+// Pass the result's stable identity and searchable keywords, including its title.
+// User keywords are merged using launcherID. This never reads global prompt variables.
+@optional
+-(NSDictionary<NSString *, NSString *> * _Nonnull)launcherQueryInputForPluginIdentifier:(NSString * _Nonnull)pluginIdentifier
+                                                                      itemIdentifier:(NSString * _Nonnull)itemIdentifier
+                                                                               query:(NSString * _Nullable)query
+                                                                            keywords:(NSArray<NSString *> * _Nullable)keywords
+                                                                          launcherID:(NSString * _Nullable)launcherID NS_SWIFT_NAME(launcherQueryInput(pluginIdentifier:itemIdentifier:query:keywords:launcherID:));
 @end
 
 @protocol BTTLauncherPluginSurfaceDelegate <BTTLauncherPluginDelegate>

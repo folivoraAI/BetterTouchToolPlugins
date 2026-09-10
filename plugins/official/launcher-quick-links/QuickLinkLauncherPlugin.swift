@@ -9,6 +9,20 @@ import AppKit
 import Foundation
 import SwiftUI
 
+// Declare the optional host selector locally so this source also compiles with
+// older BTT plugin headers. AnyObject dispatch checks selector availability
+// without requiring the host to conform to this private protocol.
+@objc private protocol QuickLinkLauncherQueryInputProviding {
+    @objc(launcherQueryInputForPluginIdentifier:itemIdentifier:query:keywords:launcherID:)
+    optional func quickLinkLauncherQueryInput(
+        pluginIdentifier: String,
+        itemIdentifier: String,
+        query: String?,
+        keywords: [String]?,
+        launcherID: String?
+    ) -> [String: String]
+}
+
 final class QuickLinkLauncherPlugin: NSObject, BTTLauncherPluginInterface {
     weak var delegate: (any BTTLauncherPluginDelegate)?
 
@@ -65,13 +79,7 @@ final class QuickLinkLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         result.title = configuration.name
         result.subtitle = previewSubtitle(for: configuration, context: context)
         result.systemImageName = configuration.systemImageName
-        result.keywords = Array(Set(configuration.searchTerms + [
-            "quicklink",
-            "quick link",
-            "link",
-            "url",
-            configuration.browserName ?? ""
-        ] + (instance.keywords ?? []))).filter { !$0.isEmpty }
+        result.keywords = searchKeywords(for: configuration, instance: instance)
         result.trailingHint = "Open"
         result.primaryActionIdentifier = Actions.open
         result.surfaceIdentifier = IDs.editorSurface
@@ -322,7 +330,21 @@ final class QuickLinkLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         useClipboardFallback: Bool
     ) -> String {
         if let query = normalized(context.query) {
-            if let remainder = leadingPromptRemainder(query: query, terms: configuration.searchTerms) {
+            let terms = searchKeywords(for: configuration, instance: context.launcherPluginInstance)
+            if let instanceIdentifier = normalized(context.launcherPluginInstance?.instanceIdentifier),
+               let host = delegate as AnyObject?,
+               let input = host.quickLinkLauncherQueryInput?(
+                   pluginIdentifier: Self.pluginIdentifier,
+                   itemIdentifier: QuickLinkConfiguration.itemIdentifier(for: instanceIdentifier),
+                   query: context.query,
+                   keywords: terms,
+                   launcherID: context.launcherID
+               ),
+               let argument = input["argument"] {
+                // An exact keyword intentionally produces an empty argument.
+                return argument
+            }
+            if let remainder = leadingPromptRemainder(query: query, terms: terms) {
                 return remainder
             }
             return query
@@ -331,18 +353,38 @@ final class QuickLinkLauncherPlugin: NSObject, BTTLauncherPluginInterface {
         return normalized(NSPasteboard.general.string(forType: .string)) ?? ""
     }
 
+    private func searchKeywords(
+        for configuration: QuickLinkConfiguration,
+        instance: BTTLauncherPluginInstance?
+    ) -> [String] {
+        Array(Set(configuration.searchTerms + [
+            "quicklink",
+            "quick link",
+            "link",
+            "url",
+            configuration.browserName ?? ""
+        ] + (instance?.keywords ?? []))).filter { !$0.isEmpty }
+    }
+
+    // Older hosts do not expose user-defined launcher keywords to plugins.
+    // Keep their built-in term parsing, including exact and symbol keywords.
     private func leadingPromptRemainder(query: String, terms: [String]) -> String? {
-        let lowercasedQuery = query.lowercased()
-        for term in terms {
-            let normalizedTerm = term.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            guard !normalizedTerm.isEmpty,
-                  lowercasedQuery.count > normalizedTerm.count,
-                  lowercasedQuery.hasPrefix(normalizedTerm) else {
+        let sortedTerms = terms.compactMap(normalized).sorted { $0.count > $1.count }
+        for term in sortedTerms {
+            guard let range = query.range(
+                of: term,
+                options: [.anchored, .caseInsensitive, .diacriticInsensitive, .widthInsensitive]
+            ) else {
                 continue
             }
-            let suffixIndex = lowercasedQuery.index(lowercasedQuery.startIndex, offsetBy: normalizedTerm.count)
-            guard lowercasedQuery[suffixIndex].isWhitespace else { continue }
-            return String(query[suffixIndex...]).trimmingCharacters(in: .whitespacesAndNewlines)
+            let suffix = query[range.upperBound...]
+            if let first = suffix.first,
+               !first.isWhitespace,
+               let last = term.last,
+               last.isLetter || last.isNumber {
+                continue
+            }
+            return String(suffix).trimmingCharacters(in: .whitespacesAndNewlines)
         }
         return nil
     }
