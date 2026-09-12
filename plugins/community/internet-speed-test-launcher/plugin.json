@@ -1,0 +1,41 @@
+{
+  "name": "Internet Speed Test",
+  "identifier": "com.btt.ai.speedtest.launcher",
+  "type": "Launcher",
+  "version": "1.0.0",
+  "icon": "speedometer",
+  "shortDescription": "A Raycast-inspired Internet speed test dashboard for BetterTouchTool Launcher.",
+  "description": "Runs macOS networkQuality and displays download/upload gauges, live throughput animation, peak graphs, latency, responsiveness, endpoint and transfer details inside BTT Launcher.",
+  "author": "Community Plugin",
+  "license": "MIT",
+  "minMacOSVersion": "12.0",
+  "requirements": [
+    "BetterTouchTool with Swift plugin support",
+    "macOS /usr/bin/networkQuality command",
+    "Apple Command Line Tools if BTT asks to compile Swift plugins"
+  ],
+  "keywords": [
+    "launcher",
+    "speedtest",
+    "networkQuality",
+    "internet",
+    "download",
+    "upload",
+    "latency",
+    "throughput"
+  ],
+  "files": [
+    {
+      "path": "SpeedTestLauncherPlugin.swift",
+      "type": "swift-source-plugin"
+    }
+  ],
+  "screenshots": [
+    "screenshot.png"
+  ],
+  "installation": [
+    "Copy SpeedTestLauncherPlugin.swift to ~/Library/Application Support/BetterTouchTool/Plugins/",
+    "Restart BetterTouchTool or wait for plugin reload.",
+    "Open BTT Launcher and search for Test Internet Speed."
+  ]
+}
