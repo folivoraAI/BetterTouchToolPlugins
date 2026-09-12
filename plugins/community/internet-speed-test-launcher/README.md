@@ -2,7 +2,7 @@
 
 ![Internet Speed Test screenshot](https://raw.githubusercontent.com/loaykhalifa/BetterTouchToolPlugins/master/plugins/community/internet-speed-test-launcher/Screenshot.jpg)
 
-A Raycast-inspired **Internet Speed Test** plugin for **BetterTouchTool Launcher**. It runs macOS's built-in `networkQuality` command and shows a compact dashboard directly inside the BTT Launcher.
+An **Internet Speed Test** plugin for **BetterTouchTool Launcher**. It runs macOS's built-in `networkQuality` command and shows a compact dashboard directly inside the BTT Launcher.
 
 ## Features
 
@@ -19,17 +19,6 @@ A Raycast-inspired **Internet Speed Test** plugin for **BetterTouchTool Launcher
 - Refresh / test-again button beside the status area
 - No third-party CLI dependency required
 
-## Screenshot
-
-![Screenshot](https://raw.githubusercontent.com/loaykhalifa/BetterTouchToolPlugins/master/plugins/community/internet-speed-test-launcher/Screenshot.jpg)
-
-Screenshot file in this repository:
-
-`Screenshot.jpg`
-
-GitHub URL:
-
-https://github.com/loaykhalifa/BetterTouchToolPlugins/blob/master/plugins/community/internet-speed-test-launcher/Screenshot.jpg
 
 ## Requirements
 
