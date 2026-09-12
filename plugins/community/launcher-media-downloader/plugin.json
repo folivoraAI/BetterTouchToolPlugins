@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "icon": "arrow.down.circle.fill",
   "main": "BTTMediaDownloader.swift",
-  "thumbnail": "thumbnail.jpg",
+  "screenshots": "thumbnail.jpg",
   "requirements": [
     "BetterTouchTool with Swift plugins enabled",
     "Homebrew",
