@@ -1,7 +1,5 @@
 # Media Downloader — BetterTouchTool Launcher Plugin
 
-![Media Downloader screenshot](https://raw.githubusercontent.com/loaykhalifa/BetterTouchToolPlugins/master/plugins/community/launcher-media-downloader/thumbnail.jpg)
-
 A minimal **Media Downloader** plugin for **BetterTouchTool Launcher**. It uses **yt-dlp** and FFmpeg to download video or audio from YouTube, Facebook, Instagram, TikTok and many other yt-dlp supported sites.
 
 ## Features
