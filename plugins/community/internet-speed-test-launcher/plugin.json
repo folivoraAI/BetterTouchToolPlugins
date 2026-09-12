@@ -4,11 +4,17 @@
   "type": "Launcher",
   "version": "1.0.0",
   "icon": "speedometer",
-  "shortDescription": "A speed test dashboard for BetterTouchTool Launcher.",
+  "shortDescription": "A Raycast-inspired Internet speed test dashboard for BetterTouchTool Launcher.",
   "description": "Runs macOS networkQuality and displays download/upload gauges, live throughput animation, peak graphs, latency, responsiveness, endpoint and transfer details inside BTT Launcher.",
-  "author": "Community Plugin",
+  "author": "loaykhalifa",
   "license": "MIT",
   "minMacOSVersion": "12.0",
+  "repository": "https://github.com/loaykhalifa/BetterTouchToolPlugins",
+  "homepage": "https://github.com/loaykhalifa/BetterTouchToolPlugins/tree/master/plugins/community/internet-speed-test-launcher",
+  "screenshot": "https://github.com/loaykhalifa/BetterTouchToolPlugins/blob/master/plugins/community/internet-speed-test-launcher/Screenshot.jpg",
+  "screenshots": [
+    "https://github.com/loaykhalifa/BetterTouchToolPlugins/blob/master/plugins/community/internet-speed-test-launcher/Screenshot.jpg"
+  ],
   "requirements": [
     "BetterTouchTool with Swift plugin support",
     "macOS /usr/bin/networkQuality command",
@@ -28,10 +34,11 @@
     {
       "path": "SpeedTestLauncherPlugin.swift",
       "type": "swift-source-plugin"
+    },
+    {
+      "path": "Screenshot.jpg",
+      "type": "screenshot"
     }
-  ],
-  "screenshots": [
-    "screenshot.png"
   ],
   "installation": [
     "Copy SpeedTestLauncherPlugin.swift to ~/Library/Application Support/BetterTouchTool/Plugins/",
