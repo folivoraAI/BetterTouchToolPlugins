@@ -4,7 +4,7 @@
   "type": "Launcher",
   "version": "1.0.0",
   "icon": "speedometer",
-  "shortDescription": "A Raycast-inspired Internet speed test dashboard for BetterTouchTool Launcher.",
+  "shortDescription": "A speed test dashboard for BetterTouchTool Launcher.",
   "description": "Runs macOS networkQuality and displays download/upload gauges, live throughput animation, peak graphs, latency, responsiveness, endpoint and transfer details inside BTT Launcher.",
   "author": "Community Plugin",
   "license": "MIT",
