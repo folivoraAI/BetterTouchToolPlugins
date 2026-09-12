@@ -144,17 +144,24 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
     }
 
     func makeDownloadArguments(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, audioQuality: String, folder: URL) -> [String] {
+        let isPlaylist = shouldDownloadPlaylist(url)
+        let fileNameTemplate = "%(title).180B - %(channel,uploader,creator|Unknown Channel).80B.%(ext)s"
+        let outputTemplate = isPlaylist
+            ? "%(playlist_title).180B/" + fileNameTemplate
+            : fileNameTemplate
+
         var args = [
             "--ignore-config",
             "--newline",
+            "--no-color",
             "--no-warnings",
             "--no-simulate",
             "--progress-template", "download:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s",
             "--print", "after_move:filepath",
             "--ffmpeg-location", ffmpegLocation,
             "-P", folder.path,
-            "-o", "%(title).180B [%(id)s].%(ext)s",
-            shouldDownloadPlaylist(url) ? "--yes-playlist" : "--no-playlist"
+            "-o", outputTemplate,
+            isPlaylist ? "--yes-playlist" : "--no-playlist"
         ]
 
         switch mode {
@@ -237,6 +244,10 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         }
     }
 
+    func willDownloadPlaylist(_ url: String) -> Bool {
+        shouldDownloadPlaylist(url)
+    }
+
     private func shouldDownloadPlaylist(_ url: String) -> Bool {
         guard let components = URLComponents(string: url), let items = components.queryItems else { return false }
         return items.contains { $0.name.lowercased() == "list" && !($0.value ?? "").isEmpty }
@@ -261,6 +272,7 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
     weak var delegate: (any BTTLauncherPluginSurfaceDelegate)?
     private weak var plugin: VideoDownloader?
     private let context: BTTLauncherPluginContext
+    private var model: VideoDownloaderViewModel?
 
     init(plugin: VideoDownloader, context: BTTLauncherPluginContext) {
         self.plugin = plugin
@@ -270,20 +282,35 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
 
     func makeLauncherSurfaceView() -> NSView {
         let model = VideoDownloaderViewModel(plugin: plugin, context: context)
+        self.model = model
         return NSHostingView(rootView: VideoDownloaderDashboardView(model: model))
+    }
+
+    func handleLauncherRawKeyEvent(_ event: NSEvent) -> Bool {
+        guard event.type == .keyDown else { return false }
+        switch event.keyCode {
+        case 36, 76: // Return / Enter
+            model?.start()
+            return true
+        case 48: // Tab cycles format reliably inside BTT Launcher
+            model?.cycleFormat(backwards: event.modifierFlags.contains(.shift))
+            return true
+        default:
+            return false
+        }
     }
 
     func launcherSurfacePreferredContentSize() -> CGSize { CGSize(width: 850, height: 395) }
     func launcherSurfaceMinimumContentSize() -> CGSize { CGSize(width: 720, height: 340) }
     func launcherSurfacePlaceholderText() -> String? { "Paste a video URL" }
-    func launcherSurfaceFooterHint() -> String? { "YouTube • Facebook • Instagram • TikTok • and more" }
+    func launcherSurfaceFooterHint() -> String? { "↩ Enter: Download • ⇥ Tab: Change Format • ⇧⇥: Previous Format" }
     func launcherSurfaceKeepsLauncherPinned() -> Bool { true }
 }
 
 final class VideoDownloaderViewModel: ObservableObject {
     @Published var mode: DownloadMode = .video
     @Published var url: String
-    @Published var videoPreset = "720p | WebM"
+    @Published var videoPreset = "Best available | Original"
     @Published var customFormat = "bestvideo+bestaudio/best"
     @Published var audioFormat = "MP3"
     @Published var audioQuality = "Best"
@@ -302,6 +329,7 @@ final class VideoDownloaderViewModel: ObservableObject {
 
     private weak var plugin: VideoDownloader?
     private var task: Process?
+    private var progressTimer: Timer?
     private var lastThumbnailURL = ""
 
     init(plugin: VideoDownloader?, context: BTTLauncherPluginContext) {
@@ -331,11 +359,13 @@ final class VideoDownloaderViewModel: ObservableObject {
         speed = "—"
         eta = "—"
         isRunning = true
+        beginLiveProgress()
         status = mode == .video ? "Downloading video…" : "Downloading audio…"
-        detail = "Starting yt-dlp."
+        detail = plugin.willDownloadPlaylist(trimmed) ? "Starting playlist download into its own folder." : "Starting yt-dlp."
         task = plugin.runYTDLP(arguments: args, progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
             guard let self else { return }
             self.isRunning = false
+            self.stopLiveProgress()
             self.progress = success ? 1 : self.progress
             self.status = success ? "Finished" : "Failed"
             self.detail = success ? "Download completed. Open Folder to view it." : "Download failed. Copy Last Log for details."
@@ -344,6 +374,7 @@ final class VideoDownloaderViewModel: ObservableObject {
 
     func cancel() {
         task?.terminate()
+        stopLiveProgress()
         isRunning = false
         status = "Cancelled"
         detail = "The active download was stopped."
@@ -353,10 +384,12 @@ final class VideoDownloaderViewModel: ObservableObject {
         guard let plugin else { fail("Plugin not available."); return }
         isRunning = true
         progress = 0
+        beginLiveProgress()
         status = "Updating yt-dlp…"
         detail = "Homebrew is checking yt-dlp and FFmpeg."
         plugin.startToolUpdate(progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
             self?.isRunning = false
+            self?.stopLiveProgress()
             self?.progress = success ? 1 : 0
             self?.status = success ? "Tools updated" : "Tool update failed"
             self?.detail = success ? "yt-dlp and FFmpeg are ready." : "Copy Last Log for details."
@@ -377,6 +410,28 @@ final class VideoDownloaderViewModel: ObservableObject {
         }
     }
 
+    func cycleFormat(backwards: Bool = false) {
+        if mode == .video {
+            guard let current = videoPresets.firstIndex(of: videoPreset) else {
+                videoPreset = videoPresets.first ?? videoPreset
+                return
+            }
+            let next = backwards
+                ? (current - 1 + videoPresets.count) % videoPresets.count
+                : (current + 1) % videoPresets.count
+            videoPreset = videoPresets[next]
+        } else {
+            guard let current = audioFormats.firstIndex(of: audioFormat) else {
+                audioFormat = audioFormats.first ?? audioFormat
+                return
+            }
+            let next = backwards
+                ? (current - 1 + audioFormats.count) % audioFormats.count
+                : (current + 1) % audioFormats.count
+            audioFormat = audioFormats[next]
+        }
+    }
+
     func copyLog() {
         if plugin?.copyLastLog() == true {
             status = "Log copied"
@@ -385,23 +440,68 @@ final class VideoDownloaderViewModel: ObservableObject {
     }
 
     private func consumeOutput(_ text: String) {
-        for line in text.components(separatedBy: .newlines) {
+        noteActivity()
+        for rawLine in text.components(separatedBy: .newlines) {
+            let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !line.isEmpty else { continue }
             if line.hasPrefix("download:") {
                 let payload = String(line.dropFirst("download:".count))
                 let parts = payload.components(separatedBy: "|")
                 if parts.count >= 3 {
-                    let percentText = parts[0].replacingOccurrences(of: "%", with: "").trimmingCharacters(in: .whitespaces)
-                    if let p = Double(percentText) { progress = min(max(p / 100.0, 0), 1) }
-                    speed = parts[1].trimmingCharacters(in: .whitespaces)
-                    eta = parts[2].trimmingCharacters(in: .whitespaces)
-                    status = "Downloading"
-                    detail = "\(Int(progress * 100))% • \(speed) • ETA \(eta)"
+                    updateProgress(percent: parts[0], speedText: parts[1], etaText: parts[2])
                 }
+            } else if let percentRange = line.range(of: #"\d+(?:\.\d+)?%"#, options: .regularExpression) {
+                let percentText = String(line[percentRange])
+                let speedText = firstMatch(in: line, pattern: #"at\s+([^\s]+/s)"#) ?? speed
+                let etaText = firstMatch(in: line, pattern: #"ETA\s+([^\s]+)"#) ?? eta
+                updateProgress(percent: percentText, speedText: speedText, etaText: etaText)
             } else if line.hasPrefix("/") || line.contains(".mp4") || line.contains(".webm") || line.contains(".mp3") || line.contains(".m4a") {
                 detail = line
             }
         }
+    }
+
+    private func updateProgress(percent: String, speedText: String, etaText: String) {
+        let cleanedPercent = percent.replacingOccurrences(of: "%", with: "").trimmingCharacters(in: .whitespaces)
+        if let p = Double(cleanedPercent) { progress = min(max(p / 100.0, 0), 1) }
+        speed = speedText.trimmingCharacters(in: .whitespaces)
+        eta = etaText.trimmingCharacters(in: .whitespaces)
+        status = "Downloading"
+        detail = "\(Int(progress * 100))% • \(speed) • ETA \(eta)"
+    }
+
+    private func beginLiveProgress() {
+        progressTimer?.invalidate()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: true) { [weak self] _ in
+            guard let self, self.isRunning else { return }
+            // yt-dlp only reports exact percentages during the download phase.
+            // During resolving, extracting info, playlist preparation, merging and post-processing,
+            // keep the bar alive but never fake-complete it. Real percent output still overrides this.
+            if self.progress < 0.92 {
+                let step = self.progress < 0.12 ? 0.018 : 0.006
+                self.progress = min(self.progress + step, 0.92)
+            }
+            if self.status == "Downloading video…" || self.status == "Downloading audio…" {
+                self.status = "Processing"
+            }
+        }
+    }
+
+    private func stopLiveProgress() {
+        progressTimer?.invalidate()
+        progressTimer = nil
+    }
+
+    private func noteActivity() {
+        if isRunning && progress < 0.06 { progress = 0.06 }
+    }
+
+    private func firstMatch(in text: String, pattern: String) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: pattern),
+              let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
+              match.numberOfRanges > 1,
+              let range = Range(match.range(at: 1), in: text) else { return nil }
+        return String(text[range])
     }
 
     private func fail(_ message: String) {
@@ -444,6 +544,7 @@ struct VideoDownloaderDashboardView: View {
             field("URL") {
                 TextField("https://youtu.be/…", text: $model.url)
                     .textFieldStyle(.roundedBorder)
+                    .onSubmit { model.start() }
             }
 
             field("Mode & Format") {
@@ -487,6 +588,7 @@ struct VideoDownloaderDashboardView: View {
                 HStack(spacing: 8) {
                     TextField("Download folder", text: $model.folderPath)
                         .textFieldStyle(.roundedBorder)
+                        .onSubmit { model.start() }
                     Button("Choose…") { model.chooseFolder() }
                 }
             }
