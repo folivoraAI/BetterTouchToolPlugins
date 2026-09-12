@@ -97,8 +97,10 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return NSPasteboard.general.setString(log, forType: .string)
     }
 
-    func startToolUpdate(progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) {
+    @discardableResult
+    func startToolUpdate(progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
         let script = """
+        set -euo pipefail
         export PATH="/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
         if [ ! -x "\(brew)" ]; then
           echo "Homebrew was not found at \(brew)"
@@ -107,44 +109,76 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         "\(brew)" update
         "\(brew)" list yt-dlp >/dev/null 2>&1 || "\(brew)" install yt-dlp
         "\(brew)" list ffmpeg >/dev/null 2>&1 || "\(brew)" install ffmpeg
-        "\(brew)" upgrade yt-dlp ffmpeg || true
+        "\(brew)" upgrade yt-dlp ffmpeg
+        test -x "\(ytDLP)"
+        test -x "\(ffmpeg)"
+        test -x "\(ffprobe)"
         """
-        runShell(script: script, progress: progress, completion: completion)
+        return runShell(script: script, progress: progress, completion: completion)
     }
 
     func fetchThumbnail(for videoURL: String, completion: @escaping (NSImage?) -> Void) {
-        let trimmed = videoURL.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty, FileManager.default.isExecutableFile(atPath: ytDLP) else { completion(nil); return }
-        DispatchQueue.global(qos: .utility).async {
-            let task = Process()
-            task.executableURL = URL(fileURLWithPath: self.ytDLP)
-            task.arguments = ["--ignore-config", "--no-warnings", "--skip-download", "--print", "thumbnail", trimmed]
-            let pipe = Pipe()
-            task.standardOutput = pipe
-            task.standardError = Pipe()
-            do {
-                try task.run()
-                task.waitUntilExit()
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                guard task.terminationStatus == 0,
-                      let output = String(data: data, encoding: .utf8),
-                      let firstLine = output.components(separatedBy: .newlines).first,
-                      let url = URL(string: firstLine.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-                    DispatchQueue.main.async { completion(nil) }
+        guard let validatedURL = validatedHTTPURLString(videoURL),
+              FileManager.default.isExecutableFile(atPath: ytDLP) else { completion(nil); return }
+
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: ytDLP)
+        task.arguments = [
+            "--ignore-config",
+            "--no-warnings",
+            "--skip-download",
+            "--playlist-items", "1",
+            "--print", "thumbnail",
+            "--", validatedURL
+        ]
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+        var output = Data()
+        var didComplete = false
+        let handle = pipe.fileHandleForReading
+        handle.readabilityHandler = { fileHandle in
+            let data = fileHandle.availableData
+            guard !data.isEmpty else { return }
+            if output.count < 64_000 { output.append(data) }
+        }
+
+        task.terminationHandler = { process in
+            handle.readabilityHandler = nil
+            DispatchQueue.main.async {
+                guard !didComplete else { return }
+                didComplete = true
+                guard process.terminationStatus == 0,
+                      let text = String(data: output, encoding: .utf8),
+                      let firstLine = text.components(separatedBy: .newlines)
+                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                        .first(where: { $0.hasPrefix("http://") || $0.hasPrefix("https://") }),
+                      let imageURL = URL(string: firstLine) else {
+                    completion(nil)
                     return
                 }
-                URLSession.shared.dataTask(with: url) { data, _, _ in
+                URLSession.shared.dataTask(with: imageURL) { data, _, _ in
                     let image = data.flatMap { NSImage(data: $0) }
                     DispatchQueue.main.async { completion(image) }
                 }.resume()
-            } catch {
-                DispatchQueue.main.async { completion(nil) }
             }
+        }
+
+        do {
+            try task.run()
+            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 12) {
+                if task.isRunning { task.terminate() }
+            }
+        } catch {
+            handle.readabilityHandler = nil
+            completion(nil)
         }
     }
 
-    func makeDownloadArguments(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, audioQuality: String, folder: URL) -> [String] {
-        let isPlaylist = shouldDownloadPlaylist(url)
+    func makeDownloadArguments(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, audioQuality: String, folder: URL) -> [String]? {
+        guard let validatedURL = validatedHTTPURLString(url) else { return nil }
+        let isPlaylist = shouldDownloadPlaylist(validatedURL)
         let fileNameTemplate = "%(title).180B - %(channel,uploader,creator|Unknown Channel).80B.%(ext)s"
         let outputTemplate = isPlaylist
             ? "%(playlist_title).180B/" + fileNameTemplate
@@ -156,7 +190,8 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
             "--no-color",
             "--no-warnings",
             "--no-simulate",
-            "--progress-template", "download:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s",
+            "--progress",
+            "--progress-template", "download:download:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s",
             "--print", "after_move:filepath",
             "--ffmpeg-location", ffmpegLocation,
             "-P", folder.path,
@@ -177,7 +212,7 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
                 args += ["--audio-quality", qualityMap[audioQuality] ?? "0"]
             }
         }
-        args.append(url)
+        args += ["--", validatedURL]
         return args
     }
 
@@ -191,8 +226,9 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return runProcess(executable: ytDLP, arguments: arguments, progress: progress, completion: completion)
     }
 
-    private func runShell(script: String, progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) {
-        _ = runProcess(executable: "/bin/zsh", arguments: ["-lc", script], progress: progress, completion: completion)
+    @discardableResult
+    private func runShell(script: String, progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
+        runProcess(executable: "/bin/zsh", arguments: ["-lc", script], progress: progress, completion: completion)
     }
 
     private func runProcess(executable: String, arguments: [String], progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
@@ -245,7 +281,19 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
     }
 
     func willDownloadPlaylist(_ url: String) -> Bool {
-        shouldDownloadPlaylist(url)
+        guard let validatedURL = validatedHTTPURLString(url) else { return false }
+        return shouldDownloadPlaylist(validatedURL)
+    }
+
+    func validatedHTTPURLString(_ raw: String) -> String? {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let components = URLComponents(string: trimmed),
+              let scheme = components.scheme?.lowercased(),
+              (scheme == "http" || scheme == "https"),
+              let host = components.host,
+              !host.isEmpty,
+              let url = components.url else { return nil }
+        return url.absoluteString
     }
 
     private func shouldDownloadPlaylist(_ url: String) -> Bool {
@@ -273,6 +321,8 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
     private weak var plugin: VideoDownloader?
     private let context: BTTLauncherPluginContext
     private var model: VideoDownloaderViewModel?
+    private var commandKeyWasDown = false
+    private var commandEventMonitor: Any?
 
     init(plugin: VideoDownloader, context: BTTLauncherPluginContext) {
         self.plugin = plugin
@@ -286,7 +336,37 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
         return NSHostingView(rootView: VideoDownloaderDashboardView(model: model))
     }
 
+    func launcherSurfaceDidAppear() {
+        commandEventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { [weak self] event in
+            _ = self?.handleCommandFlags(event)
+            return event
+        }
+    }
+
+    func launcherSurfaceWillDisappear() {
+        if let commandEventMonitor {
+            NSEvent.removeMonitor(commandEventMonitor)
+            self.commandEventMonitor = nil
+        }
+        commandKeyWasDown = false
+    }
+
+    private func handleCommandFlags(_ event: NSEvent) -> Bool {
+        let commandIsDown = event.modifierFlags.intersection(.deviceIndependentFlagsMask).contains(.command)
+        if commandIsDown && !commandKeyWasDown {
+            commandKeyWasDown = true
+            model?.toggleMode()
+            return true
+        }
+        commandKeyWasDown = commandIsDown
+        return false
+    }
+
     func handleLauncherRawKeyEvent(_ event: NSEvent) -> Bool {
+        if event.type == .flagsChanged {
+            return handleCommandFlags(event)
+        }
+
         guard event.type == .keyDown else { return false }
         switch event.keyCode {
         case 36, 76: // Return / Enter
@@ -300,10 +380,10 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
         }
     }
 
-    func launcherSurfacePreferredContentSize() -> CGSize { CGSize(width: 850, height: 395) }
-    func launcherSurfaceMinimumContentSize() -> CGSize { CGSize(width: 720, height: 340) }
+    func launcherSurfacePreferredContentSize() -> CGSize { CGSize(width: 850, height: 440) }
+    func launcherSurfaceMinimumContentSize() -> CGSize { CGSize(width: 720, height: 410) }
     func launcherSurfacePlaceholderText() -> String? { "Paste a video URL" }
-    func launcherSurfaceFooterHint() -> String? { "↩ Enter: Download • ⇥ Tab: Change Format • ⇧⇥: Previous Format" }
+    func launcherSurfaceFooterHint() -> String? { "⌘ Command: Switch Video/Audio • ↩ Enter: Download • ⇥ Tab: Change Format" }
     func launcherSurfaceKeepsLauncherPinned() -> Bool { true }
 }
 
@@ -330,6 +410,7 @@ final class VideoDownloaderViewModel: ObservableObject {
     private weak var plugin: VideoDownloader?
     private var task: Process?
     private var progressTimer: Timer?
+    private var cancellationRequested = false
     private var lastThumbnailURL = ""
 
     init(plugin: VideoDownloader?, context: BTTLauncherPluginContext) {
@@ -347,17 +428,22 @@ final class VideoDownloaderViewModel: ObservableObject {
     }
 
     func start() {
+        guard !isRunning else { return }
         guard let plugin else { fail("Plugin not available."); return }
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { fail("Please paste a video URL."); return }
+        guard plugin.validatedHTTPURLString(trimmed) != nil else { fail("Please paste a valid http(s) URL."); return }
         refreshThumbnailIfNeeded()
         let folder = URL(fileURLWithPath: folderPath.isEmpty ? plugin.defaultDownloadDirectory().path : folderPath, isDirectory: true)
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let args = plugin.makeDownloadArguments(mode: mode, url: trimmed, videoPreset: videoPreset, customFormat: customFormat, audioFormat: audioFormat, audioQuality: audioQuality, folder: folder)
+        guard let args = plugin.makeDownloadArguments(mode: mode, url: trimmed, videoPreset: videoPreset, customFormat: customFormat, audioFormat: audioFormat, audioQuality: audioQuality, folder: folder) else {
+            fail("Please paste a valid http(s) URL.")
+            return
+        }
 
         progress = 0
         speed = "—"
         eta = "—"
+        cancellationRequested = false
         isRunning = true
         beginLiveProgress()
         status = mode == .video ? "Downloading video…" : "Downloading audio…"
@@ -366,33 +452,48 @@ final class VideoDownloaderViewModel: ObservableObject {
             guard let self else { return }
             self.isRunning = false
             self.stopLiveProgress()
+            if self.cancellationRequested {
+                self.status = "Cancelled"
+                self.detail = "The active operation was stopped."
+                self.cancellationRequested = false
+                return
+            }
             self.progress = success ? 1 : self.progress
             self.status = success ? "Finished" : "Failed"
-            self.detail = success ? "Download completed. Open Folder to view it." : "Download failed. Copy Last Log for details."
+            self.detail = success ? "Download completed." : "Download failed. Copy Last Log for details."
         })
     }
 
     func cancel() {
-        task?.terminate()
-        stopLiveProgress()
-        isRunning = false
-        status = "Cancelled"
-        detail = "The active download was stopped."
+        guard let task, task.isRunning else { return }
+        cancellationRequested = true
+        status = "Cancelling…"
+        detail = "Stopping the active operation."
+        task.terminate()
     }
 
     func updateTools() {
+        guard !isRunning else { return }
         guard let plugin else { fail("Plugin not available."); return }
+        cancellationRequested = false
         isRunning = true
         progress = 0
         beginLiveProgress()
         status = "Updating yt-dlp…"
         detail = "Homebrew is checking yt-dlp and FFmpeg."
-        plugin.startToolUpdate(progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
-            self?.isRunning = false
-            self?.stopLiveProgress()
-            self?.progress = success ? 1 : 0
-            self?.status = success ? "Tools updated" : "Tool update failed"
-            self?.detail = success ? "yt-dlp and FFmpeg are ready." : "Copy Last Log for details."
+        task = plugin.startToolUpdate(progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
+            guard let self else { return }
+            self.isRunning = false
+            self.stopLiveProgress()
+            if self.cancellationRequested {
+                self.status = "Cancelled"
+                self.detail = "The update was stopped."
+                self.cancellationRequested = false
+                return
+            }
+            self.progress = success ? 1 : 0
+            self.status = success ? "Tools updated" : "Tool update failed"
+            self.detail = success ? "yt-dlp and FFmpeg are ready." : "Copy Last Log for details."
         })
     }
 
@@ -408,6 +509,10 @@ final class VideoDownloaderViewModel: ObservableObject {
         if panel.runModal() == .OK, let url = panel.url {
             folderPath = url.path
         }
+    }
+
+    func toggleMode() {
+        mode = mode == .video ? .audio : .video
     }
 
     func cycleFormat(backwards: Bool = false) {
@@ -514,14 +619,17 @@ struct VideoDownloaderDashboardView: View {
     @ObservedObject var model: VideoDownloaderViewModel
 
     var body: some View {
-        VStack(spacing: 18) {
-            header
-            HStack(alignment: .top, spacing: 22) {
+        HStack(alignment: .top, spacing: 22) {
+            VStack(alignment: .leading, spacing: 14) {
+                header
                 controls
-                previewAndProgress
             }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+
+            previewAndProgress
         }
-        .padding(22)
+        .padding(18)
+        .frame(width: 806, height: 356, alignment: .top)
         .background(Color.clear)
         .onChange(of: model.url) { _ in model.refreshThumbnailIfNeeded() }
     }
@@ -593,16 +701,20 @@ struct VideoDownloaderDashboardView: View {
                 }
             }
 
-            Spacer(minLength: 0)
-
             Button(action: { model.start() }) {
                 Text("Download")
-                    .font(.system(size: 38, weight: .bold, design: .rounded))
-                    .frame(maxWidth: .infinity, minHeight: 68)
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .frame(maxWidth: .infinity, minHeight: 48)
             }
             .keyboardShortcut(.return, modifiers: [])
             .buttonStyle(.borderedProminent)
             .disabled(model.isRunning)
+
+            Text("⌘ Command: Switch Video/Audio   •   ↩ Enter: Download   •   ⇥ Tab: Change Format")
+                .font(.caption.weight(.medium))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .center)
 
             if model.isRunning {
                 HStack {
@@ -666,12 +778,13 @@ struct VideoDownloaderDashboardView: View {
                     Spacer()
                     Button("Update") { model.updateTools() }
                         .font(.caption.weight(.semibold))
+                        .disabled(model.isRunning)
                     Button("Log") { model.copyLog() }
                         .font(.caption.weight(.semibold))
                 }
             }
         }
-        .frame(width: 245, height: 250, alignment: .topLeading)
+        .frame(width: 245, height: 320, alignment: .topLeading)
     }
 
     private func field<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
