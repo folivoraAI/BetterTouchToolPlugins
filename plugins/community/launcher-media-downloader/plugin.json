@@ -1,0 +1,29 @@
+{
+  "name": "Media Downloader",
+  "identifier": "com.loay.btt.media-downloader",
+  "type": "launcher",
+  "description": "Download video or audio from YouTube, Facebook, Instagram, TikTok and many other yt-dlp supported sites.",
+  "author": "Loay Khalifa",
+  "version": "1.0.0",
+  "icon": "arrow.down.circle.fill",
+  "main": "BTTMediaDownloader.swift",
+  "requirements": [
+    "BetterTouchTool with Swift plugins enabled",
+    "Homebrew",
+    "yt-dlp",
+    "ffmpeg",
+    "ffprobe"
+  ],
+  "tags": [
+    "launcher",
+    "media",
+    "youtube",
+    "instagram",
+    "facebook",
+    "tiktok",
+    "yt-dlp",
+    "download",
+    "video",
+    "audio"
+  ]
+}
