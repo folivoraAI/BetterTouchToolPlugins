@@ -9,6 +9,11 @@ import AppKit
 import Foundation
 import SwiftUI
 
+// Keep the State property wrapper used by earlier SwiftUI SDKs. SDK 27 also
+// exports a State macro whose implementation is absent from some standalone
+// Command Line Tools packages; this distinct name avoids selecting that macro.
+private typealias QuickLinkState<Value> = SwiftUI.State<Value>
+
 // Declare the optional host selector locally so this source also compiles with
 // older BTT plugin headers. AnyObject dispatch checks selector availability
 // without requiring the host to conform to this private protocol.
@@ -1103,8 +1108,8 @@ private struct QuickLinkEditorView: View {
     let onDelete: () -> Void
     let onCancel: () -> Void
 
-    @State private var draft: QuickLinkEditorDraft
-    @State private var validationMessage: String?
+    @QuickLinkState private var draft: QuickLinkEditorDraft
+    @QuickLinkState private var validationMessage: String?
 
     init(
         isEditing: Bool,

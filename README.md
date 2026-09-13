@@ -96,6 +96,31 @@ final class HelloLauncher: NSObject, BTTLauncherPluginInterface {
 }
 ```
 
+### SwiftUI State Compatibility
+
+For SwiftUI source plugins that support standalone Command Line Tools and older
+macOS SDKs, use a uniquely named local alias for the `State` property wrapper:
+
+```swift
+import SwiftUI
+
+private typealias MyPluginState<Value> = SwiftUI.State<Value>
+
+private struct EditorView: View {
+    @MyPluginState private var text = ""
+
+    var body: some View {
+        TextField("Text", text: $text)
+    }
+}
+```
+
+SDK 27 also declares an `@State` macro, but some standalone tools packages lack
+its `SwiftUIMacros` implementation. The distinct alias selects the existing
+property wrapper and retains its earlier initialization behavior. This does not
+provide other missing macros or the new macro's lazy initialization semantics.
+The [Quick Links example](plugins/official/launcher-quick-links) uses this pattern.
+
 ### Install
 
 Use one of these:

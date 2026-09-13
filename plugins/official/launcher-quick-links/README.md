@@ -9,6 +9,11 @@ commands, variable replacement, and browser launching.
 Install by dropping `QuickLinkLauncherPlugin.swift` onto the BetterTouchTool
 preferences window.
 
+The editor uses SwiftUI's `State` property wrapper through a local type alias.
+This supports earlier macOS SDKs and standalone Command Line Tools with the
+macOS 27 SDK, including packages missing the new `SwiftUIMacros` implementation.
+Full Xcode is not required for this plugin.
+
 `{argument}` contains the input after the link's matching launcher keyword or
 search term. Custom keywords use the active launcher's settings, including any
 launcher-specific override. The longest leading match wins: a keyword `g` turns
