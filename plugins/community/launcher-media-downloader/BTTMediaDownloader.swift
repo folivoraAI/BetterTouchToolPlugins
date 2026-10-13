@@ -10,8 +10,8 @@
 //
 // Requirements:
 // - BetterTouchTool with Swift plugins enabled
-// - Homebrew at /opt/homebrew/bin/brew
-// - yt-dlp, ffmpeg and ffprobe at /opt/homebrew/bin/
+// - Homebrew at /opt/homebrew/bin/brew (Apple Silicon) or /usr/local/bin/brew (Intel)
+// - yt-dlp, ffmpeg and ffprobe in /opt/homebrew/bin/ or /usr/local/bin/
 //
 // The plugin includes an Update button that can install/update yt-dlp and FFmpeg
 // through Homebrew. Only download media you own or have permission to download.
@@ -24,58 +24,60 @@ import Combine
 final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
     weak var delegate: (any BTTLauncherPluginDelegate)?
 
-    private static let backgroundTaskLock = NSLock()
-    private static var backgroundTasks: [Process] = []
+    // The model of the running download (or tool check/update). It is owned by the plugin, not by a
+    // surface, so a reopened Launcher surface shows the live progress and Cancel still reaches the process.
+    var activeJobModel: VideoDownloaderViewModel?
 
-    private static func retainBackgroundTask(_ task: Process) {
-        backgroundTaskLock.lock()
-        backgroundTasks.append(task)
-        backgroundTaskLock.unlock()
-    }
-
-    private static func releaseBackgroundTask(_ task: Process) {
-        backgroundTaskLock.lock()
-        backgroundTasks.removeAll { $0 === task }
-        backgroundTaskLock.unlock()
-    }
-
-    private static func hasRunningBackgroundTasks() -> Bool {
-        backgroundTaskLock.lock()
-        let hasRunning = backgroundTasks.contains { $0.isRunning }
-        backgroundTaskLock.unlock()
-        return hasRunning
-    }
-
-    func hasRunningBackgroundDownloads() -> Bool {
-        VideoDownloader.hasRunningBackgroundTasks()
-    }
-
-    func killProcessTree(_ process: Process?) {
-        guard let process else { return }
+    /// Sends SIGTERM to the process and its direct children (ffmpeg), escalating to SIGKILL after 0.7 s
+    /// while the process is still running. Returns false when there was no running process to signal.
+    @discardableResult
+    func killProcessTree(_ process: Process?) -> Bool {
+        guard let process, process.isRunning else { return false }
         let pid = process.processIdentifier
-        guard pid > 0 else { return }
+        guard pid > 0 else { return false }
 
-        let killer = Process()
-        killer.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        killer.arguments = ["-lc", "pkill -TERM -P \(pid) 2>/dev/null; kill -TERM \(pid) 2>/dev/null; sleep 0.7; pkill -KILL -P \(pid) 2>/dev/null; kill -KILL \(pid) 2>/dev/null; true"]
-        try? killer.run()
-
-        if process.isRunning {
-            process.terminate()
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Children first: pkill -P only finds them while their parent is still alive.
+            // Process.isRunning stays true until the child is reaped, so the pid cannot have been reused while it is true.
+            VideoDownloader.signalChildProcesses(of: pid, signal: "TERM")
+            if process.isRunning { kill(pid, SIGTERM) }
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.7) {
+                guard process.isRunning else { return }
+                VideoDownloader.signalChildProcesses(of: pid, signal: "KILL")
+                if process.isRunning { kill(pid, SIGKILL) }
+            }
         }
+        return true
     }
 
-    let ytDLP = "/opt/homebrew/bin/yt-dlp"
-    let ffmpeg = "/opt/homebrew/bin/ffmpeg"
-    let ffprobe = "/opt/homebrew/bin/ffprobe"
-    let brew = "/opt/homebrew/bin/brew"
-    let ffmpegLocation = "/opt/homebrew/bin"
+    /// Runs /usr/bin/pkill directly (no shell) and waits briefly for it. Must not be called on the main thread.
+    private static func signalChildProcesses(of pid: pid_t, signal: String) {
+        let pkill = Process()
+        pkill.executableURL = URL(fileURLWithPath: "/usr/bin/pkill")
+        pkill.arguments = ["-\(signal)", "-P", String(pid)]
+        pkill.standardInput = FileHandle.nullDevice
+        pkill.standardOutput = FileHandle.nullDevice
+        pkill.standardError = FileHandle.nullDevice
+        let finished = DispatchSemaphore(value: 0)
+        pkill.terminationHandler = { _ in finished.signal() }
+        guard (try? pkill.run()) != nil else { return }
+        _ = finished.wait(timeout: .now() + 2)
+    }
 
-    func preferredBrewPath() -> String? {
-        for path in ["/opt/homebrew/bin/brew", "/usr/local/bin/brew"] {
+    // One resolver for Check Tools, Update Tools, previews and downloads: Apple Silicon Homebrew first, then Intel Homebrew.
+    static let toolDirectories = ["/opt/homebrew/bin", "/usr/local/bin"]
+    static let toolSearchPATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+    func toolPath(_ name: String) -> String? {
+        for directory in VideoDownloader.toolDirectories {
+            let path = directory + "/" + name
             if FileManager.default.isExecutableFile(atPath: path) { return path }
         }
         return nil
+    }
+
+    var ffmpegLocation: String? {
+        toolPath("ffmpeg").map { URL(fileURLWithPath: $0).deletingLastPathComponent().path }
     }
 
     static func launcherPluginName() -> String { "Media Downloader" }
@@ -109,8 +111,22 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return result
     }
 
+    // The clipboard is not read here; the surface reads it once when it appears (see loadURLFromClipboardIfNeeded).
     func suggestedURL(for context: BTTLauncherPluginContext) -> String {
-        firstURL(in: context.query ?? "") ?? firstURL(in: NSPasteboard.general.string(forType: .string) ?? "") ?? ""
+        firstURL(in: context.query ?? "") ?? ""
+    }
+
+    // Clipboard URLs are previewed automatically only for these hosts (or their subdomains).
+    private static let wellKnownMediaHosts = [
+        "youtube.com", "youtu.be", "music.youtube.com", "vimeo.com", "instagram.com", "tiktok.com",
+        "facebook.com", "fb.watch", "x.com", "twitter.com", "soundcloud.com", "twitch.tv",
+        "dailymotion.com", "reddit.com", "bilibili.com", "open.spotify.com"
+    ]
+
+    func isWellKnownMediaURL(_ raw: String) -> Bool {
+        guard let validatedURL = validatedHTTPURLString(raw),
+              let host = URLComponents(string: validatedURL)?.host?.lowercased() else { return false }
+        return VideoDownloader.wellKnownMediaHosts.contains { host == $0 || host.hasSuffix("." + $0) }
     }
 
     func defaultDownloadDirectory() -> URL {
@@ -133,12 +149,6 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return logURL
     }
 
-    func openDownloadFolder() {
-        let folder = defaultDownloadDirectory()
-        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        NSWorkspace.shared.open(folder)
-    }
-
     func copyLastLog() -> Bool {
         let log = (try? String(contentsOf: lastLogURL(), encoding: .utf8)) ?? "No log found."
         NSPasteboard.general.clearContents()
@@ -156,19 +166,11 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         let safeFolder = shellSingleQuote(folderPath)
         let script = """
         set +e
-        export PATH="/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-        BREW=""
-        [ -x /opt/homebrew/bin/brew ] && BREW=/opt/homebrew/bin/brew
-        [ -z "$BREW" ] && [ -x /usr/local/bin/brew ] && BREW=/usr/local/bin/brew
-        YTDLP="$(command -v yt-dlp)"
-        FFMPEG="$(command -v ffmpeg)"
-        FFPROBE="$(command -v ffprobe)"
-        [ -z "$YTDLP" ] && [ -x /opt/homebrew/bin/yt-dlp ] && YTDLP=/opt/homebrew/bin/yt-dlp
-        [ -z "$YTDLP" ] && [ -x /usr/local/bin/yt-dlp ] && YTDLP=/usr/local/bin/yt-dlp
-        [ -z "$FFMPEG" ] && [ -x /opt/homebrew/bin/ffmpeg ] && FFMPEG=/opt/homebrew/bin/ffmpeg
-        [ -z "$FFMPEG" ] && [ -x /usr/local/bin/ffmpeg ] && FFMPEG=/usr/local/bin/ffmpeg
-        [ -z "$FFPROBE" ] && [ -x /opt/homebrew/bin/ffprobe ] && FFPROBE=/opt/homebrew/bin/ffprobe
-        [ -z "$FFPROBE" ] && [ -x /usr/local/bin/ffprobe ] && FFPROBE=/usr/local/bin/ffprobe
+        export PATH="\(VideoDownloader.toolSearchPATH)"
+        BREW=\(quotedToolPath("brew"))
+        YTDLP=\(quotedToolPath("yt-dlp"))
+        FFMPEG=\(quotedToolPath("ffmpeg"))
+        FFPROBE=\(quotedToolPath("ffprobe"))
 
         echo "Health check"
         if [ -n "$BREW" ]; then echo "✅ Homebrew: $($BREW --version | head -n 1)"; else echo "❌ Homebrew: missing"; fi
@@ -189,10 +191,8 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
     func startToolUpdate(progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
         let script = """
         set -euo pipefail
-        export PATH="/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-        BREW=""
-        [ -x /opt/homebrew/bin/brew ] && BREW=/opt/homebrew/bin/brew
-        [ -z "$BREW" ] && [ -x /usr/local/bin/brew ] && BREW=/usr/local/bin/brew
+        export PATH="\(VideoDownloader.toolSearchPATH)"
+        BREW=\(quotedToolPath("brew"))
         if [ -z "$BREW" ]; then
           echo "Homebrew was not found at /opt/homebrew/bin/brew or /usr/local/bin/brew"
           exit 1
@@ -208,104 +208,46 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return runShell(script: script, progress: progress, completion: completion)
     }
 
-    func fetchThumbnail(for videoURL: String, completion: @escaping (NSImage?) -> Void) {
-        guard let validatedURL = validatedHTTPURLString(videoURL),
-              FileManager.default.isExecutableFile(atPath: ytDLP) else { completion(nil); return }
-
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: ytDLP)
-        task.arguments = [
-            "--ignore-config",
-            "--no-warnings",
-            "--skip-download",
-            "--playlist-items", "1",
-            "--print", "thumbnail",
-            "--", validatedURL
-        ]
-
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        var output = Data()
-        var didComplete = false
-        let handle = pipe.fileHandleForReading
-        handle.readabilityHandler = { fileHandle in
-            let data = fileHandle.availableData
-            guard !data.isEmpty else { return }
-            if output.count < 64_000 { output.append(data) }
-        }
-
-        task.terminationHandler = { process in
-            handle.readabilityHandler = nil
-            DispatchQueue.main.async {
-                guard !didComplete else { return }
-                didComplete = true
-                guard process.terminationStatus == 0,
-                      let text = String(data: output, encoding: .utf8),
-                      let firstLine = text.components(separatedBy: .newlines)
-                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-                        .first(where: { $0.hasPrefix("http://") || $0.hasPrefix("https://") }),
-                      let imageURL = URL(string: firstLine) else {
-                    completion(nil)
-                    return
-                }
-                URLSession.shared.dataTask(with: imageURL) { data, _, _ in
-                    let image = data.flatMap { NSImage(data: $0) }
-                    DispatchQueue.main.async { completion(image) }
-                }.resume()
-            }
-        }
-
-        do {
-            try task.run()
-            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 12) {
-                if task.isRunning { task.terminate() }
-            }
-        } catch {
-            handle.readabilityHandler = nil
+    /// Fetches title, channel, duration and thumbnail URL with one yt-dlp call (never with browser cookies).
+    /// Returns the process so the caller can terminate it when the preview is no longer needed.
+    @discardableResult
+    func fetchMediaMetadata(for mediaURL: String, completion: @escaping (MediaPreview?) -> Void) -> Process? {
+        guard let validatedURL = validatedHTTPURLString(mediaURL),
+              let ytDLP = toolPath("yt-dlp") else {
             completion(nil)
+            return nil
+        }
+        let arguments = ["--ignore-config", "--no-warnings", "--skip-download", "--playlist-items", "1", "--dump-single-json", "--", validatedURL]
+        return runCapturingProcess(executable: ytDLP, arguments: arguments, outputLimit: 16_000_000, timeout: 12) { status, data in
+            guard status == 0,
+                  let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                completion(nil)
+                return
+            }
+            var preview = MediaPreview()
+            preview.title = object["title"] as? String
+            preview.source = (object["channel"] as? String) ?? (object["uploader"] as? String) ?? (object["extractor_key"] as? String)
+            if let seconds = (object["duration"] as? NSNumber)?.intValue, seconds > 0 {
+                if seconds >= 3600 {
+                    preview.duration = String(format: "%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, seconds % 60)
+                } else {
+                    preview.duration = String(format: "%d:%02d", seconds / 60, seconds % 60)
+                }
+            }
+            // Playlists carry the thumbnail on their first entry.
+            let firstEntry = (object["entries"] as? [Any])?.first as? [String: Any]
+            preview.thumbnailURL = (object["thumbnail"] as? String) ?? (firstEntry?["thumbnail"] as? String)
+            completion(preview)
         }
     }
 
-    func fetchMediaMetadata(for mediaURL: String, completion: @escaping (String?, String?, String?) -> Void) {
-        guard let validatedURL = validatedHTTPURLString(mediaURL),
-              FileManager.default.isExecutableFile(atPath: ytDLP) else {
-            completion(nil, nil, nil)
-            return
+    /// Downloads a thumbnail with an ephemeral session (no shared cookies or cache), a 10 s timeout and a 10 MB cap.
+    func fetchThumbnailImage(from imageURL: String, completion: @escaping (NSImage?) -> Void) -> ThumbnailDownload? {
+        guard let validatedURL = validatedHTTPURLString(imageURL), let url = URL(string: validatedURL) else {
+            completion(nil)
+            return nil
         }
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: ytDLP)
-        task.arguments = ["--ignore-config", "--no-warnings", "--skip-download", "--playlist-items", "1", "--dump-single-json", "--", validatedURL]
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = Pipe()
-        task.terminationHandler = { process in
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            var title: String?
-            var source: String?
-            var durationText: String?
-            if process.terminationStatus == 0,
-               let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                title = object["title"] as? String
-                source = (object["channel"] as? String) ?? (object["uploader"] as? String) ?? (object["extractor_key"] as? String)
-                if let seconds = (object["duration"] as? NSNumber)?.intValue, seconds > 0 {
-                    if seconds >= 3600 {
-                        durationText = String(format: "%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, seconds % 60)
-                    } else {
-                        durationText = String(format: "%d:%02d", seconds / 60, seconds % 60)
-                    }
-                }
-            }
-            DispatchQueue.main.async { completion(title, source, durationText) }
-        }
-        do {
-            try task.run()
-            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 12) {
-                if task.isRunning { task.terminate() }
-            }
-        } catch {
-            completion(nil, nil, nil)
-        }
+        return ThumbnailDownload(url: url, completion: completion)
     }
 
     func makeDownloadArguments(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, audioQuality: String, cookiesBrowser: String, folder: URL) -> [String]? {
@@ -325,12 +267,16 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
             "--progress",
             "--progress-template", "download:download:%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s|%(progress.downloaded_bytes)s|%(progress.total_bytes_estimate)s",
             "--print", "after_move:filepath",
-            "--ffmpeg-location", ffmpegLocation,
             "-P", folder.path,
             "-o", outputTemplate,
             isPlaylist ? "--yes-playlist" : "--no-playlist"
         ]
 
+        if let ffmpegLocation {
+            args += ["--ffmpeg-location", ffmpegLocation]
+        }
+
+        // Browser cookies are only ever passed to the actual download, never to previews or estimates.
         if let browser = cookiesBrowserArgument(cookiesBrowser) {
             args += ["--cookies-from-browser", browser]
         }
@@ -352,70 +298,45 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         return args
     }
 
-    func estimateDownloadSize(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, cookiesBrowser: String = "None", completion: @escaping (Int64?, Int?) -> Void) -> Process? {
-        guard let validatedURL = validatedHTTPURLString(url), FileManager.default.isExecutableFile(atPath: ytDLP) else {
+    /// Estimates the download size without browser cookies. Single items are resolved with the selected format;
+    /// playlists are only listed (--flat-playlist) for their entry count because extracting every entry is slow.
+    @discardableResult
+    func estimateDownloadSize(mode: DownloadMode, url: String, videoPreset: String, customFormat: String, audioFormat: String, completion: @escaping (Int64?, Int?) -> Void) -> Process? {
+        guard let validatedURL = validatedHTTPURLString(url), let ytDLP = toolPath("yt-dlp") else {
             completion(nil, nil)
             return nil
         }
 
+        let isPlaylist = shouldDownloadPlaylist(validatedURL)
         var args = [
             "--ignore-config",
             "--no-warnings",
             "--skip-download",
-            "--dump-single-json",
-            "--ffmpeg-location", ffmpegLocation,
-            shouldDownloadPlaylist(validatedURL) ? "--yes-playlist" : "--no-playlist"
+            "--dump-single-json"
         ]
 
-        if let browser = cookiesBrowserArgument(cookiesBrowser) {
-            args += ["--cookies-from-browser", browser]
-        }
-
-        switch mode {
-        case .video:
-            args += ["-f", videoFormatSelector(preset: videoPreset, customFormat: customFormat).selector]
-        case .audio:
-            args += ["-f", "bestaudio/best"]
+        if isPlaylist {
+            args += ["--yes-playlist", "--flat-playlist"]
+        } else {
+            args += ["--no-playlist"]
+            if let ffmpegLocation {
+                args += ["--ffmpeg-location", ffmpegLocation]
+            }
+            switch mode {
+            case .video:
+                args += ["-f", videoFormatSelector(preset: videoPreset, customFormat: customFormat).selector]
+            case .audio:
+                args += ["-f", "bestaudio/best"]
+            }
         }
         args += ["--", validatedURL]
 
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: ytDLP)
-        task.arguments = args
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = Pipe()
-
-        var output = Data()
-        let handle = pipe.fileHandleForReading
-        handle.readabilityHandler = { fileHandle in
-            let data = fileHandle.availableData
-            guard !data.isEmpty else { return }
-            if output.count < 8_000_000 { output.append(data) }
-        }
-
-        task.terminationHandler = { process in
-            handle.readabilityHandler = nil
-            let size: Int64?
-            let playlistCount: Int?
-            if process.terminationStatus == 0,
-               let object = try? JSONSerialization.jsonObject(with: output) {
-                size = self.estimatedBytes(from: object)
-                playlistCount = self.playlistItemCount(from: object)
-            } else {
-                size = nil
-                playlistCount = nil
+        return runCapturingProcess(executable: ytDLP, arguments: args, outputLimit: 8_000_000, timeout: 25) { status, data in
+            guard status == 0, let object = try? JSONSerialization.jsonObject(with: data) else {
+                completion(nil, nil)
+                return
             }
-            DispatchQueue.main.async { completion(size, playlistCount) }
-        }
-
-        do {
-            try task.run()
-            return task
-        } catch {
-            handle.readabilityHandler = nil
-            completion(nil, nil)
-            return nil
+            completion(isPlaylist ? nil : self.estimatedBytes(from: object), self.playlistItemCount(from: object))
         }
     }
 
@@ -429,30 +350,38 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         if let dictionary = object as? [String: Any] {
             if let entries = dictionary["entries"] as? [Any] {
                 let values = entries.compactMap { estimatedBytes(from: $0) }
-                return values.isEmpty ? nil : values.reduce(0, +)
+                return values.isEmpty ? nil : saturatingSum(values)
             }
             if let requested = dictionary["requested_formats"] as? [Any] {
                 let values = requested.compactMap { estimatedBytes(from: $0) }
-                return values.isEmpty ? directFileSize(from: dictionary) : values.reduce(0, +)
+                return values.isEmpty ? directFileSize(from: dictionary) : saturatingSum(values)
             }
             return directFileSize(from: dictionary)
         }
         return nil
     }
 
+    // Sizes come from remote metadata, so add them up without risking an overflow trap.
+    private func saturatingSum(_ values: [Int64]) -> Int64 {
+        values.reduce(Int64(0)) { total, value in
+            let (sum, overflow) = total.addingReportingOverflow(value)
+            return overflow ? Int64.max : sum
+        }
+    }
+
     private func directFileSize(from dictionary: [String: Any]) -> Int64? {
         for key in ["filesize", "filesize_approx"] {
             if let number = dictionary[key] as? NSNumber, number.int64Value > 0 { return number.int64Value }
             if let int = dictionary[key] as? Int64, int > 0 { return int }
-            if let double = dictionary[key] as? Double, double > 0 { return Int64(double) }
+            if let double = dictionary[key] as? Double, double > 0, double < Double(Int64.max) { return Int64(double) }
         }
         return nil
     }
 
     func runYTDLP(arguments: [String], progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
-        let missing = [ytDLP, ffmpeg, ffprobe].filter { !FileManager.default.isExecutableFile(atPath: $0) }
-        guard missing.isEmpty else {
-            progress("Missing tools: " + missing.map { URL(fileURLWithPath: $0).lastPathComponent }.joined(separator: ", "))
+        let missing = ["yt-dlp", "ffmpeg", "ffprobe"].filter { toolPath($0) == nil }
+        guard missing.isEmpty, let ytDLP = toolPath("yt-dlp") else {
+            progress("Missing tools: " + missing.joined(separator: ", "))
             completion(false)
             return nil
         }
@@ -461,42 +390,108 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
 
     @discardableResult
     private func runShell(script: String, progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
-        runProcess(executable: "/bin/zsh", arguments: ["-lc", script], progress: progress, completion: completion)
+        // Not a login shell, so the user's dotfiles are not loaded; the scripts set PATH explicitly.
+        runProcess(executable: "/bin/zsh", arguments: ["-c", script], progress: progress, completion: completion)
     }
 
     private func runProcess(executable: String, arguments: [String], progress: @escaping (String) -> Void, completion: @escaping (Bool) -> Void) -> Process? {
         let logURL = prepareLogFile()
         try? "".write(to: logURL, atomically: true, encoding: .utf8)
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: executable)
-        task.arguments = arguments
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let handle = pipe.fileHandleForReading
-        handle.readabilityHandler = { fileHandle in
-            let data = fileHandle.availableData
-            guard !data.isEmpty, let text = String(data: data, encoding: .utf8) else { return }
-            if let file = try? FileHandle(forWritingTo: logURL) {
-                try? file.seekToEnd()
-                if let d = text.data(using: .utf8) { try? file.write(contentsOf: d) }
-                try? file.close()
-            }
-            DispatchQueue.main.async { progress(text) }
-        }
-        task.terminationHandler = { process in
-            handle.readabilityHandler = nil
-            VideoDownloader.releaseBackgroundTask(process)
-            DispatchQueue.main.async { completion(process.terminationStatus == 0) }
-        }
+        let logFile = try? FileHandle(forWritingTo: logURL)
         do {
-            try task.run()
-            VideoDownloader.retainBackgroundTask(task)
-            return task
+            return try launchProcess(executable: executable, arguments: arguments, mergeErrorOutput: true, output: { data in
+                // Runs on the pipe's single background reader, so log writes and progress stay in order.
+                try? logFile?.write(contentsOf: data)
+                let text = String(decoding: data, as: UTF8.self)
+                DispatchQueue.main.async { progress(text) }
+            }, completion: { status in
+                completion(status == 0)
+            })
         } catch {
             progress("Could not start: \(error.localizedDescription)")
             completion(false)
             return nil
+        }
+    }
+
+    /// Runs a short helper process (previews, estimates) with a hard timeout and hands its stdout to `completion`
+    /// on the main thread.
+    private func runCapturingProcess(executable: String, arguments: [String], outputLimit: Int, timeout: TimeInterval, completion: @escaping (Int32, Data) -> Void) -> Process? {
+        let buffer = ProcessOutputBuffer(limit: outputLimit)
+        guard let task = try? launchProcess(executable: executable, arguments: arguments, mergeErrorOutput: false, output: { buffer.append($0) }, completion: { status in
+            completion(status, buffer.data)
+        }) else {
+            completion(-1, Data())
+            return nil
+        }
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + timeout) {
+            if task.isRunning { task.terminate() }
+        }
+        return task
+    }
+
+    /// Launches a process and reads stdout/stderr on background threads while it runs, so the child never blocks
+    /// on a full pipe. `output` receives the data in order; `completion` runs on the main thread once the process
+    /// has exited and the remaining output has been drained.
+    private func launchProcess(executable: String, arguments: [String], mergeErrorOutput: Bool, output: @escaping (Data) -> Void, completion: @escaping (Int32) -> Void) throws -> Process {
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: executable)
+        task.arguments = arguments
+        task.standardInput = FileHandle.nullDevice
+        let outputPipe = Pipe()
+        let errorPipe = mergeErrorOutput ? outputPipe : Pipe()
+        task.standardOutput = outputPipe
+        task.standardError = errorPipe
+
+        let readers = DispatchGroup()
+        let readerCount = mergeErrorOutput ? 1 : 2
+        for _ in 0..<readerCount { readers.enter() }
+        task.terminationHandler = { process in
+            let status = process.terminationStatus
+            DispatchQueue.global(qos: .utility).async {
+                // Let the readers drain the pipes, but don't wait forever if an orphaned grandchild keeps them open.
+                _ = readers.wait(timeout: .now() + 3)
+                DispatchQueue.main.async { completion(status) }
+            }
+        }
+
+        do {
+            try task.run()
+        } catch {
+            for _ in 0..<readerCount { readers.leave() }
+            throw error
+        }
+        VideoDownloader.readPipe(outputPipe.fileHandleForReading, output: output) { readers.leave() }
+        if !mergeErrorOutput {
+            // stderr is drained (and dropped) so a chatty child can't block on it.
+            VideoDownloader.readPipe(errorPipe.fileHandleForReading, output: { _ in }) { readers.leave() }
+        }
+        return task
+    }
+
+    /// Reads `handle` until EOF on a background thread. Data is passed on in whole lines where possible, so
+    /// progress lines and UTF-8 sequences are not split between callbacks.
+    private static func readPipe(_ handle: FileHandle, output: @escaping (Data) -> Void, finished: @escaping () -> Void) {
+        DispatchQueue.global(qos: .utility).async {
+            var pending = Data()
+            while true {
+                let chunk = handle.availableData
+                if chunk.isEmpty { break }
+                if let newline = chunk.lastIndex(of: 0x0A) {
+                    let split = chunk.index(after: newline)
+                    pending.append(chunk.subdata(in: chunk.startIndex..<split))
+                    output(pending)
+                    pending = chunk.subdata(in: split..<chunk.endIndex)
+                } else {
+                    pending.append(chunk)
+                    if pending.count >= 1_048_576 {
+                        output(pending)
+                        pending = Data()
+                    }
+                }
+            }
+            if !pending.isEmpty { output(pending) }
+            finished()
         }
     }
 
@@ -552,7 +547,10 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
             return
         }
 
-        URLSession.shared.dataTask(with: url) { data, _, _ in
+        // Ephemeral session: BetterTouchTool's shared cookies and cache are not used.
+        let session = URLSession(configuration: .ephemeral)
+        defer { session.finishTasksAndInvalidate() }
+        session.dataTask(with: url) { data, _, _ in
             var query: String?
             if let data,
                let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -586,6 +584,10 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         "'" + string.replacingOccurrences(of: "'", with: "'\\''") + "'"
     }
 
+    private func quotedToolPath(_ name: String) -> String {
+        toolPath(name).map(shellSingleQuote) ?? "''"
+    }
+
     private func cookiesBrowserArgument(_ browser: String) -> String? {
         switch browser.lowercased() {
         case "safari": return "safari"
@@ -617,14 +619,90 @@ enum DownloadMode: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+struct MediaPreview {
+    var title: String?
+    var source: String?
+    var duration: String?
+    var thumbnailURL: String?
+}
+
+/// Process output collected from a background reader thread; all access is lock-protected.
+final class ProcessOutputBuffer {
+    private let lock = NSLock()
+    private var storage = Data()
+    private let limit: Int
+
+    init(limit: Int) { self.limit = limit }
+
+    func append(_ data: Data) {
+        lock.lock()
+        if storage.count < limit { storage.append(data) }
+        lock.unlock()
+    }
+
+    var data: Data {
+        lock.lock()
+        defer { lock.unlock() }
+        return storage
+    }
+}
+
+/// Downloads one preview image. The ephemeral session shares no cookies or cache with BetterTouchTool,
+/// requests time out after 10 s and responses larger than 10 MB are cancelled instead of buffered.
+final class ThumbnailDownload: NSObject, URLSessionDataDelegate {
+    static let maximumBytes: Int64 = 10 * 1024 * 1024
+    private var data = Data() // only touched on the session's serial delegate queue
+    private var completion: ((NSImage?) -> Void)?
+    private var task: URLSessionDataTask?
+
+    init(url: URL, completion: @escaping (NSImage?) -> Void) {
+        self.completion = completion
+        super.init()
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForResource = 10
+        configuration.httpShouldSetCookies = false
+        configuration.httpCookieAcceptPolicy = .never
+        configuration.urlCache = nil
+        let delegateQueue = OperationQueue()
+        delegateQueue.maxConcurrentOperationCount = 1
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: delegateQueue)
+        let task = session.dataTask(with: url)
+        self.task = task
+        task.resume()
+        session.finishTasksAndInvalidate() // releases this delegate once the task has finished
+    }
+
+    func cancel() {
+        task?.cancel()
+    }
+
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        let expectedLength = dataTask.response?.expectedContentLength ?? -1
+        guard expectedLength <= ThumbnailDownload.maximumBytes,
+              Int64(self.data.count + data.count) <= ThumbnailDownload.maximumBytes else {
+            dataTask.cancel()
+            return
+        }
+        self.data.append(data)
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        let statusCode = (task.response as? HTTPURLResponse)?.statusCode ?? 0
+        let image = error == nil && (200..<300).contains(statusCode) ? NSImage(data: data) : nil
+        let completion = self.completion
+        self.completion = nil
+        DispatchQueue.main.async { completion?(image) }
+    }
+}
+
 final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     weak var delegate: (any BTTLauncherPluginSurfaceDelegate)?
     private weak var plugin: VideoDownloader?
     private let context: BTTLauncherPluginContext
     private var model: VideoDownloaderViewModel?
-    private var controlKeyWasDown = false
-    private var optionKeyWasDown = false
-    private var modifierEventMonitor: Any?
+    private var isVisible = false
+    private var didCheckClipboard = false
 
     init(plugin: VideoDownloader, context: BTTLauncherPluginContext) {
         self.plugin = plugin
@@ -632,57 +710,34 @@ final class VideoDownloaderDashboardSurface: NSObject, BTTLauncherPluginSurfaceI
         super.init()
     }
 
+    deinit {
+        if isVisible { model?.surfaceWillDisappear() }
+    }
+
     func makeLauncherSurfaceView() -> NSView {
-        let model = VideoDownloaderViewModel(plugin: plugin, context: context)
+        // A running job keeps its model in the plugin, so reopening the Launcher shows its live progress.
+        let model = plugin?.activeJobModel ?? self.model ?? VideoDownloaderViewModel(plugin: plugin, context: context)
         self.model = model
         return NSHostingView(rootView: VideoDownloaderDashboardView(model: model))
     }
 
     func launcherSurfaceDidAppear() {
-        model?.loadURLFromClipboardIfNeeded()
-        modifierEventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { [weak self] event in
-            _ = self?.handleModifierFlags(event)
-            return event
-        }
+        guard !isVisible else { return }
+        isVisible = true
+        // The clipboard is read once per opened surface, and only to prefill an empty source.
+        model?.surfaceDidAppear(checkClipboard: !didCheckClipboard)
+        didCheckClipboard = true
     }
 
     func launcherSurfaceWillDisappear() {
-        if let modifierEventMonitor {
-            NSEvent.removeMonitor(modifierEventMonitor)
-            self.modifierEventMonitor = nil
-        }
-        controlKeyWasDown = false
-        optionKeyWasDown = false
-        // Do not cancel downloads here. Closing the launcher with Escape should let yt-dlp continue in the background.
-    }
-
-    private func handleModifierFlags(_ event: NSEvent) -> Bool {
-        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        let controlIsDown = flags.contains(.control)
-        let optionIsDown = flags.contains(.option)
-
-        if controlIsDown && !controlKeyWasDown {
-            controlKeyWasDown = true
-            model?.cycleFormat(backwards: flags.contains(.shift))
-            return true
-        }
-
-        if optionIsDown && !optionKeyWasDown {
-            optionKeyWasDown = true
-            model?.cycleQuality(backwards: flags.contains(.shift))
-            return true
-        }
-
-        controlKeyWasDown = controlIsDown
-        optionKeyWasDown = optionIsDown
-        return false
+        guard isVisible else { return }
+        isVisible = false
+        // Stops preview processes only. Do not cancel downloads here: closing the launcher with Escape should
+        // let yt-dlp continue in the background.
+        model?.surfaceWillDisappear()
     }
 
     func handleLauncherRawKeyEvent(_ event: NSEvent) -> Bool {
-        if event.type == .flagsChanged {
-            return handleModifierFlags(event)
-        }
-
         guard event.type == .keyDown else { return false }
         switch event.keyCode {
         case 36, 76: // Return / Enter
@@ -728,7 +783,6 @@ final class VideoDownloaderViewModel: ObservableObject {
     @Published var audioQuality = "Best"
     @Published var cookiesBrowser = "None"
     @Published var folderPath: String
-    @Published var recentFolders: [String] = []
     @Published var status = "Ready"
     @Published var detail = "Paste a URL and choose a format."
     @Published var progress: Double = 0
@@ -745,7 +799,6 @@ final class VideoDownloaderViewModel: ObservableObject {
     @Published var transferredBytes: Int64?
     @Published var totalBytes: Int64?
     @Published var jobSummary = ""
-    @Published var technicalDetails = ""
     @Published var mediaTitle = ""
     @Published var mediaSource = ""
     @Published var mediaDuration = ""
@@ -754,42 +807,59 @@ final class VideoDownloaderViewModel: ObservableObject {
     let audioFormats = ["MP3", "M4A", "WAV", "Opus", "FLAC"]
     let audioQualities = ["Best", "320 kbps", "256 kbps", "192 kbps", "128 kbps"]
     let cookiesBrowsers = ["None", "Safari", "Chrome", "Edge", "Firefox", "Brave"]
-    let chooseFolderMenuValue = "__choose_folder__"
 
-    private static let backgroundModelLock = NSLock()
-    private static var backgroundModels: [ObjectIdentifier: VideoDownloaderViewModel] = [:]
-
+    // While a job runs, the plugin owns this model, so the job outlives the surface and a reopened surface reuses it.
     private func retainForBackgroundDownload() {
-        let id = ObjectIdentifier(self)
-        Self.backgroundModelLock.lock()
-        Self.backgroundModels[id] = self
-        Self.backgroundModelLock.unlock()
+        plugin?.activeJobModel = self
     }
 
     private func releaseFromBackgroundDownload() {
-        let id = ObjectIdentifier(self)
-        Self.backgroundModelLock.lock()
-        Self.backgroundModels.removeValue(forKey: id)
-        Self.backgroundModelLock.unlock()
+        if plugin?.activeJobModel === self { plugin?.activeJobModel = nil }
     }
 
     private weak var plugin: VideoDownloader?
     private let defaults = UserDefaults.standard
+    // These settings live in BetterTouchTool's preferences domain, so every key carries the plugin identifier.
     private enum DefaultsKey {
-        static let mode = "MediaDownloader.mode"
-        static let videoPreset = "MediaDownloader.videoPreset"
-        static let customFormat = "MediaDownloader.customFormat"
-        static let audioFormat = "MediaDownloader.audioFormat"
-        static let audioQuality = "MediaDownloader.audioQuality"
-        static let cookiesBrowser = "MediaDownloader.cookiesBrowser"
-        static let lastDownloadedFile = "MediaDownloader.lastDownloadedFile"
-        static let folderPath = "MediaDownloader.folderPath"
-        static let recentFolders = "MediaDownloader.recentFolders"
+        static let prefix = "com.loay.btt.media-downloader."
+        static let mode = prefix + "mode"
+        static let videoPreset = prefix + "videoPreset"
+        static let customFormat = prefix + "customFormat"
+        static let audioFormat = prefix + "audioFormat"
+        static let audioQuality = prefix + "audioQuality"
+        static let cookiesBrowser = prefix + "cookiesBrowser"
+        static let lastDownloadedFile = prefix + "lastDownloadedFile"
+        static let folderPath = prefix + "folderPath"
+        // Earlier versions used the generic "MediaDownloader." prefix; those values are migrated once.
+        static let legacyPrefix = "MediaDownloader."
+        static let migratedNames = ["mode", "videoPreset", "customFormat", "audioFormat", "audioQuality", "cookiesBrowser", "lastDownloadedFile", "folderPath"]
+        static let obsoleteNames = ["recentFolders"]
     }
+
+    private static func migrateLegacyDefaults(_ defaults: UserDefaults) {
+        for name in DefaultsKey.migratedNames + DefaultsKey.obsoleteNames {
+            let legacyKey = DefaultsKey.legacyPrefix + name
+            guard let value = defaults.object(forKey: legacyKey) else { continue }
+            let key = DefaultsKey.prefix + name
+            if DefaultsKey.migratedNames.contains(name), defaults.object(forKey: key) == nil {
+                defaults.set(value, forKey: key)
+            }
+            defaults.removeObject(forKey: legacyKey)
+        }
+    }
+
     private var task: Process?
     private var estimateTask: Process?
-    private var progressTimer: Timer?
-    private var backgroundLogPollingTimer: Timer?
+    private var metadataTask: Process?
+    private var thumbnailDownload: ThumbnailDownload?
+    private var previewWorkItem: DispatchWorkItem?
+    private var previewGeneration = 0
+    private var estimateGeneration = 0
+    private var isSurfaceVisible = false
+    // A clipboard URL from a site that isn't a well-known media host is not contacted until the user confirms it.
+    private var clipboardURLAwaitingConfirmation: String?
+    private var launcherQuery = ""
+    private var jobID = 0
     private var cancellationRequested = false
     private var playlistCurrentItem = 0
     private var playlistTotalItems = 0
@@ -802,7 +872,9 @@ final class VideoDownloaderViewModel: ObservableObject {
 
     init(plugin: VideoDownloader?, context: BTTLauncherPluginContext) {
         self.plugin = plugin
+        self.launcherQuery = context.query ?? ""
         self.url = plugin?.suggestedURL(for: context) ?? ""
+        VideoDownloaderViewModel.migrateLegacyDefaults(defaults)
 
         let defaultFolder = plugin?.defaultDownloadDirectory().path ?? ""
         self.folderPath = defaults.string(forKey: DefaultsKey.folderPath) ?? defaultFolder
@@ -821,18 +893,53 @@ final class VideoDownloaderViewModel: ObservableObject {
         let savedCookiesBrowser = defaults.string(forKey: DefaultsKey.cookiesBrowser)
         if let savedCookiesBrowser, cookiesBrowsers.contains(savedCookiesBrowser) { self.cookiesBrowser = savedCookiesBrowser }
         self.lastDownloadedFile = defaults.string(forKey: DefaultsKey.lastDownloadedFile) ?? ""
-
-        let savedFolders = defaults.stringArray(forKey: DefaultsKey.recentFolders) ?? []
-        self.recentFolders = normalizedRecentFolders([self.folderPath] + savedFolders + [defaultFolder])
         saveSettings()
-        refreshThumbnailIfNeeded()
-        refreshSizeEstimateIfNeeded()
-        restoreBackgroundDownloadIfNeeded()
+        // Previews start (debounced) once the surface appears, see surfaceDidAppear.
+    }
+
+    deinit {
+        previewWorkItem?.cancel()
+        thumbnailDownload?.cancel()
+        if let metadataTask, metadataTask.isRunning { metadataTask.terminate() }
+        if let estimateTask, estimateTask.isRunning { estimateTask.terminate() }
+    }
+
+    func surfaceDidAppear(checkClipboard: Bool) {
+        isSurfaceVisible = true
+        if checkClipboard { loadURLFromClipboardIfNeeded() }
+        schedulePreview()
+    }
+
+    func surfaceWillDisappear() {
+        isSurfaceVisible = false
+        stopPreviews()
     }
 
     func updateURLFromLauncherQuery(_ query: String?) {
+        launcherQuery = query ?? ""
+        // A running job keeps its source and queue; launcher typing must not replace them.
+        guard !isRunning else { return }
+        // A URL typed or pasted into the launcher is explicit input, so it may be previewed.
+        if clipboardURLAwaitingConfirmation != nil, !allURLCandidates(in: launcherQuery).isEmpty {
+            clipboardURLAwaitingConfirmation = nil
+            schedulePreview()
+        }
+        loadSource(launcherQuery)
+    }
+
+    func pasteFromClipboard() {
+        guard !isRunning,
+              let pasted = NSPasteboard.general.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !pasted.isEmpty else { return }
+        // An explicit paste may load a multi-line list and is previewed like typed input.
+        clipboardURLAwaitingConfirmation = nil
+        url = pasted
+        loadSource(pasted)
+        schedulePreview()
+    }
+
+    private func loadSource(_ rawQuery: String) {
         guard let plugin else { return }
-        let rawQuery = query ?? ""
         let urls = allURLCandidates(in: rawQuery)
         if urls.count > 1 {
             queuedURLs = urls
@@ -843,8 +950,7 @@ final class VideoDownloaderViewModel: ObservableObject {
             url = urls[0]
             status = "Queue ready"
             detail = "\(urls.count) URLs loaded. Press Enter to start queue."
-            refreshThumbnailIfNeeded()
-            refreshSizeEstimateIfNeeded()
+            schedulePreview()
             return
         }
 
@@ -859,7 +965,7 @@ final class VideoDownloaderViewModel: ObservableObject {
             status = "Text playlist ready"
             detail = "\(searches.count) search lines loaded. Press Enter to download them in order."
             thumbnail = nil
-            refreshSizeEstimateIfNeeded()
+            schedulePreview()
             return
         }
         let candidate = urls.first ?? ""
@@ -871,8 +977,7 @@ final class VideoDownloaderViewModel: ObservableObject {
             url = candidate
             status = "URL ready"
             detail = "URL taken from launcher input."
-            refreshThumbnailIfNeeded()
-            refreshSizeEstimateIfNeeded()
+            schedulePreview()
             return
         }
 
@@ -887,63 +992,39 @@ final class VideoDownloaderViewModel: ObservableObject {
         status = "Search ready"
         detail = "Press Enter to search YouTube and download the first result."
         thumbnail = nil
-        refreshSizeEstimateIfNeeded()
+        schedulePreview()
     }
 
+    /// Called once when a surface appears. Prefills a single clipboard URL into an empty source unless the launcher
+    /// query already contains a URL. Lists (several URLs or lines) are only loaded through the Paste button.
     func loadURLFromClipboardIfNeeded() {
-        guard let plugin else { return }
-        let clipboardText = NSPasteboard.general.string(forType: .string) ?? ""
+        guard let plugin, !isRunning,
+              url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              allURLCandidates(in: launcherQuery).isEmpty else { return }
+        let clipboardText = (NSPasteboard.general.string(forType: .string) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !clipboardText.isEmpty, clipboardText.utf16.count <= 4_096 else { return }
         let urls = allURLCandidates(in: clipboardText)
-
-        // Always prefer a multi-URL clipboard, even if a previous single URL is already loaded.
-        // This makes copying a batch and reopening/pressing Enter reliably switch to queue mode.
-        if urls.count > 1 {
-            queuedURLs = urls
-            queueCompleted = 0
-            queueTotal = urls.count
-            queueSubfolderName = nil
-            queueStatus = "0 of \(urls.count)"
-            url = urls[0]
-            status = "Clipboard queue ready"
-            detail = "\(urls.count) clipboard URLs loaded. Press Enter to start queue."
-            refreshThumbnailIfNeeded()
-            refreshSizeEstimateIfNeeded()
+        guard urls.count == 1, !clipboardText.contains(where: { $0.isNewline }) else {
+            if urls.count > 1 || allSearchCandidates(in: clipboardText).count > 1 {
+                detail = "The clipboard holds a list. Click Paste to load it as a queue."
+            }
             return
         }
 
-        let searches = allSearchCandidates(in: clipboardText)
-        if urls.isEmpty, searches.count > 1 {
-            queuedURLs = searches
-            queueCompleted = 0
-            queueTotal = searches.count
-            queueSubfolderName = textPlaylistFolderName(from: searches)
-            queueStatus = "0 of \(searches.count)"
-            url = searches[0]
-            status = "Clipboard text playlist ready"
-            detail = "\(searches.count) search lines loaded. Press Enter to download them in order."
-            thumbnail = nil
-            refreshSizeEstimateIfNeeded()
-            return
-        }
-
-        let current = url.trimmingCharacters(in: .whitespacesAndNewlines)
-        if plugin.validatedHTTPURLString(current) != nil {
-            status = queuedURLs.count > 1 ? "Queue ready" : "URL ready"
-            detail = queuedURLs.count > 1 ? "\(queuedURLs.count) URLs loaded. Press Enter to start queue." : "URL loaded. Press Enter to download."
-            return
-        }
-
-        guard let firstURL = urls.first else { return }
-        url = firstURL
+        let clipboardURL = urls[0]
+        url = clipboardURL
         queuedURLs = []
         queueCompleted = 0
         queueTotal = 0
         queueSubfolderName = nil
         queueStatus = ""
         status = "Clipboard URL ready"
-        detail = "URL was loaded from clipboard. Press Enter to download."
-        refreshThumbnailIfNeeded()
-        refreshSizeEstimateIfNeeded()
+        if plugin.isWellKnownMediaURL(clipboardURL) {
+            detail = "URL was loaded from clipboard. Press Enter to download."
+        } else {
+            clipboardURLAwaitingConfirmation = clipboardURL
+            detail = "Not previewed for this site. Edit it, click Paste, or press Enter to download."
+        }
     }
 
     private func allURLCandidates(in text: String) -> [String] {
@@ -986,42 +1067,87 @@ final class VideoDownloaderViewModel: ObservableObject {
         return "Media Playlist \(formatter.string(from: Date()))"
     }
 
-    private func bestURLCandidate(in text: String) -> String {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if plugin?.validatedHTTPURLString(trimmed) != nil { return trimmed }
-        for token in trimmed.split(whereSeparator: { $0.isWhitespace }) {
-            let cleaned = token.trimmingCharacters(in: CharacterSet(charactersIn: "<>()[]{}\\\"'"))
-            if cleaned.hasPrefix("https://") || cleaned.hasPrefix("http://") { return String(cleaned) }
+    /// Previews (metadata, thumbnail, size) run 0.6 s after the source stops changing and only while a surface is
+    /// visible. A clipboard URL from an unknown site waits until the user edits it, clicks Paste or starts the download.
+    func schedulePreview() {
+        previewWorkItem?.cancel()
+        previewWorkItem = nil
+        guard isSurfaceVisible else { return }
+        if let pendingURL = clipboardURLAwaitingConfirmation {
+            guard url.trimmingCharacters(in: .whitespacesAndNewlines) != pendingURL else { return }
+            clipboardURLAwaitingConfirmation = nil // the source was edited, so it is the user's choice now
         }
-        return ""
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.previewWorkItem = nil
+            self.refreshThumbnailIfNeeded()
+            self.refreshSizeEstimateIfNeeded()
+        }
+        previewWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: workItem)
     }
 
-    func refreshThumbnailIfNeeded() {
+    /// Terminates in-flight preview work and drops its late results; unfinished previews load again on the next appear.
+    private func stopPreviews() {
+        previewWorkItem?.cancel()
+        previewWorkItem = nil
+        previewGeneration += 1
+        estimateGeneration += 1
+        if metadataTask != nil || thumbnailDownload != nil { lastThumbnailURL = "" }
+        if estimateTask != nil { lastEstimateKey = "" }
+        terminatePreviewProcess(metadataTask)
+        terminatePreviewProcess(estimateTask)
+        metadataTask = nil
+        estimateTask = nil
+        thumbnailDownload?.cancel()
+        thumbnailDownload = nil
+    }
+
+    private func terminatePreviewProcess(_ process: Process?) {
+        if let process, process.isRunning { process.terminate() }
+    }
+
+    private func refreshThumbnailIfNeeded() {
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed != lastThumbnailURL, !trimmed.isEmpty else { return }
         lastThumbnailURL = trimmed
+        // One preview at a time: stop the previous fetch and ignore its late results via the generation token.
+        previewGeneration += 1
+        let generation = previewGeneration
+        terminatePreviewProcess(metadataTask)
+        thumbnailDownload?.cancel()
+        thumbnailDownload = nil
+        thumbnail = nil
         mediaTitle = ""
         mediaSource = ""
         mediaDuration = ""
-        plugin?.fetchThumbnail(for: trimmed) { [weak self] image in self?.thumbnail = image }
-        plugin?.fetchMediaMetadata(for: trimmed) { [weak self] title, source, duration in
-            guard let self, self.lastThumbnailURL == trimmed else { return }
-            self.mediaTitle = title ?? ""
-            self.mediaSource = source ?? ""
-            self.mediaDuration = duration ?? ""
+        metadataTask = plugin?.fetchMediaMetadata(for: trimmed) { [weak self] preview in
+            guard let self, self.previewGeneration == generation else { return }
+            self.metadataTask = nil
+            self.mediaTitle = preview?.title ?? ""
+            self.mediaSource = preview?.source ?? ""
+            self.mediaDuration = preview?.duration ?? ""
+            guard let thumbnailURL = preview?.thumbnailURL else { return }
+            self.thumbnailDownload = self.plugin?.fetchThumbnailImage(from: thumbnailURL) { [weak self] image in
+                guard let self, self.previewGeneration == generation else { return }
+                self.thumbnailDownload = nil
+                self.thumbnail = image
+            }
         }
     }
 
-    func refreshSizeEstimateIfNeeded() {
+    private func refreshSizeEstimateIfNeeded() {
         guard let plugin else { return }
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines)
-        let key = [trimmed, mode.rawValue, videoPreset, customFormat, audioFormat, audioQuality, cookiesBrowser].joined(separator: "|")
+        let key = [trimmed, mode.rawValue, videoPreset, customFormat, audioFormat, audioQuality].joined(separator: "|")
         guard key != lastEstimateKey else { return }
         lastEstimateKey = key
+        estimateGeneration += 1
+        let generation = estimateGeneration
+        terminatePreviewProcess(estimateTask)
+        estimateTask = nil
 
-        guard plugin.validatedHTTPURLString(trimmed) != nil else {
-            estimateTask?.terminate()
-            estimateTask = nil
+        guard plugin.validatedHTTPURLString(trimmed) != nil, !plugin.isSpotifyURL(trimmed) else {
             if plugin.isSpotifyURL(trimmed) {
                 let kind = plugin.spotifyURLKind(trimmed) ?? "link"
                 sizeEstimate = kind == "track" ? "Spotify track → YouTube" : "Spotify \(kind) not supported"
@@ -1034,16 +1160,20 @@ final class VideoDownloaderViewModel: ObservableObject {
             return
         }
 
-        estimateTask?.terminate()
-        sizeEstimate = "Estimating size…"
-        estimateTask = plugin.estimateDownloadSize(mode: mode, url: trimmed, videoPreset: videoPreset, customFormat: customFormat, audioFormat: audioFormat, cookiesBrowser: cookiesBrowser) { [weak self] bytes, playlistCount in
-            guard let self, self.lastEstimateKey == key else { return }
+        let isPlaylist = plugin.willDownloadPlaylist(trimmed)
+        sizeEstimate = isPlaylist ? "Counting playlist…" : "Estimating size…"
+        estimateTask = plugin.estimateDownloadSize(mode: mode, url: trimmed, videoPreset: videoPreset, customFormat: customFormat, audioFormat: audioFormat) { [weak self] bytes, playlistCount in
+            guard let self, self.estimateGeneration == generation else { return }
+            self.estimateTask = nil
             if let playlistCount, playlistCount > 1 {
                 self.playlistCounter = "0 of \(playlistCount)"
             } else if !self.isRunning {
                 self.playlistCounter = ""
             }
-            if let bytes, bytes > 0 {
+            if isPlaylist {
+                // Playlists are only counted; their size is not estimated.
+                self.sizeEstimate = playlistCount.map { "Playlist: \($0) items" } ?? "Playlist"
+            } else if let bytes, bytes > 0 {
                 let approx = self.mode == .audio ? "Approx. audio size" : "Approx. size"
                 self.sizeEstimate = "\(approx): \(self.formatBytes(bytes))"
             } else {
@@ -1062,6 +1192,9 @@ final class VideoDownloaderViewModel: ObservableObject {
 
     func start() {
         guard !isRunning else { return }
+        // Starting the download confirms a clipboard URL, so its preview may load now.
+        clipboardURLAwaitingConfirmation = nil
+        jobID += 1
         if queuedURLs.count > 1 {
             startQueue()
             return
@@ -1103,8 +1236,6 @@ final class VideoDownloaderViewModel: ObservableObject {
 
     private func finishQueue(cancelled: Bool) {
         isRunning = false
-        stopLiveProgress()
-        stopBackgroundLogPolling()
         releaseFromBackgroundDownload()
         if cancelled {
             status = "Queue cancelled"
@@ -1131,9 +1262,11 @@ final class VideoDownloaderViewModel: ObservableObject {
             }
             status = "Resolving Spotify track…"
             detail = "Using Spotify track metadata to search YouTube for a matching audio result."
+            let job = jobID
             plugin.resolveSpotifyToYouTubeSearch(trimmed) { [weak self] target in
                 DispatchQueue.main.async {
-                    guard let self else { return }
+                    // Drop the result if this job was cancelled or replaced while Spotify was being asked.
+                    guard let self, self.jobID == job, !self.cancellationRequested else { return }
                     guard let target else {
                         self.fail("Could not resolve Spotify metadata. Paste artist + song title or use a normal media URL.")
                         completion?(false)
@@ -1146,8 +1279,7 @@ final class VideoDownloaderViewModel: ObservableObject {
         }
         guard plugin.normalizedDownloadTarget(trimmed) != nil else { fail("Paste a URL, Spotify track, or type search text."); completion?(false); return }
         url = trimmed
-        refreshThumbnailIfNeeded()
-        refreshSizeEstimateIfNeeded()
+        schedulePreview()
         let baseFolder = URL(fileURLWithPath: folderPath.isEmpty ? plugin.defaultDownloadDirectory().path : folderPath, isDirectory: true)
         let folder = queueMode && queueSubfolderName != nil
             ? baseFolder.appendingPathComponent(queueSubfolderName ?? "Text Playlist", isDirectory: true)
@@ -1172,20 +1304,16 @@ final class VideoDownloaderViewModel: ObservableObject {
         eta = "—"
         transferredBytes = nil
         totalBytes = nil
-        technicalDetails = ""
         let selectedFormat = mode == .video ? videoPreset : audioFormat
         let selectedQuality = mode == .video ? videoPreset : ((audioFormat == "WAV" || audioFormat == "FLAC") ? "Lossless conversion" : audioQuality)
         jobSummary = "\(mode.rawValue) • \(selectedFormat) • \(selectedQuality) • \(baseFolder.lastPathComponent)"
         playlistCounter = queueMode ? playlistCounter : ""
         cancellationRequested = false
         isRunning = true
-        beginLiveProgress()
         status = queueMode ? "Queue item \(queueCompleted + 1) of \(queueTotal)" : (mode == .video ? "Downloading video…" : "Downloading audio…")
         detail = plugin.normalizedDownloadTarget(trimmed)?.lowercased().hasPrefix("ytsearch") == true ? "Searching YouTube for best matching result." : (plugin.willDownloadPlaylist(trimmed) ? "Starting playlist download into its own folder." : "Starting yt-dlp.")
         task = plugin.runYTDLP(arguments: args, progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
             guard let self else { return }
-            self.stopLiveProgress()
-            self.stopBackgroundLogPolling()
             if self.cancellationRequested {
                 if queueMode { completion?(false); return }
                 self.isRunning = false
@@ -1210,26 +1338,27 @@ final class VideoDownloaderViewModel: ObservableObject {
     }
 
     func cancel() {
+        guard isRunning else { return }
         cancellationRequested = true
         queuedURLs.removeAll()
         queueSubfolderName = nil
-        status = queueTotal > 1 ? "Cancelling queue…" : "Cancelling…"
-        detail = queueTotal > 1 ? "Killing the active queue and child processes." : "Killing the active process and child processes."
 
-        if let task {
-            plugin?.killProcessTree(task)
+        if plugin?.killProcessTree(task) == true {
+            // The process's completion handler reports "Cancelled" once it has actually exited.
+            status = queueTotal > 1 ? "Cancelling queue…" : "Cancelling…"
+            detail = queueTotal > 1 ? "Stopping the active queue item and its child processes." : "Stopping the active process and its child processes."
+            return
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
-            guard let self, self.cancellationRequested else { return }
-            self.task = nil
-            self.isRunning = false
-            self.stopLiveProgress()
-            self.stopBackgroundLogPolling()
-            self.status = "Cancelled"
-            self.detail = "Process was killed."
-            self.cancellationRequested = false
-            self.releaseFromBackgroundDownload()
+        // No process was running (e.g. a Spotify link was still being resolved), so stop right away.
+        task = nil
+        if queueTotal > 1 {
+            finishQueue(cancelled: true)
+        } else {
+            isRunning = false
+            status = "Cancelled"
+            detail = "Stopped. No yt-dlp process was running."
+            releaseFromBackgroundDownload()
         }
     }
 
@@ -1238,9 +1367,9 @@ final class VideoDownloaderViewModel: ObservableObject {
         guard let plugin else { fail("Plugin not available."); return }
         cancellationRequested = false
         isRunning = true
+        retainForBackgroundDownload()
         progress = 0
         overallProgress = 0
-        beginLiveProgress()
         status = "Checking tools…"
         detail = "Checking Homebrew, yt-dlp, FFmpeg, internet, folder and disk space."
         healthStatus = "Checking…"
@@ -1251,8 +1380,13 @@ final class VideoDownloaderViewModel: ObservableObject {
         }, completion: { [weak self] success in
             guard let self else { return }
             self.isRunning = false
-            self.stopLiveProgress()
-            self.stopBackgroundLogPolling()
+            self.releaseFromBackgroundDownload()
+            if self.cancellationRequested {
+                self.status = "Cancelled"
+                self.detail = "The tool check was stopped."
+                self.cancellationRequested = false
+                return
+            }
             self.progress = success ? 1 : 0
             self.overallProgress = success ? 1 : 0
             self.status = success ? "Health OK" : "Needs attention"
@@ -1265,15 +1399,14 @@ final class VideoDownloaderViewModel: ObservableObject {
         guard let plugin else { fail("Plugin not available."); return }
         cancellationRequested = false
         isRunning = true
+        retainForBackgroundDownload()
         progress = 0
-        beginLiveProgress()
         status = "Updating tools…"
         detail = "Homebrew is installing/updating yt-dlp and FFmpeg."
         task = plugin.startToolUpdate(progress: { [weak self] text in self?.consumeOutput(text) }, completion: { [weak self] success in
             guard let self else { return }
             self.isRunning = false
-            self.stopLiveProgress()
-            self.stopBackgroundLogPolling()
+            self.releaseFromBackgroundDownload()
             if self.cancellationRequested {
                 self.status = "Cancelled"
                 self.detail = "The update was stopped."
@@ -1286,16 +1419,6 @@ final class VideoDownloaderViewModel: ObservableObject {
             self.detail = success ? "yt-dlp and FFmpeg are ready." : "Copy Last Log for details."
             if success { self.checkTools() }
         })
-    }
-
-    func folderSelectionChanged() {
-        if folderPath == chooseFolderMenuValue {
-            folderPath = recentFolders.first ?? plugin?.defaultDownloadDirectory().path ?? ""
-            chooseFolder()
-        } else {
-            rememberFolder(folderPath)
-            saveSettings()
-        }
     }
 
     func openCurrentFolder() {
@@ -1326,52 +1449,6 @@ final class VideoDownloaderViewModel: ObservableObject {
         saveSettings()
     }
 
-    func cycleFormat(backwards: Bool = false) {
-        if mode == .video {
-            guard let current = videoPresets.firstIndex(of: videoPreset) else {
-                videoPreset = videoPresets.first ?? videoPreset
-                return
-            }
-            let next = backwards
-                ? (current - 1 + videoPresets.count) % videoPresets.count
-                : (current + 1) % videoPresets.count
-            videoPreset = videoPresets[next]
-            saveSettings()
-        } else {
-            guard let current = audioFormats.firstIndex(of: audioFormat) else {
-                audioFormat = audioFormats.first ?? audioFormat
-                return
-            }
-            let next = backwards
-                ? (current - 1 + audioFormats.count) % audioFormats.count
-                : (current + 1) % audioFormats.count
-            audioFormat = audioFormats[next]
-            saveSettings()
-        }
-    }
-
-    func cycleQuality(backwards: Bool = false) {
-        if mode == .video {
-            let videoQualityPresets = ["Best available | Original", "2160p / 4K", "1440p / 2K", "1080p", "720p", "480p", "360p"]
-            let currentPreset = videoQualityPresets.contains(videoPreset) ? videoPreset : "Best available | Original"
-            guard let current = videoQualityPresets.firstIndex(of: currentPreset) else { return }
-            let next = backwards
-                ? (current - 1 + videoQualityPresets.count) % videoQualityPresets.count
-                : (current + 1) % videoQualityPresets.count
-            videoPreset = videoQualityPresets[next]
-        } else {
-            guard let current = audioQualities.firstIndex(of: audioQuality) else {
-                audioQuality = audioQualities.first ?? audioQuality
-                return
-            }
-            let next = backwards
-                ? (current - 1 + audioQualities.count) % audioQualities.count
-                : (current + 1) % audioQualities.count
-            audioQuality = audioQualities[next]
-        }
-        saveSettings()
-    }
-
     func saveSettings() {
         defaults.set(mode.rawValue, forKey: DefaultsKey.mode)
         defaults.set(videoPreset, forKey: DefaultsKey.videoPreset)
@@ -1381,27 +1458,12 @@ final class VideoDownloaderViewModel: ObservableObject {
         defaults.set(cookiesBrowser, forKey: DefaultsKey.cookiesBrowser)
         defaults.set(lastDownloadedFile, forKey: DefaultsKey.lastDownloadedFile)
         defaults.set(folderPath, forKey: DefaultsKey.folderPath)
-        defaults.set(recentFolders, forKey: DefaultsKey.recentFolders)
     }
 
     private func rememberFolder(_ path: String) {
         let trimmed = path.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         folderPath = trimmed
-        recentFolders = normalizedRecentFolders([trimmed] + recentFolders)
-    }
-
-    private func normalizedRecentFolders(_ folders: [String]) -> [String] {
-        var seen = Set<String>()
-        var result: [String] = []
-        for folder in folders {
-            let trimmed = folder.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmed.isEmpty, !seen.contains(trimmed) else { continue }
-            seen.insert(trimmed)
-            result.append(trimmed)
-            if result.count == 3 { break }
-        }
-        return result
     }
 
     func copyLog() {
@@ -1421,7 +1483,6 @@ final class VideoDownloaderViewModel: ObservableObject {
     }
 
     private func consumeOutput(_ text: String) {
-        noteActivity()
         for rawLine in text.components(separatedBy: .newlines) {
             let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !line.isEmpty else { continue }
@@ -1513,65 +1574,6 @@ final class VideoDownloaderViewModel: ObservableObject {
         }
     }
 
-    private func beginLiveProgress() {
-        // Progress and phase changes come only from real yt-dlp output.
-        // In particular, do not show Processing until download progress reaches 100%.
-        progressTimer?.invalidate()
-        progressTimer = nil
-    }
-
-    private func stopLiveProgress() {
-        progressTimer?.invalidate()
-        progressTimer = nil
-    }
-
-    private func restoreBackgroundDownloadIfNeeded() {
-        guard let plugin, plugin.hasRunningBackgroundDownloads() else { return }
-        isRunning = true
-        cancellationRequested = false
-        status = "Downloading in background"
-        detail = "A previous download is still running. Reading progress from the log."
-        playlistCounter = ""
-        beginLiveProgress()
-        beginBackgroundLogPolling()
-    }
-
-    private func beginBackgroundLogPolling() {
-        backgroundLogPollingTimer?.invalidate()
-        backgroundLogPollingTimer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            guard let plugin = self.plugin else {
-                self.stopBackgroundLogPolling()
-                return
-            }
-
-            if let logText = try? String(contentsOf: plugin.lastLogURL(), encoding: .utf8), !logText.isEmpty {
-                let lines = logText.components(separatedBy: .newlines)
-                let tail = lines.suffix(80).joined(separator: "\\n")
-                self.consumeOutput(tail)
-            }
-
-            if !plugin.hasRunningBackgroundDownloads() {
-                self.isRunning = false
-                self.stopLiveProgress()
-                self.stopBackgroundLogPolling()
-                self.progress = max(self.progress, 1)
-                self.overallProgress = max(self.overallProgress, 1)
-                self.status = "Completed"
-                self.detail = "Background download completed. The file is ready."
-            }
-        }
-    }
-
-    private func stopBackgroundLogPolling() {
-        backgroundLogPollingTimer?.invalidate()
-        backgroundLogPollingTimer = nil
-    }
-
-    private func noteActivity() {
-        // Keep progress stable; only real yt-dlp progress should move the bars.
-    }
-
     private func firstMatch(in text: String, pattern: String) -> String? {
         guard let regex = try? NSRegularExpression(pattern: pattern),
               let match = regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
@@ -1593,15 +1595,9 @@ final class VideoDownloaderViewModel: ObservableObject {
         NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: lastDownloadedFile)])
     }
 
-    func retry() {
-        guard !isRunning else { return }
-        start()
-    }
-
     private func fail(_ message: String) {
         status = "Failed"
         detail = message
-        technicalDetails = message
     }
 }
 
@@ -1632,7 +1628,6 @@ struct VideoDownloaderDashboardView: View {
         .onChange(of: model.audioFormat, perform: settingsChanged)
         .onChange(of: model.audioQuality, perform: settingsChanged)
         .onChange(of: model.cookiesBrowser, perform: settingsChanged)
-        .onChange(of: model.folderPath, perform: folderChanged)
     }
 
     private var leftColumn: some View {
@@ -1711,10 +1706,7 @@ struct VideoDownloaderDashboardView: View {
                     .disabled(model.isRunning)
                     .accessibilityLabel("Source URL or search text")
                 Button {
-                    if let pasted = NSPasteboard.general.string(forType: .string), !pasted.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        model.url = pasted.trimmingCharacters(in: .whitespacesAndNewlines)
-                        model.updateURLFromLauncherQuery(model.url)
-                    }
+                    model.pasteFromClipboard()
                 } label: {
                     Image(systemName: "doc.on.clipboard")
                 }
@@ -1986,6 +1978,15 @@ struct VideoDownloaderDashboardView: View {
                 Text("Background safe")
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.secondary)
+            } else if model.hasValidOutputFile {
+                Button("Open") { model.openLastFile() }
+                    .controlSize(.small)
+                    .help("Open the last downloaded file")
+                    .accessibilityLabel("Open Downloaded File")
+                Button("Reveal") { model.revealLastFile() }
+                    .controlSize(.small)
+                    .help("Reveal in Finder")
+                    .accessibilityLabel("Reveal in Finder")
             }
         }
     }
@@ -1994,8 +1995,6 @@ struct VideoDownloaderDashboardView: View {
         HStack(spacing: 10) {
             Label("Download", systemImage: "return")
             Label("Mode", systemImage: "arrow.right.to.line.compact")
-            Label("Format", systemImage: "control")
-            Label("Quality", systemImage: "option")
         }
         .font(.caption2.weight(.semibold))
         .foregroundStyle(.secondary)
@@ -2028,17 +2027,12 @@ struct VideoDownloaderDashboardView: View {
     }
 
     private func sourceChanged(_ value: String) {
-        model.refreshThumbnailIfNeeded()
-        model.refreshSizeEstimateIfNeeded()
+        model.schedulePreview()
     }
 
     private func settingsChanged<T>(_ value: T) {
         model.saveSettings()
-        model.refreshSizeEstimateIfNeeded()
-    }
-
-    private func folderChanged(_ value: String) {
-        model.folderSelectionChanged()
+        model.schedulePreview()
     }
 
     private var headerSubtitle: String {

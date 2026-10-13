@@ -9,9 +9,10 @@
     "url": "https://github.com/loaykhalifa"
   },
   "description": "Download video or extract audio with yt-dlp inside BetterTouchTool Launcher, with previews, format controls, queues, playlists, progress, cookies, and tool management.",
-  "minimumBetterTouchToolVersion": "5.0",
+  "minimumBetterTouchToolVersion": "TBD",
   "permissions": [
     "clipboard-read",
+    "clipboard-write",
     "file-read",
     "file-write",
     "network",
@@ -23,11 +24,7 @@
   "screenshots": [
     "screenshots/main.jpg"
   ],
-  "reviewStatus": "submitted",
-  "origin": {
-    "repository": "https://github.com/loaykhalifa/BetterTouchToolPlugins",
-    "source": "https://github.com/loaykhalifa/BetterTouchToolPlugins/blob/master/plugins/community/launcher-media-downloader/BTTMediaDownloader.swift"
-  },
+  "reviewStatus": "community-reviewed",
   "copyright": "Copyright (c) 2026 loaykhalifa.",
   "license": "MIT"
 }
