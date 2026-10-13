@@ -147,7 +147,14 @@ func fetchStockQuote(symbol: String, completion: @escaping (StockQuote?) -> Void
             else { completion(nil); return }
 
             let price     = meta["regularMarketPrice"] as? Double ?? 0
-            let prevClose = meta["chartPreviousClose"]  as? Double ?? price
+            // `previousClose` is yesterday's official close. `chartPreviousClose`
+            // is the close just before the requested chart range starts — for a
+            // `range=5d` request that's ~5 trading days ago, which gives a wildly
+            // wrong "today's change". Prefer `previousClose`; fall back only if
+            // Yahoo omits it.
+            let prevClose = (meta["previousClose"]      as? Double)
+                         ?? (meta["chartPreviousClose"] as? Double)
+                         ?? price
             let name      = (meta["longName"]  as? String)
                          ?? (meta["shortName"] as? String)
                          ?? symbol
@@ -592,7 +599,12 @@ struct StockDetailView: View {
     // previous trading day's close from the initial quote fetch.
     private var validChartPrices: [Double] { chartPrices.compactMap { $0 } }
     private var rangeBaseline: Double? {
-        validChartPrices.count >= 2 ? validChartPrices.first : nil
+        // 1D should mirror the watchlist row, which compares against the
+        // previous trading day's close (Yahoo's `quote.change`). For longer
+        // ranges, compare against the first sample of the selected range so
+        // the headline reflects what the chart visually shows.
+        if selectedRange == .oneDay { return nil }
+        return validChartPrices.count >= 2 ? validChartPrices.first : nil
     }
     private var rangeChange: Double {
         guard let base = rangeBaseline else { return quote.change }
@@ -1079,8 +1091,9 @@ struct StocksRootView: View {
             }
         }
         .onAppear {
-            // Refresh on first appear; no-op while a refresh is in flight.
-            if store.lastFetch == nil { store.refreshAll() }
+            // Auto-refresh every time the surface is opened from the launcher.
+            // `refreshAll()` already no-ops while a refresh is in flight.
+            store.refreshAll()
         }
     }
 

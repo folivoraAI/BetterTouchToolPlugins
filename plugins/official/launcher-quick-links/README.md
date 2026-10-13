@@ -1,5 +1,13 @@
 # Quick Links
 
+> **Built into BetterTouchTool.** Since BetterTouchTool 6.829, Quick Links ships
+> with the app, so you no longer need to install this plugin. If the downloaded
+> plugin is installed, BetterTouchTool offers to switch to the built-in version
+> and keeps your links, aliases, shortcuts and launcher settings. You can switch
+> back in Launcher Settings › Launcher Plugins. The source stays here as an
+> example of plugin-managed instances and editor surfaces, and for older
+> BetterTouchTool versions.
+
 Creates saved launcher items that open reusable URL templates. This example is
 useful for plugins that need user-created instances, editing surfaces, custom
 commands, variable replacement, and browser launching.

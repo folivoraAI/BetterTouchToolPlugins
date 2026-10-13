@@ -53,7 +53,7 @@
       "folder": "launcher-quick-links",
       "section": "official",
       "reviewStatus": "official",
-      "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
+      "description": "Built into BetterTouchTool 6.829 and later; kept as an example. Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
       "entry": "QuickLinkLauncherPlugin.swift",
       "author": {
         "name": "folivora.AI",
@@ -87,7 +87,7 @@
         "open-url",
         "launcher-plugin-instances"
       ],
-      "searchText": "quick links com.folivora.btt.launcher.quicklinks creates saved launcher items that open reusable url templates and demonstrates plugin-managed instances. launcher official official launcher-quick-links folivora.ai clipboard-read clipboard-write open-url launcher-plugin-instances",
+      "searchText": "quick links com.folivora.btt.launcher.quicklinks built into bettertouchtool 6.829 and later; kept as an example. creates saved launcher items that open reusable url templates and demonstrates plugin-managed instances. launcher official official launcher-quick-links folivora.ai clipboard-read clipboard-write open-url launcher-plugin-instances",
       "order": 1
     },
     {
@@ -886,8 +886,8 @@
       "typeLabel": "Launcher",
       "folder": "launcher-stock-prices",
       "section": "community",
-      "reviewStatus": "community-reviewed",
-      "description": "Look up stock quotes and manage a watchlist with sparkline details.",
+      "reviewStatus": "submitted",
+      "description": "Look up stock quotes and manage a watchlist with sparkline details. Prices auto-refresh whenever the launcher view is opened.",
       "entry": "StockPrices.swift",
       "author": {
         "name": "Subhash Jha",
@@ -912,18 +912,18 @@
       "origin": {
         "repository": "https://github.com/jhasubhash/btt-plugins",
         "source": "https://github.com/jhasubhash/btt-plugins/blob/main/StockPrices.swift",
-        "importedFromCommit": "c8a095204b44e3fe8c5bb0e0455b24744453f916"
+        "importedFromCommit": "d50cae6fb703d7782b3594da820ebbd957d2775b"
       },
       "copyright": "Copyright (c) Subhash Jha and contributors to jhasubhash/btt-plugins.",
-      "license": "No explicit upstream license file was present in the upstream repository at import time.",
+      "license": "MIT (see LICENSE in upstream repository).",
       "tags": [
         "community",
         "launcher",
-        "community-reviewed",
+        "submitted",
         "network",
         "user-defaults"
       ],
-      "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. launcher community-reviewed community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. network user-defaults",
+      "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. prices auto-refresh whenever the launcher view is opened. launcher submitted community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit (see license in upstream repository). network user-defaults",
       "order": 20
     },
     {

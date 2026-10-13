@@ -5,6 +5,9 @@
 // BTT-Principal-Class: QuickLinkLauncherPlugin
 // BTT-AI-Managed: true
 
+// Quick Links is built into BetterTouchTool 6.829 and later. Install this
+// plugin only on older versions; it remains here as a plugin example.
+
 import AppKit
 import Foundation
 import SwiftUI

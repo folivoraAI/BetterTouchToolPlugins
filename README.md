@@ -137,7 +137,7 @@ must be installed.
 | Plugin | Type | What It Shows |
 |---|---|---|
 | [Sample Launcher](plugins/official/launcher-sample) | `Launcher` | Rows, children, commands, variables, named triggers, and a native surface |
-| [Quick Links](plugins/official/launcher-quick-links) | `Launcher` | Saved plugin instances, editor surfaces, URL templates, and commands |
+| [Quick Links](plugins/official/launcher-quick-links) | `Launcher` | Saved plugin instances, editor surfaces, URL templates, and commands (built into BTT 6.829+, kept as an example) |
 | [1Password Launcher Example](plugins/official/launcher-onepassword-example) | `Launcher` | Searching 1Password items through the `op` CLI |
 | [Google Search Launcher](plugins/official/launcher-google-search) | `Launcher` | Opening launcher queries as Google searches |
 | [Caffeinate](plugins/official/launcher-caffeinate) | `Launcher` | Toggling a background `caffeinate` process from the launcher |

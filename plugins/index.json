@@ -18,7 +18,7 @@
       "path": "plugins/official/launcher-quick-links",
       "entry": "QuickLinkLauncherPlugin.swift",
       "reviewStatus": "official",
-      "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances."
+      "description": "Built into BetterTouchTool 6.829 and later; kept as an example. Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances."
     },
     {
       "name": "Clipboard Change",

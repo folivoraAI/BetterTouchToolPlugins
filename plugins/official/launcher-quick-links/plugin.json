@@ -7,7 +7,7 @@
   "author": {
     "name": "folivora.AI"
   },
-  "description": "Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
+  "description": "Built into BetterTouchTool 6.829 and later; kept as an example. Creates saved launcher items that open reusable URL templates and demonstrates plugin-managed instances.",
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": ["clipboard-read", "clipboard-write", "open-url", "launcher-plugin-instances"],
   "screenshots": [
