@@ -2,7 +2,7 @@ window.BTT_PLUGIN_CATALOG = {
   "schemaVersion": 1,
   "repository": "https://github.com/folivoraAI/BetterTouchToolPlugins",
   "branch": "master",
-  "pluginCount": 23,
+  "pluginCount": 24,
   "plugins": [
     {
       "name": "Sample Launcher Plugin",
@@ -288,6 +288,54 @@ window.BTT_PLUGIN_CATALOG = {
       "order": 6
     },
     {
+      "name": "Apple Notes",
+      "identifier": "com.folivora.btt.launcher.applenotes",
+      "type": "Launcher",
+      "typeLabel": "Launcher",
+      "folder": "launcher-apple-notes",
+      "section": "official",
+      "reviewStatus": "official",
+      "description": "Full-text search, preview, Markdown export and creation of Apple Notes with tag, folder and checklist filters.",
+      "entry": "AppleNotesLauncherPlugin.swift",
+      "author": {
+        "name": "folivora.AI",
+        "url": null
+      },
+      "minimumBetterTouchToolVersion": "TBD",
+      "permissions": [
+        "file-read",
+        "file-write",
+        "apple-script",
+        "clipboard-write",
+        "open-url"
+      ],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-apple-notes/screenshots/browser-dark.png",
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/official/launcher-apple-notes/screenshots/browser-light.png"
+      ],
+      "downloadFileName": "AppleNotesLauncherPlugin.swift",
+      "links": {
+        "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/official/launcher-apple-notes",
+        "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-apple-notes/AppleNotesLauncherPlugin.swift",
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/official/launcher-apple-notes/README.md",
+        "download": "downloads/official/launcher-apple-notes/AppleNotesLauncherPlugin.swift"
+      },
+      "origin": null,
+      "copyright": null,
+      "license": null,
+      "tags": [
+        "official",
+        "launcher",
+        "file-read",
+        "file-write",
+        "apple-script",
+        "clipboard-write",
+        "open-url"
+      ],
+      "searchText": "apple notes com.folivora.btt.launcher.applenotes full-text search, preview, markdown export and creation of apple notes with tag, folder and checklist filters. launcher official official launcher-apple-notes folivora.ai file-read file-write apple-script clipboard-write open-url",
+      "order": 7
+    },
+    {
       "name": "Launcher FallingBlocks2",
       "identifier": "com.folivora.btt.launcher.fallingblocks",
       "type": "Launcher",
@@ -321,7 +369,7 @@ window.BTT_PLUGIN_CATALOG = {
         "launcher"
       ],
       "searchText": "launcher fallingblocks2 com.folivora.btt.launcher.fallingblocks demonstrates a swiftui falling-blocks game hosted inside a launcher surface. launcher official official launcher-falling-blocks folivora.ai",
-      "order": 7
+      "order": 8
     },
     {
       "name": "Launcher Pong",
@@ -357,7 +405,7 @@ window.BTT_PLUGIN_CATALOG = {
         "launcher"
       ],
       "searchText": "launcher pong com.folivora.btt.launcher.pong demonstrates an interactive pong game hosted inside a launcher surface. launcher official official launcher-pong folivora.ai",
-      "order": 8
+      "order": 9
     },
     {
       "name": "Compress Finder Selection",
@@ -400,7 +448,7 @@ window.BTT_PLUGIN_CATALOG = {
         "shell"
       ],
       "searchText": "compress finder selection com.folivora.btt.action.compressfinderselection creates zip archives from the current finder selection. action official official action-compress-finder-selection folivora.ai apple-script file-read file-write shell",
-      "order": 9
+      "order": 10
     },
     {
       "name": "Finder Convert Selected Image to JPEG",
@@ -441,7 +489,7 @@ window.BTT_PLUGIN_CATALOG = {
         "file-write"
       ],
       "searchText": "finder convert selected image to jpeg com.folivora.btt.action.finderconvertselectedimagetojpeg converts the currently selected finder image to jpeg. action official official action-finder-convert-selected-image-to-jpeg folivora.ai apple-script file-read file-write",
-      "order": 10
+      "order": 11
     },
     {
       "name": "Analog Clock",
@@ -479,7 +527,7 @@ window.BTT_PLUGIN_CATALOG = {
         "floating menu"
       ],
       "searchText": "analog clock com.folivora.btt.floating.analogclock shows a smooth native analog clock as a floating menu widget. floatingmenuwidget official official floating-analog-clock folivora.ai",
-      "order": 11
+      "order": 12
     },
     {
       "name": "Copy Path / URL",
@@ -529,7 +577,7 @@ window.BTT_PLUGIN_CATALOG = {
         "btt-variables"
       ],
       "searchText": "copy path / url com.bttuserplugin.swift.copypathaction copies the front app's document path or the active browser tab's url. action community-reviewed community action-copy-path-url subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/copypathaction.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. clipboard-write apple-script accessibility file-read btt-variables",
-      "order": 12
+      "order": 13
     },
     {
       "name": "Cursor Launcher",
@@ -577,7 +625,7 @@ window.BTT_PLUGIN_CATALOG = {
         "finder-selection"
       ],
       "searchText": "cursor launcher com.bttuserplugin.cursor.launcher quick-open recent cursor workspaces. launcher community-reviewed community launcher-cursor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/cursorlauncher.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. file-read shell open-url finder-selection",
-      "order": 13
+      "order": 14
     },
     {
       "name": "GitHub PR Monitor",
@@ -629,7 +677,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher submitted community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit shell network open-url clipboard-write user-defaults",
-      "order": 14
+      "order": 15
     },
     {
       "name": "Jira Issues",
@@ -680,7 +728,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher submitted community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
-      "order": 15
+      "order": 16
     },
     {
       "name": "Kill Process",
@@ -728,7 +776,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "kill process com.bttuserplugin.killprocess browse running processes and force-kill or gracefully terminate them. launcher community-reviewed community launcher-kill-process subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/killprocess.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. shell process-control user-defaults",
-      "order": 16
+      "order": 17
     },
     {
       "name": "News Search",
@@ -776,7 +824,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "news search com.bttuserplugin.newssearch search google news from the launcher with a rich preview surface. launcher community-reviewed community launcher-news-search subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/newssearchplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. network open-url user-defaults",
-      "order": 17
+      "order": 18
     },
     {
       "name": "Quick Links",
@@ -831,7 +879,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher submitted community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
-      "order": 18
+      "order": 19
     },
     {
       "name": "QuickTime Recording",
@@ -877,7 +925,7 @@ window.BTT_PLUGIN_CATALOG = {
         "open-url"
       ],
       "searchText": "quicktime recording com.bttuserplugin.quicktime.recording start quicktime screen, audio, or movie recordings from the launcher. launcher community-reviewed community launcher-quicktime-recording subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicktimerecording.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. apple-script accessibility open-url",
-      "order": 19
+      "order": 20
     },
     {
       "name": "Stock Prices",
@@ -924,7 +972,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. prices auto-refresh whenever the launcher view is opened. launcher submitted community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit (see license in upstream repository). network user-defaults",
-      "order": 20
+      "order": 21
     },
     {
       "name": "Code Launcher",
@@ -972,7 +1020,7 @@ window.BTT_PLUGIN_CATALOG = {
         "finder-selection"
       ],
       "searchText": "code launcher com.bttuserplugin.vscode.launcher quick-open recent visual studio code workspaces. launcher community-reviewed community launcher-vscode subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/vscodelauncher.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. file-read shell open-url finder-selection",
-      "order": 21
+      "order": 22
     },
     {
       "name": "Xcode Recent Projects",
@@ -1018,7 +1066,7 @@ window.BTT_PLUGIN_CATALOG = {
         "open-url"
       ],
       "searchText": "xcode recent projects com.bttuserplugin.xcode-recent-projects search and open recently used xcode projects and workspaces. launcher community-reviewed community launcher-xcode-recent-projects subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/xcoderecentprojects.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. file-read spotlight open-url",
-      "order": 22
+      "order": 23
     }
   ]
 }

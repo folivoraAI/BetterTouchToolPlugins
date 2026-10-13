@@ -141,6 +141,7 @@ must be installed.
 | [1Password Launcher Example](plugins/official/launcher-onepassword-example) | `Launcher` | Searching 1Password items through the `op` CLI |
 | [Google Search Launcher](plugins/official/launcher-google-search) | `Launcher` | Opening launcher queries as Google searches |
 | [Caffeinate](plugins/official/launcher-caffeinate) | `Launcher` | Toggling a background `caffeinate` process from the launcher |
+| [Apple Notes](plugins/official/launcher-apple-notes) | `Launcher` | Full-text search, a three-pane browser surface, Markdown export and argument forms |
 | [Launcher Falling Blocks](plugins/official/launcher-falling-blocks) | `Launcher` | A SwiftUI game hosted in a launcher surface |
 | [Launcher Pong](plugins/official/launcher-pong) | `Launcher` | Another interactive SwiftUI launcher-surface game |
 | [Clipboard Change](plugins/official/trigger-clipboard-change) | `Trigger` | Firing BTT triggers when the clipboard changes |

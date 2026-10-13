@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "name": "Apple Notes",
+  "identifier": "com.folivora.btt.launcher.applenotes",
+  "type": "Launcher",
+  "entry": "AppleNotesLauncherPlugin.swift",
+  "author": {
+    "name": "folivora.AI"
+  },
+  "description": "Full-text search, preview, Markdown export and creation of Apple Notes with tag, folder and checklist filters.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": ["file-read", "file-write", "apple-script", "clipboard-write", "open-url"],
+  "screenshots": ["screenshots/browser-dark.png", "screenshots/browser-light.png"],
+  "reviewStatus": "official"
+}
