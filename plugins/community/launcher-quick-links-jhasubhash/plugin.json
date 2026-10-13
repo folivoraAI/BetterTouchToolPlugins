@@ -22,7 +22,7 @@
     "screenshots/quick-links.png",
     "screenshots/quick-links-manage.png"
   ],
-  "reviewStatus": "submitted",
+  "reviewStatus": "community-reviewed",
   "origin": {
     "repository": "https://github.com/jhasubhash/btt-plugins",
     "source": "https://github.com/jhasubhash/btt-plugins/blob/main/QuickLinkLauncherPlugin.swift",

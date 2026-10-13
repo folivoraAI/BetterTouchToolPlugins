@@ -634,7 +634,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-github-pr-monitor",
       "section": "community",
-      "reviewStatus": "submitted",
+      "reviewStatus": "community-reviewed",
       "description": "Lists open pull requests and review requests for a configured GitHub repository.",
       "entry": "GitHubPRMonitor.swift",
       "author": {
@@ -669,14 +669,14 @@
       "tags": [
         "community",
         "launcher",
-        "submitted",
+        "community-reviewed",
         "shell",
         "network",
         "open-url",
         "clipboard-write",
         "user-defaults"
       ],
-      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher submitted community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit shell network open-url clipboard-write user-defaults",
+      "searchText": "github pr monitor com.bttuserplugin.github.prmonitor lists open pull requests and review requests for a configured github repository. launcher community-reviewed community launcher-github-pr-monitor subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/githubprmonitor.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit shell network open-url clipboard-write user-defaults",
       "order": 15
     },
     {
@@ -686,7 +686,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-jira-issues",
       "section": "community",
-      "reviewStatus": "submitted",
+      "reviewStatus": "community-reviewed",
       "description": "Browse issues assigned to, reported by, or watched by you, or run custom JQL.",
       "entry": "JiraLauncherPlugin.swift",
       "author": {
@@ -721,13 +721,13 @@
       "tags": [
         "community",
         "launcher",
-        "submitted",
+        "community-reviewed",
         "network",
         "clipboard-write",
         "open-url",
         "user-defaults"
       ],
-      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher submitted community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
+      "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher community-reviewed community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
       "order": 16
     },
     {
@@ -833,7 +833,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-quick-links-jhasubhash",
       "section": "community",
-      "reviewStatus": "submitted",
+      "reviewStatus": "community-reviewed",
       "description": "Save reusable URL or filesystem-path templates and open them with the right app.",
       "entry": "QuickLinkLauncherPlugin.swift",
       "author": {
@@ -870,7 +870,7 @@
       "tags": [
         "community",
         "launcher",
-        "submitted",
+        "community-reviewed",
         "clipboard-read",
         "clipboard-write",
         "open-url",
@@ -878,7 +878,7 @@
         "launcher-plugin-instances",
         "user-defaults"
       ],
-      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher submitted community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
+      "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher community-reviewed community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
       "order": 19
     },
     {
@@ -934,7 +934,7 @@
       "typeLabel": "Launcher",
       "folder": "launcher-stock-prices",
       "section": "community",
-      "reviewStatus": "submitted",
+      "reviewStatus": "community-reviewed",
       "description": "Look up stock quotes and manage a watchlist with sparkline details. Prices auto-refresh whenever the launcher view is opened.",
       "entry": "StockPrices.swift",
       "author": {
@@ -967,11 +967,11 @@
       "tags": [
         "community",
         "launcher",
-        "submitted",
+        "community-reviewed",
         "network",
         "user-defaults"
       ],
-      "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. prices auto-refresh whenever the launcher view is opened. launcher submitted community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit (see license in upstream repository). network user-defaults",
+      "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. prices auto-refresh whenever the launcher view is opened. launcher community-reviewed community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit (see license in upstream repository). network user-defaults",
       "order": 21
     },
     {
