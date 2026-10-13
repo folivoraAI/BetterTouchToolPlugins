@@ -38,7 +38,14 @@ Open **Test Internet Speed** from BTT Launcher. The test starts automatically. Y
 
 ## How it works
 
-The plugin runs Apple's `networkQuality -c`, parses its output, and displays the results in a native SwiftUI Launcher surface. During testing, local interface counters are sampled to animate the live meters.
+The plugin runs Apple's `networkQuality -c`, parses its output, and displays the results in a native SwiftUI Launcher surface. During testing, the byte counters of the active network interface are read once a second to animate the live meters.
+
+## Safety Notes
+
+- Opening the plugin starts a test right away. `networkQuality` contacts Apple's test servers and can transfer a large amount of data on fast connections, so avoid it on metered connections.
+- The test keeps running after the Launcher closes, until `networkQuality` finishes.
+- The only process the plugin starts is `/usr/bin/networkQuality`. It reads interface counters through `getifaddrs` and the active interface through the SystemConfiguration framework.
+- It does not read or write files, the clipboard or settings, and sends no data anywhere other than through `networkQuality`.
 
 ## Files
 

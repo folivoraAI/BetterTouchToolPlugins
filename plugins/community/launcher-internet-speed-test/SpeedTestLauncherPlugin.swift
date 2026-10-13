@@ -1,11 +1,12 @@
 // BTT-Plugin-Name: Internet Speed Test
-// BTT-Plugin-Identifier: com.btt.ai.speedtest.launcher
+// BTT-Plugin-Identifier: com.loay.btt.internet-speed-test
 // BTT-Plugin-Type: Launcher
 // BTT-Plugin-Icon: speedometer
 
 import AppKit
 import SwiftUI
 import Foundation
+import SystemConfiguration
 
 class SpeedTestLauncherPlugin: NSObject, BTTLauncherPluginInterface {
     weak var delegate: (any BTTLauncherPluginDelegate)?
@@ -108,8 +109,7 @@ final class SpeedTestSurface: NSObject, BTTLauncherPluginSurfaceInterface {
     func launcherSurfaceKeepsLauncherPinned() -> Bool { false }
 
     func handleLauncherInputCommand(_ command: BTTLauncherPluginInputCommand) -> BTTLauncherPluginSurfaceCommandResult? {
-        let raw = String(describing: command).lowercased()
-        if raw.contains("return") || raw.contains("enter") || raw.contains("activate") {
+        if command == .activateSelection {
             if !model.isRunning { model.startTest() }
             let result = BTTLauncherPluginSurfaceCommandResult()
             result.handled = true
@@ -158,7 +158,8 @@ final class SpeedTestModel: ObservableObject, @unchecked Sendable {
 
     private var process: Process?
     private var sampleTimer: Timer?
-    private var lastSample: (time: Date, rx: Double, tx: Double)?
+    private var lastSample: (time: Date, rx: UInt32, tx: UInt32)?
+    private var sampledInterface = "en0"
 
     func startTest() {
         guard !isRunning else { return }
@@ -312,6 +313,7 @@ final class SpeedTestModel: ObservableObject, @unchecked Sendable {
 
     private func startSamplingNetworkThroughput() {
         stopSamplingNetworkThroughput()
+        sampledInterface = Self.primaryInterfaceName() ?? "en0"
         lastSample = readInterfaceCounters()
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.sampleNetworkThroughput()
@@ -330,8 +332,10 @@ final class SpeedTestModel: ObservableObject, @unchecked Sendable {
         defer { lastSample = current }
         guard let previous = lastSample else { return }
         let seconds = max(current.time.timeIntervalSince(previous.time), 0.25)
-        let rxBits = max(current.rx - previous.rx, 0) * 8
-        let txBits = max(current.tx - previous.tx, 0) * 8
+        // Interface byte counters are 32-bit and wrap; wrapping subtraction keeps
+        // one-second deltas correct.
+        let rxBits = Double(current.rx &- previous.rx) * 8
+        let txBits = Double(current.tx &- previous.tx) * 8
         liveDownloadMbps = rxBits / seconds / 1_000_000
         liveUploadMbps = txBits / seconds / 1_000_000
         peakDownloadMbps = max(peakDownloadMbps, liveDownloadMbps)
@@ -347,35 +351,33 @@ final class SpeedTestModel: ObservableObject, @unchecked Sendable {
         if samples.count > 18 { samples.removeFirst(samples.count - 18) }
     }
 
-    private func readInterfaceCounters() -> (time: Date, rx: Double, tx: Double)? {
-        let interface = interfaceName == "—" ? "en0" : interfaceName
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/sbin/netstat")
-        process.arguments = ["-ib", "-I", interface]
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = Pipe()
-        do {
-            try process.run()
-            process.waitUntilExit()
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            guard let output = String(data: data, encoding: .utf8) else { return nil }
-            return parseNetstatCounters(output)
-        } catch {
-            return nil
+    /// Reads the interface byte counters directly with getifaddrs. This runs on
+    /// the main thread once a second, so it must not launch a process.
+    private func readInterfaceCounters() -> (time: Date, rx: UInt32, tx: UInt32)? {
+        var addresses: UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&addresses) == 0, let first = addresses else { return nil }
+        defer { freeifaddrs(addresses) }
+        var cursor: UnsafeMutablePointer<ifaddrs>? = first
+        while let entry = cursor {
+            defer { cursor = entry.pointee.ifa_next }
+            guard let address = entry.pointee.ifa_addr,
+                  address.pointee.sa_family == UInt8(AF_LINK),
+                  String(cString: entry.pointee.ifa_name) == sampledInterface,
+                  let data = entry.pointee.ifa_data else { continue }
+            let counters = data.assumingMemoryBound(to: if_data.self).pointee
+            return (Date(), counters.ifi_ibytes, counters.ifi_obytes)
         }
+        return nil
     }
 
-    private func parseNetstatCounters(_ output: String) -> (time: Date, rx: Double, tx: Double)? {
-        let lines = output.components(separatedBy: .newlines).filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
-        guard let header = lines.first else { return nil }
-        let headerParts = header.split { $0 == " " || $0 == "\t" }.map(String.init)
-        guard let rxIndex = headerParts.firstIndex(of: "Ibytes"),
-              let txIndex = headerParts.firstIndex(of: "Obytes") else { return nil }
-        for line in lines.dropFirst().reversed() {
-            let parts = line.split { $0 == " " || $0 == "\t" }.map(String.init)
-            if parts.count > max(rxIndex, txIndex), let rx = Double(parts[rxIndex]), let tx = Double(parts[txIndex]) {
-                return (Date(), rx, tx)
+    /// The interface macOS currently routes traffic through, e.g. "en0" for
+    /// Wi-Fi or "en7" for a USB Ethernet adapter.
+    private static func primaryInterfaceName() -> String? {
+        guard let store = SCDynamicStoreCreate(nil, "BTTInternetSpeedTest" as CFString, nil, nil) else { return nil }
+        for key in ["State:/Network/Global/IPv4", "State:/Network/Global/IPv6"] {
+            if let value = SCDynamicStoreCopyValue(store, key as CFString) as? [String: Any],
+               let name = value["PrimaryInterface"] as? String, !name.isEmpty {
+                return name
             }
         }
         return nil

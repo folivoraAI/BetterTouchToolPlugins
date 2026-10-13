@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Internet Speed Test",
-  "identifier": "com.btt.ai.speedtest.launcher",
+  "identifier": "com.loay.btt.internet-speed-test",
   "type": "Launcher",
   "entry": "SpeedTestLauncherPlugin.swift",
   "author": {
@@ -9,7 +9,7 @@
     "url": "https://github.com/loaykhalifa"
   },
   "description": "Run Apple's native networkQuality speed test in BetterTouchTool Launcher with live meters, graphs, latency details, background continuation, and retesting.",
-  "minimumBetterTouchToolVersion": "5.0",
+  "minimumBetterTouchToolVersion": "TBD",
   "permissions": [
     "network",
     "shell",
@@ -18,11 +18,7 @@
   "screenshots": [
     "screenshots/main.jpg"
   ],
-  "reviewStatus": "submitted",
-  "origin": {
-    "repository": "https://github.com/loaykhalifa/BetterTouchToolPlugins",
-    "source": "https://github.com/loaykhalifa/BetterTouchToolPlugins/blob/add-internet-speed-test-2026-09-18/plugins/community/launcher-internet-speed-test/SpeedTestLauncherPlugin.swift"
-  },
+  "reviewStatus": "community-reviewed",
   "copyright": "Copyright (c) 2026 loaykhalifa.",
   "license": "MIT"
 }
