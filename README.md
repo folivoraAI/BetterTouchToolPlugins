@@ -168,8 +168,10 @@ copyright attribution, and upstream license note.
 | [Copy Path / URL](plugins/community/action-copy-path-url) | `Action` | Copy the front app document path or active browser tab URL |
 | [Cursor Launcher](plugins/community/launcher-cursor) | `Launcher` | Open recent Cursor workspaces |
 | [GitHub PR Monitor](plugins/community/launcher-github-pr-monitor) | `Launcher` | Browse open pull requests through the `gh` CLI |
+| [Internet Speed Test](plugins/community/launcher-internet-speed-test) | `Launcher` | Run macOS `networkQuality` with live meters and graphs |
 | [Jira Issues](plugins/community/launcher-jira-issues) | `Launcher` | Browse Jira issues and custom JQL results |
 | [Kill Process](plugins/community/launcher-kill-process) | `Launcher` | List and terminate running processes |
+| [Media Downloader](plugins/community/launcher-media-downloader) | `Launcher` | Download video or audio with `yt-dlp`, with previews, queues and progress |
 | [News Search](plugins/community/launcher-news-search) | `Launcher` | Search Google News with a native preview surface |
 | [Quick Links](plugins/community/launcher-quick-links-jhasubhash) | `Launcher` | Save and open reusable URL or path templates |
 | [QuickTime Recording](plugins/community/launcher-quicktime-recording) | `Launcher` | Start QuickTime recordings |

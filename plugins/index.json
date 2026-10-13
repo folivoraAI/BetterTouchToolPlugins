@@ -147,6 +147,15 @@
       "description": "Lists open pull requests and review requests for a configured GitHub repository."
     },
     {
+      "name": "Internet Speed Test",
+      "identifier": "com.loay.btt.internet-speed-test",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-internet-speed-test",
+      "entry": "SpeedTestLauncherPlugin.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Run Apple's native networkQuality speed test in BetterTouchTool Launcher with live meters, graphs, latency details, background continuation, and retesting."
+    },
+    {
       "name": "Jira Issues",
       "identifier": "com.bttuserplugin.jira.launcher",
       "type": "Launcher",
@@ -163,6 +172,15 @@
       "entry": "KillProcess.swift",
       "reviewStatus": "community-reviewed",
       "description": "Browse running processes and force-kill or gracefully terminate them."
+    },
+    {
+      "name": "Media Downloader",
+      "identifier": "com.loay.btt.media-downloader",
+      "type": "Launcher",
+      "path": "plugins/community/launcher-media-downloader",
+      "entry": "BTTMediaDownloader.swift",
+      "reviewStatus": "community-reviewed",
+      "description": "Download video or extract audio with yt-dlp inside BetterTouchTool Launcher, with previews, format controls, queues, playlists, progress, cookies, and tool management."
     },
     {
       "name": "News Search",

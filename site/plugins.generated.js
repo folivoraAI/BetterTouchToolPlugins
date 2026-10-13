@@ -2,7 +2,7 @@ window.BTT_PLUGIN_CATALOG = {
   "schemaVersion": 1,
   "repository": "https://github.com/folivoraAI/BetterTouchToolPlugins",
   "branch": "master",
-  "pluginCount": 24,
+  "pluginCount": 26,
   "plugins": [
     {
       "name": "Sample Launcher Plugin",
@@ -680,6 +680,50 @@ window.BTT_PLUGIN_CATALOG = {
       "order": 15
     },
     {
+      "name": "Internet Speed Test",
+      "identifier": "com.loay.btt.internet-speed-test",
+      "type": "Launcher",
+      "typeLabel": "Launcher",
+      "folder": "launcher-internet-speed-test",
+      "section": "community",
+      "reviewStatus": "community-reviewed",
+      "description": "Run Apple's native networkQuality speed test in BetterTouchTool Launcher with live meters, graphs, latency details, background continuation, and retesting.",
+      "entry": "SpeedTestLauncherPlugin.swift",
+      "author": {
+        "name": "loaykhalifa",
+        "url": "https://github.com/loaykhalifa"
+      },
+      "minimumBetterTouchToolVersion": "TBD",
+      "permissions": [
+        "network",
+        "shell",
+        "process-control"
+      ],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-internet-speed-test/screenshots/main.jpg"
+      ],
+      "downloadFileName": "SpeedTestLauncherPlugin.swift",
+      "links": {
+        "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-internet-speed-test",
+        "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-internet-speed-test/SpeedTestLauncherPlugin.swift",
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-internet-speed-test/README.md",
+        "download": "downloads/community/launcher-internet-speed-test/SpeedTestLauncherPlugin.swift"
+      },
+      "origin": null,
+      "copyright": "Copyright (c) 2026 loaykhalifa.",
+      "license": "MIT",
+      "tags": [
+        "community",
+        "launcher",
+        "community-reviewed",
+        "network",
+        "shell",
+        "process-control"
+      ],
+      "searchText": "internet speed test com.loay.btt.internet-speed-test run apple's native networkquality speed test in bettertouchtool launcher with live meters, graphs, latency details, background continuation, and retesting. launcher community-reviewed community launcher-internet-speed-test loaykhalifa copyright (c) 2026 loaykhalifa. mit network shell process-control",
+      "order": 16
+    },
+    {
       "name": "Jira Issues",
       "identifier": "com.bttuserplugin.jira.launcher",
       "type": "Launcher",
@@ -728,7 +772,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "jira issues com.bttuserplugin.jira.launcher browse issues assigned to, reported by, or watched by you, or run custom jql. launcher community-reviewed community launcher-jira-issues subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/jiralauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit network clipboard-write open-url user-defaults",
-      "order": 16
+      "order": 17
     },
     {
       "name": "Kill Process",
@@ -776,7 +820,63 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "kill process com.bttuserplugin.killprocess browse running processes and force-kill or gracefully terminate them. launcher community-reviewed community launcher-kill-process subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/killprocess.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. shell process-control user-defaults",
-      "order": 17
+      "order": 18
+    },
+    {
+      "name": "Media Downloader",
+      "identifier": "com.loay.btt.media-downloader",
+      "type": "Launcher",
+      "typeLabel": "Launcher",
+      "folder": "launcher-media-downloader",
+      "section": "community",
+      "reviewStatus": "community-reviewed",
+      "description": "Download video or extract audio with yt-dlp inside BetterTouchTool Launcher, with previews, format controls, queues, playlists, progress, cookies, and tool management.",
+      "entry": "BTTMediaDownloader.swift",
+      "author": {
+        "name": "loaykhalifa",
+        "url": "https://github.com/loaykhalifa"
+      },
+      "minimumBetterTouchToolVersion": "TBD",
+      "permissions": [
+        "clipboard-read",
+        "clipboard-write",
+        "file-read",
+        "file-write",
+        "network",
+        "open-url",
+        "shell",
+        "user-defaults",
+        "process-control"
+      ],
+      "screenshots": [
+        "https://raw.githubusercontent.com/folivoraAI/BetterTouchToolPlugins/master/plugins/community/launcher-media-downloader/screenshots/main.jpg"
+      ],
+      "downloadFileName": "BTTMediaDownloader.swift",
+      "links": {
+        "folder": "https://github.com/folivoraAI/BetterTouchToolPlugins/tree/master/plugins/community/launcher-media-downloader",
+        "source": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-media-downloader/BTTMediaDownloader.swift",
+        "readme": "https://github.com/folivoraAI/BetterTouchToolPlugins/blob/master/plugins/community/launcher-media-downloader/README.md",
+        "download": "downloads/community/launcher-media-downloader/BTTMediaDownloader.swift"
+      },
+      "origin": null,
+      "copyright": "Copyright (c) 2026 loaykhalifa.",
+      "license": "MIT",
+      "tags": [
+        "community",
+        "launcher",
+        "community-reviewed",
+        "clipboard-read",
+        "clipboard-write",
+        "file-read",
+        "file-write",
+        "network",
+        "open-url",
+        "shell",
+        "user-defaults",
+        "process-control"
+      ],
+      "searchText": "media downloader com.loay.btt.media-downloader download video or extract audio with yt-dlp inside bettertouchtool launcher, with previews, format controls, queues, playlists, progress, cookies, and tool management. launcher community-reviewed community launcher-media-downloader loaykhalifa copyright (c) 2026 loaykhalifa. mit clipboard-read clipboard-write file-read file-write network open-url shell user-defaults process-control",
+      "order": 19
     },
     {
       "name": "News Search",
@@ -824,7 +924,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "news search com.bttuserplugin.newssearch search google news from the launcher with a rich preview surface. launcher community-reviewed community launcher-news-search subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/newssearchplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. network open-url user-defaults",
-      "order": 18
+      "order": 20
     },
     {
       "name": "Quick Links",
@@ -879,7 +979,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "quick links com.folivora.launcher.quicklinks.example save reusable url or filesystem-path templates and open them with the right app. launcher community-reviewed community launcher-quick-links-jhasubhash subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicklinklauncherplugin.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit clipboard-read clipboard-write open-url file-read launcher-plugin-instances user-defaults",
-      "order": 19
+      "order": 21
     },
     {
       "name": "QuickTime Recording",
@@ -925,7 +1025,7 @@ window.BTT_PLUGIN_CATALOG = {
         "open-url"
       ],
       "searchText": "quicktime recording com.bttuserplugin.quicktime.recording start quicktime screen, audio, or movie recordings from the launcher. launcher community-reviewed community launcher-quicktime-recording subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/quicktimerecording.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. apple-script accessibility open-url",
-      "order": 20
+      "order": 22
     },
     {
       "name": "Stock Prices",
@@ -972,7 +1072,7 @@ window.BTT_PLUGIN_CATALOG = {
         "user-defaults"
       ],
       "searchText": "stock prices com.bttuserplugin.stockprices look up stock quotes and manage a watchlist with sparkline details. prices auto-refresh whenever the launcher view is opened. launcher community-reviewed community launcher-stock-prices subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/stockprices.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. mit (see license in upstream repository). network user-defaults",
-      "order": 21
+      "order": 23
     },
     {
       "name": "Code Launcher",
@@ -1020,7 +1120,7 @@ window.BTT_PLUGIN_CATALOG = {
         "finder-selection"
       ],
       "searchText": "code launcher com.bttuserplugin.vscode.launcher quick-open recent visual studio code workspaces. launcher community-reviewed community launcher-vscode subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/vscodelauncher.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. file-read shell open-url finder-selection",
-      "order": 22
+      "order": 24
     },
     {
       "name": "Xcode Recent Projects",
@@ -1066,7 +1166,7 @@ window.BTT_PLUGIN_CATALOG = {
         "open-url"
       ],
       "searchText": "xcode recent projects com.bttuserplugin.xcode-recent-projects search and open recently used xcode projects and workspaces. launcher community-reviewed community launcher-xcode-recent-projects subhash jha https://github.com/jhasubhash/btt-plugins https://github.com/jhasubhash/btt-plugins/blob/main/xcoderecentprojects.swift copyright (c) subhash jha and contributors to jhasubhash/btt-plugins. no explicit upstream license file was present in the upstream repository at import time. file-read spotlight open-url",
-      "order": 23
+      "order": 25
     }
   ]
 }
