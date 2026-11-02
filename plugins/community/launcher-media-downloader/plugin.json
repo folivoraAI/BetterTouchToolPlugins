@@ -8,7 +8,7 @@
     "name": "loaykhalifa",
     "url": "https://github.com/loaykhalifa"
   },
-  "description": "Download video or extract audio with yt-dlp inside BetterTouchTool Launcher, with previews, format controls, queues, playlists, progress, cookies, and tool management.",
+  "description": "Download video or extract audio directly in BetterTouchTool Launcher with independent format and quality controls, metadata and thumbnail previews, live progress, playlists, and multi-item queues. Version 1.2 adds MOV, AVI, and FLV choices alongside Original, MP4, MKV, and WebM, with audio output in MP3, M4A, WAV, Opus, or FLAC. Includes YouTube text search, individual Spotify track resolution, browser-cookie selection for downloads, destination controls, and Homebrew tool checks and updates.",
   "minimumBetterTouchToolVersion": "TBD",
   "permissions": [
     "clipboard-read",
@@ -26,5 +26,14 @@
   ],
   "reviewStatus": "community-reviewed",
   "copyright": "Copyright (c) 2026 loaykhalifa.",
-  "license": "MIT"
+  "license": "MIT",
+  "version": "1.2",
+  "shortDescription": "Download video and audio in BTT Launcher with independent format and quality controls.",
+  "releaseNotes": [
+    "Separate video Format and Quality dropdowns in a compact Mode/Format/Quality row.",
+    "Add MOV, AVI, and FLV choices alongside Original, MP4, MKV, and WebM.",
+    "Show the chosen format and quality separately in download summaries.",
+    "Restore combined format/quality preferences across sessions.",
+    "Refresh screenshot and documentation while preserving current upstream safety, privacy, and Apple Silicon/Intel tool-resolution improvements."
+  ]
 }

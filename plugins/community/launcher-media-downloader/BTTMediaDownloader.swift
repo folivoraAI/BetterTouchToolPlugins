@@ -504,8 +504,11 @@ final class VideoDownloader: NSObject, BTTLauncherPluginInterface {
         let cap = heights[quality].map { "[height<=\($0)]" } ?? ""
         switch container {
         case "MP4": return ("bestvideo\(cap)[ext=mp4]+bestaudio[ext=m4a]/best\(cap)[ext=mp4]/best\(cap)", "mp4")
+        case "MOV": return ("bestvideo\(cap)+bestaudio/best\(cap)/best", "mov")
         case "MKV": return ("bestvideo\(cap)+bestaudio/best\(cap)/best", "mkv")
         case "WebM": return ("bestvideo\(cap)[ext=webm]+bestaudio[ext=webm]/best\(cap)[ext=webm]/best\(cap)", "webm")
+        case "AVI": return ("bestvideo\(cap)+bestaudio/best\(cap)/best", "avi")
+        case "FLV": return ("bestvideo\(cap)+bestaudio/best\(cap)/best", "flv")
         default: return ("bestvideo\(cap)+bestaudio/best\(cap)/best", nil)
         }
     }
@@ -803,8 +806,36 @@ final class VideoDownloaderViewModel: ObservableObject {
     @Published var mediaSource = ""
     @Published var mediaDuration = ""
 
-    let videoPresets = ["Best available | Original", "2160p / 4K", "1440p / 2K", "1080p", "720p", "480p", "360p", "1080p | MKV", "720p | WebM", "Custom yt-dlp selector"]
+    let videoFormats = ["Original", "MP4", "MOV", "MKV", "WebM", "AVI", "FLV"]
+    let videoQualities = ["Best available", "2160p / 4K", "1440p / 2K", "1080p", "720p", "480p", "360p", "Custom yt-dlp selector"]
     let audioFormats = ["MP3", "M4A", "WAV", "Opus", "FLAC"]
+
+    var selectedVideoQuality: String {
+        get {
+            if videoPreset == "Custom yt-dlp selector" { return videoPreset }
+            return videoPreset.components(separatedBy: " | ").first ?? "Best available"
+        }
+        set {
+            if newValue == "Custom yt-dlp selector" {
+                videoPreset = newValue
+            } else {
+                videoPreset = "\(newValue) | \(selectedVideoFormat)"
+            }
+        }
+    }
+
+    var selectedVideoFormat: String {
+        get {
+            if videoPreset == "Custom yt-dlp selector" { return "Original" }
+            let parts = videoPreset.components(separatedBy: " | ")
+            if parts.count > 1 { return parts[1] }
+            return videoPreset == "Best available" ? "Original" : "MP4"
+        }
+        set {
+            let quality = selectedVideoQuality == "Custom yt-dlp selector" ? "Best available" : selectedVideoQuality
+            videoPreset = "\(quality) | \(newValue)"
+        }
+    }
     let audioQualities = ["Best", "320 kbps", "256 kbps", "192 kbps", "128 kbps"]
     let cookiesBrowsers = ["None", "Safari", "Chrome", "Edge", "Firefox", "Brave"]
 
@@ -881,7 +912,7 @@ final class VideoDownloaderViewModel: ObservableObject {
         self.mode = DownloadMode(rawValue: defaults.string(forKey: DefaultsKey.mode) ?? "") ?? .video
 
         let savedVideoPreset = defaults.string(forKey: DefaultsKey.videoPreset)
-        if let savedVideoPreset, videoPresets.contains(savedVideoPreset) { self.videoPreset = savedVideoPreset }
+        if let savedVideoPreset, !savedVideoPreset.isEmpty { self.videoPreset = savedVideoPreset }
         self.customFormat = defaults.string(forKey: DefaultsKey.customFormat) ?? self.customFormat
 
         let savedAudioFormat = defaults.string(forKey: DefaultsKey.audioFormat)
@@ -1304,8 +1335,8 @@ final class VideoDownloaderViewModel: ObservableObject {
         eta = "—"
         transferredBytes = nil
         totalBytes = nil
-        let selectedFormat = mode == .video ? videoPreset : audioFormat
-        let selectedQuality = mode == .video ? videoPreset : ((audioFormat == "WAV" || audioFormat == "FLAC") ? "Lossless conversion" : audioQuality)
+        let selectedFormat = mode == .video ? selectedVideoFormat : audioFormat
+        let selectedQuality = mode == .video ? selectedVideoQuality : ((audioFormat == "WAV" || audioFormat == "FLAC") ? "Lossless conversion" : audioQuality)
         jobSummary = "\(mode.rawValue) • \(selectedFormat) • \(selectedQuality) • \(baseFolder.lastPathComponent)"
         playlistCounter = queueMode ? playlistCounter : ""
         cancellationRequested = false
@@ -1743,22 +1774,46 @@ struct VideoDownloaderDashboardView: View {
 
     private var optionsSection: some View {
         section("Download Options") {
-            Picker("Mode", selection: $model.mode) {
-                ForEach(DownloadMode.allCases) { Text($0.rawValue).tag($0) }
-            }
-            .pickerStyle(.segmented)
-            .frame(maxWidth: .infinity)
-            .disabled(model.isRunning)
-
             HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Mode")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Picker("Mode", selection: $model.mode) {
+                        ForEach(DownloadMode.allCases) { Text($0.rawValue).tag($0) }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.segmented)
+                    .frame(width: 150)
+                }
+                .disabled(model.isRunning)
+
                 if model.mode == .video {
-                    compactMenu("Format", selection: $model.videoPreset, values: model.videoPresets, width: 330)
-                        .disabled(model.isRunning)
+                    compactMenu(
+                        "Format",
+                        selection: Binding(
+                            get: { model.selectedVideoFormat },
+                            set: { model.selectedVideoFormat = $0 }
+                        ),
+                        values: model.videoFormats,
+                        width: 140
+                    )
+                    .disabled(model.isRunning)
+                    compactMenu(
+                        "Quality",
+                        selection: Binding(
+                            get: { model.selectedVideoQuality },
+                            set: { model.selectedVideoQuality = $0 }
+                        ),
+                        values: model.videoQualities,
+                        width: 185
+                    )
+                    .disabled(model.isRunning)
                 } else {
-                    compactMenu("Format", selection: $model.audioFormat, values: model.audioFormats, width: 150)
+                    compactMenu("Format", selection: $model.audioFormat, values: model.audioFormats, width: 140)
                         .disabled(model.isRunning)
                     if model.audioFormat != "WAV" && model.audioFormat != "FLAC" {
-                        compactMenu("Quality", selection: $model.audioQuality, values: model.audioQualities, width: 190)
+                        compactMenu("Quality", selection: $model.audioQuality, values: model.audioQualities, width: 185)
                             .disabled(model.isRunning)
                     }
                 }
@@ -2013,7 +2068,7 @@ struct VideoDownloaderDashboardView: View {
     }
 
     private func compactMenu(_ title: String, selection: Binding<String>, values: [String], width: CGFloat) -> some View {
-        HStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
@@ -2022,6 +2077,7 @@ struct VideoDownloaderDashboardView: View {
             }
             .labelsHidden()
             .pickerStyle(.menu)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(width: width, alignment: .leading)
     }
