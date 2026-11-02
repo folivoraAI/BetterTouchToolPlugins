@@ -1,0 +1,68 @@
+{
+  "name": "GIF Search",
+  "identifier": "com.btt.ai.gifsearch.launcher",
+  "type": "Launcher",
+  "version": "1.0.0",
+  "icon": "photo.stack",
+  "shortDescription": "Search and copy GIFs inside BTT Launcher.",
+  "description": "A native BetterTouchTool Launcher plugin with animated previews, GIPHY GIFs and Clips, Klipy, Finer Gifs Club, favorites, recents, and keyboard navigation.",
+  "author": {
+    "name": "Loay Khalifa",
+    "url": "https://github.com/loaykhalifa"
+  },
+  "entry": "GIFSearchLauncherPlugin.swift",
+  "screenshot": "thumbnail.jpg",
+  "screenshots": [
+    "thumbnail.jpg"
+  ],
+  "requirements": [
+    "BetterTouchTool with Swift Launcher plugin and launcher surface support",
+    "Internet connection for online providers and media downloads",
+    "Apple Command Line Tools if requested by BetterTouchTool for compilation"
+  ],
+  "permissions": [
+    "network",
+    "clipboard-write",
+    "user-defaults"
+  ],
+  "reviewStatus": "submitted",
+  "keywords": [
+    "launcher",
+    "gif",
+    "search",
+    "giphy",
+    "clips",
+    "klipy",
+    "favorites",
+    "clipboard"
+  ],
+  "files": [
+    {
+      "path": "GIFSearchLauncherPlugin.swift",
+      "type": "swift-source-plugin"
+    },
+    {
+      "path": "README.md",
+      "type": "documentation"
+    },
+    {
+      "path": "thumbnail.jpg",
+      "type": "screenshot"
+    }
+  ],
+  "installation": [
+    "Copy GIFSearchLauncherPlugin.swift to ~/Library/Application Support/BetterTouchTool/Plugins/.",
+    "Restart BetterTouchTool or wait for its Swift plugin watcher to reload.",
+    "Open BTT Launcher, search for GIF Search, and open the result."
+  ],
+  "limitations": [
+    "GIPHY and Klipy currently use third-party search endpoints; availability and authorization for third-party use must be reviewed before publication.",
+    "Finer Gifs Club requires a search term.",
+    "Clipboard media support depends on the destination application.",
+    "Provider failures or changes may prevent results from loading."
+  ],
+  "schemaVersion": 1,
+  "minimumBetterTouchToolVersion": "TBD",
+  "repository": "https://github.com/loaykhalifa/BetterTouchToolPlugins",
+  "homepage": "https://github.com/loaykhalifa/BetterTouchToolPlugins/tree/submit-gif-search/plugins/community/launcher-gif-search"
+}
