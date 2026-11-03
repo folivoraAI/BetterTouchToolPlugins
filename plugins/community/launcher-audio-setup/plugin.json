@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "name": "Audio Setup",
+  "identifier": "com.loaysax.btt.set-audio-device",
+  "type": "Launcher",
+  "version": "1.0.0",
+  "entry": "AudioSetup.swift",
+  "author": {
+    "name": "LoaySax",
+    "url": "https://github.com/loaykhalifa"
+  },
+  "description": "Switch speakers and microphones, save your favorite audio setups, and manage presets from the BetterTouchTool Launcher.",
+  "minimumBetterTouchToolVersion": "TBD",
+  "permissions": [
+    "user-defaults"
+  ],
+  "screenshots": [
+    "thumbnail.jpg"
+  ],
+  "reviewStatus": "submitted",
+  "license": "MIT"
+}
