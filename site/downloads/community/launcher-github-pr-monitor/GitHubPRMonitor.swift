@@ -8,6 +8,11 @@
 import Cocoa
 import SwiftUI
 
+// Keep the State property wrapper used by earlier SwiftUI SDKs. SDK 27 also
+// exports a State macro whose implementation is absent from some standalone
+// Command Line Tools packages; this distinct name avoids selecting that macro.
+private typealias GitHubPRMonitorState<Value> = SwiftUI.State<Value>
+
 // MARK: - Models
 
 struct GitHubPR: Identifiable {
@@ -252,7 +257,7 @@ struct PRRowView: View {
     let pr: GitHubPR
     var isSelected: Bool = false
     let onOpen: () -> Void
-    @State private var hovered = false
+    @GitHubPRMonitorState private var hovered = false
 
     var body: some View {
         Button(action: onOpen) {

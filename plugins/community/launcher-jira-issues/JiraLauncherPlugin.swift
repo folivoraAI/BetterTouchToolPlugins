@@ -9,6 +9,11 @@ import Foundation
 import AppKit
 import SwiftUI
 
+// Keep the State property wrapper used by earlier SwiftUI SDKs. SDK 27 also
+// exports a State macro whose implementation is absent from some standalone
+// Command Line Tools packages; this distinct name avoids selecting that macro.
+private typealias JiraPluginState<Value> = SwiftUI.State<Value>
+
 // MARK: - Data Model
 
 struct JiraIssue {
@@ -1201,7 +1206,7 @@ struct JiraIssueRow: View {
     let accent: Color
     var isSelected: Bool = false
     let onOpen: () -> Void
-    @State private var hovered = false
+    @JiraPluginState private var hovered = false
 
     var body: some View {
         Button(action: onOpen) {
