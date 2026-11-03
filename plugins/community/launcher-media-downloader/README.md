@@ -4,10 +4,22 @@
 
 A native Swift **BetterTouchTool Launcher** plugin for downloading video or extracting audio with [yt-dlp](https://github.com/yt-dlp/yt-dlp) and FFmpeg.
 
+## What’s new in v1.2
+
+- Independent **Format** and **Quality** dropdowns for video downloads.
+- Format choices: **Original, MP4, MOV, MKV, WebM, AVI, FLV**.
+- Quality choices: **Best available, 4K, 2K, 1080p, 720p, 480p, 360p**, or a custom yt-dlp selector.
+- Compact **Mode → Format → Quality** layout with clearer download summaries.
+- Format and quality selections are remembered between sessions.
+- Updated screenshot and gallery description.
+- Preserves the current upstream process-management, privacy, and Intel/Apple Silicon fixes.
+
+Container availability depends on the selected streams, yt-dlp, and FFmpeg; not every format/codec combination is supported. **Original** leaves container selection to yt-dlp rather than forcing a specific container.
+
 ## Features
 
 - Native one-page interface inside BTT Launcher
-- Video and Audio modes with video presets, custom yt-dlp selectors, and MP3/M4A/WAV/Opus/FLAC output
+- Video and Audio modes with independent video format/quality controls, custom yt-dlp selectors, and MP3/M4A/WAV/Opus/FLAC audio output
 - Thumbnail, title, channel/uploader, duration, and estimated-size preview (entry count for playlists)
 - Live progress, transferred size, speed, ETA, playlist count, and queue count
 - Direct URLs, plain-text YouTube searches, multi-URL queues, and multi-line search lists
@@ -52,6 +64,8 @@ brew install yt-dlp ffmpeg
 5. Enter a supported URL or search, select the output options, and choose **Download**.
 
 ## Usage
+
+In Video mode, choose **Format** and **Quality** independently. In Audio mode, choose the audio format and bitrate (WAV/FLAC use lossless conversion).
 
 The Source field accepts a single HTTP(S) URL, plain search text, multiple URLs, multiple search lines, or an individual Spotify track link.
 
