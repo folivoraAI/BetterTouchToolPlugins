@@ -1,0 +1,90 @@
+{
+  "name": "GIF Search",
+  "identifier": "com.github.loaykhalifa.gifsearch",
+  "type": "Launcher",
+  "version": "1.0.0",
+  "icon": "photo.stack",
+  "shortDescription": "Search and copy GIFs inside BTT Launcher.",
+  "description": "A native BetterTouchTool Launcher plugin with GIPHY GIFs, KLIPY GIFs/Stickers/Memes, keyless Wikimedia Commons GIF search, animated previews, favorites, recents, and keyboard navigation.",
+  "author": {
+    "name": "LoaySax",
+    "url": "https://github.com/loaykhalifa"
+  },
+  "entry": "GIFSearchLauncherPlugin.swift",
+  "screenshot": "thumbnail-1.png",
+  "screenshots": [
+    "thumbnail-1.png",
+    "thumbnail-2.png",
+    "thumbnail-3.png"
+  ],
+  "requirements": [
+    "BetterTouchTool 6.992 or newer (target support baseline)",
+    "Internet connection for online providers, saved-provider refreshes, and media",
+    "Your own GIPHY API key / KLIPY app key for the corresponding providers",
+    "Apple Command Line Tools if requested by BetterTouchTool for compilation",
+    "Wikimedia Commons public search needs no API key or account; individual file licenses apply."
+  ],
+  "permissions": [
+    "network",
+    "clipboard-read",
+    "clipboard-write",
+    "user-defaults",
+    "open-url"
+  ],
+  "keywords": [
+    "launcher",
+    "gif",
+    "search",
+    "giphy",
+    "klipy",
+    "favorites",
+    "clipboard",
+    "stickers",
+    "memes",
+    "commons",
+    "wikimedia",
+    "attribution"
+  ],
+  "files": [
+    {
+      "path": "GIFSearchLauncherPlugin.swift",
+      "type": "swift-source-plugin"
+    },
+    {
+      "path": "README.md",
+      "type": "documentation"
+    },
+    {
+      "path": "thumbnail-1.png",
+      "type": "screenshot"
+    },
+    {
+      "path": "thumbnail-2.png",
+      "type": "screenshot"
+    },
+    {
+      "path": "thumbnail-3.png",
+      "type": "screenshot"
+    }
+  ],
+  "installation": [
+    "Drag GIFSearchLauncherPlugin.swift onto BetterTouchTool preferences and approve compilation/loading.",
+    "Configure your own GIPHY API key / KLIPY app key in Launcher Settings → GIF Search → API Keys.",
+    "Open BTT Launcher, search for GIF Search, and open the result."
+  ],
+  "limitations": [
+    "Animation and media paste support depend on the receiving application.",
+    "Some stickers and memes are static PNG images.",
+    "Provider keys, account permissions, quotas, internet access, and content availability affect results.",
+    "GIPHY/KLIPY return up to 50 items per page; choosing 100 uses two requests. Commons returns up to 50 items and requires a search phrase.",
+    "Favorites and Recent store references, not offline media copies.",
+    "Media downloads are limited to 32 MiB. Timeouts and restricted redirects can prevent downloads.",
+    "Provider keys are stored in ordinary BetterTouchTool configuration fields, not Keychain.",
+    "Individual media licenses and provider terms apply."
+  ],
+  "schemaVersion": 1,
+  "minimumBetterTouchToolVersion": "6.992",
+  "reviewStatus": "submitted",
+  "repository": "https://github.com/loaykhalifa/BetterTouchToolPlugins",
+  "homepage": "https://github.com/loaykhalifa/BetterTouchToolPlugins/tree/submit-gif-search/plugins/community/launcher-gif-search"
+}
